@@ -79,6 +79,16 @@
       "pages": 688,
       "genre": "Sci-Fi",
       "status": "reading"
+    },
+    {
+      "id": 9,
+      "title": "Belajar Vue.js Lanjutan",
+      "author": "Dika S.A",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "reading"
     }
   ]
 }
