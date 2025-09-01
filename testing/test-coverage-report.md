@@ -66,4 +66,3 @@ Laporan ini merangkum hasil pengujian aplikasi **BookTracker**:
 
 ---
 
-*Report ini dibuat berdasarkan hasil pengujian manual dan automated test (jika ada).*
