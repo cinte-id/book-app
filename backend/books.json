@@ -1,16 +1,6 @@
 {
   "books": [
     {
-      "id": 1,
-      "title": "The Great Gatsby",
-      "author": "F. Scott Fitzgerald",
-      "cover": "https://covers.openlibrary.org/b/id/12749894-L.jpg",
-      "rating": 4.2,
-      "pages": 180,
-      "genre": "Classic",
-      "status": "read"
-    },
-    {
       "id": 2,
       "title": "To Kill a Mockingbird",
       "author": "Harper Lee",
@@ -79,6 +69,186 @@
       "pages": 688,
       "genre": "Sci-Fi",
       "status": "reading"
+    },
+    {
+      "id": 9,
+      "title": "Laskar Pelangi",
+      "author": "Andrea Hirata",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 10,
+      "title": "Hujan",
+      "author": "Tere Liye",
+      "cover": "https://share.google/images/fRxuSg1K6XaitssCd",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 11,
+      "title": "Negeri 5 Menara",
+      "author": "Ahmad Fuadi",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "fiction",
+      "status": "want-to-read"
+    },
+    {
+      "id": 12,
+      "title": "5 cm",
+      "author": "Donny Dhirgantoro",
+      "cover": "",
+      "rating": 0,
+      "pages": 381,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 13,
+      "title": "Dilan 1990",
+      "author": "Pidi Baiq",
+      "cover": "",
+      "rating": 4.7,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 14,
+      "title": "Perahu Kertas",
+      "author": "Dee Lestari",
+      "cover": "https://share.google/images/S5gy1vDLFvBL3yAro",
+      "rating": 4.2,
+      "pages": 280,
+      "genre": "romance",
+      "status": "want-to-read"
+    },
+    {
+      "id": 15,
+      "title": "Laskar Pelangi",
+      "author": "Andrea Hirata",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 16,
+      "title": "",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 4.3,
+      "pages": 280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 17,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 4.3,
+      "pages": 280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 18,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 4.3,
+      "pages": 280,
+      "genre": "drama",
+      "status": ""
+    },
+    {
+      "id": 19,
+      "title": "",
+      "author": "",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": ""
+    },
+    {
+      "id": 20,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 4.3,
+      "pages": 280,
+      "genre": "drama",
+      "status": "wait"
+    },
+    {
+      "id": 21,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "abc",
+      "rating": 4.3,
+      "pages": 280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 22,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 4.3,
+      "pages": -280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 23,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 7,
+      "pages": 280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 24,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": -2,
+      "pages": 280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 25,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 7,
+      "pages": 280,
+      "genre": "drama",
+      "status": "want-to-read"
+    },
+    {
+      "id": 26,
+      "title": "Ronggeng Dukuh Paruk",
+      "author": "Ahmad Tohari",
+      "cover": "https://share.google/images/tHqfnsdj954hsqINF",
+      "rating": 4.3,
+      "pages": 280,
+      "genre": 123,
+      "status": "want-to-read"
     }
   ]
 }
