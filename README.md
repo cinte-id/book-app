@@ -110,7 +110,7 @@ The frontend will be available at http://localhost:5173
 ## Project Structure
 
 ```
-book-tracker-app/
+book-app/
 ├── backend/
 │   └── app.py              # Flask backend API
 ├── frontend/
@@ -167,7 +167,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 # Test Instruction
 
 Hi there! 👋  
-Thanks for applying to our internship program.
+Thanks for applying to our company.
 
 This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
 You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
@@ -187,7 +187,7 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
 ## ✅ What to Do
 
 1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're confident in:
+2. **Pick ONE area** you're applying in:
    - Frontend
    - Backend
    - DevOps
@@ -195,12 +195,14 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
    - Data
    - Project/Product Manager
    - UI/UX
+   - Customer Services
 3. **Work only in the part that fits your chosen role.**
 4. Push your code and include in your `README.md`:
    - Your chosen role
    - How to run/test your part
    - Any notes or decisions you made
-   - Create Merge Request to the main branch
+5. Create a Pull Request (PR) to the main branch of this repository
+6. Share the PR link with us for review
 
 ---
 
@@ -236,12 +238,20 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
 - Bonus: Add environment config or deployment steps
 
 ### 🔹 QA
-- Write test cases (unit/integration) for:
-  - API in `backend/`, or
-  - UI in `frontend/`
-- Tools you can use:
-  - Postman, Jest, Supertest, Cypress, Playwright, etc.
-- Bonus: Add a test report or coverage info
+- **Create a comprehensive Test Plan** covering both positive and negative test scenarios
+- **Test Environment Options:**
+  - Local development: Run backend on `http://localhost:5000` and frontend on `http://localhost:5173`
+  - Live environment: Test on `https://book-app.cinte.id/`
+- **Deliverables:**
+  - Test plan document with test scenarios
+  - Test execution results
+  - Bug reports (if any issues found)
+  - Test coverage report
+- **Bonus:** 
+  - Automated test suite
+  - Performance testing results
+  - Accessibility compliance report
+  - Cross-browser testing matrix
 
 ### 🔹 UI/UX
 - Use Figma for Create new design for usecase User Authentication and User Settings/Profile
@@ -266,6 +276,29 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
     - Build dashboard with 4-5 visualizations
     - Generate business insights and recommendations
 - Bonus: Advanced SQL techniques or interactive dashboard features
+
+### 🔹 Customer Service
+- **Test Environment Options:**
+  - Local development: Run backend on `http://localhost:5000` and frontend on `http://localhost:5173`
+  - Live environment: Test on `https://book-app.cinte.id/`
+- **Create comprehensive customer support system** including:
+  - Help & FAQ page with searchable content
+  - Contact Support form with ticket system
+  - User Guide/Tutorial pages for app features
+  - Feedback & Suggestion submission system
+  - Live Chat widget interface (UI only, no backend integration needed)
+- **Deliverables:**
+  - Help & FAQ page with categorized questions and answers
+  - Contact Support form with form validation
+  - User onboarding tutorial pages
+  - Feedback submission form
+  - Customer service dashboard layout
+- **Bonus:** 
+  - Knowledge base with article categories
+  - User satisfaction survey component
+  - Support ticket tracking interface
+  - Multi-language support structure
+  - Customer service analytics dashboard mockup
 
 ---
 
@@ -292,7 +325,11 @@ No need to overengineer — focus on clarity and your best work in a short time.
 
 ## 📩 Submission
 
-Once you're done, share your GitHub repo link with us.
+Once you're done:
+1. Create a Pull Request (PR) to the main branch of this repository
+2. Share the PR link with us for review
+
+**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
 
 Good luck, and have fun! 🚀
 
