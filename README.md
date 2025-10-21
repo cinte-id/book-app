@@ -208,97 +208,17 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
 
 ## 🔧 Tasks by Role
 
-### 🔹 Fullstack
-- Complete feature for Library > Browse page
-    - implement search by name and category
-    - add detail page
-- Bonus: Add more Essential feature
+Choose your role and follow the detailed task instructions:
 
-### 🔹 Frontend
-- Build a UI to:
-  - User Authentication
-  - User Settings
-  - User Insight
-- No need to connect to BE if API was not available. just create dummy page on FE
-- Bonus: Add more Essential feature
-
-### 🔹 Backend
-- Build a REST API that supports:
-  - Search and filtering
-  - Books added to user library
-- Use in-memory storage or simple JSON file
-- Bonus: Add input validation or simple auth
-
-### 🔹 DevOps
-- Use `backend/` or `frontend/` as the app to work on
-- Create:
-  - `Dockerfile`
-  - (Optional) `docker-compose.yml`
-  - (Optional) GitHub Actions CI (e.g., lint, test)
-- Bonus: Add environment config or deployment steps
-
-### 🔹 QA
-- **Create a comprehensive Test Plan** covering both positive and negative test scenarios
-- **Test Environment Options:**
-  - Local development: Run backend on `http://localhost:5000` and frontend on `http://localhost:5173`
-  - Live environment: Test on `https://book-app.cinte.id/`
-- **Deliverables:**
-  - Test plan document with test scenarios
-  - Test execution results
-  - Bug reports (if any issues found)
-  - Test coverage report
-- **Bonus:** 
-  - Automated test suite
-  - Performance testing results
-  - Accessibility compliance report
-  - Cross-browser testing matrix
-
-### 🔹 UI/UX
-- Use Figma for Create new design for usecase User Authentication and User Settings/Profile
-- Bonus: Add more essential feature page
-
-### 🔹 Project/Product Manager
-- Create timeline if i need to add new checkout or payment feature
-    - task breakdown
-    - imagine you resource of 1 person for each role
-    - estimated time
-- Tools you can use:
-    - Notion, Any Project Management Tools
-- Delivery send document link to recruiter emails
-- Bonus: Add more timeline for other essential feature
-
-
-### 🔹 Data Analytic Engineer
-- **📋 [Follow detailed test scenarios here](DATA_ANALYTIC_ENGINEER_TEST_SCENARIOS.md)** for complete instructions
-- Create a data analytics solution for the Book Tracker App (2-3 hours)
-    - Data preparation & ETL using Python/pandas
-    - Design simple data model with 3-4 tables
-    - Build dashboard with 4-5 visualizations
-    - Generate business insights and recommendations
-- Bonus: Advanced SQL techniques or interactive dashboard features
-
-### 🔹 Customer Service
-- **Test Environment Options:**
-  - Local development: Run backend on `http://localhost:5000` and frontend on `http://localhost:5173`
-  - Live environment: Test on `https://book-app.cinte.id/`
-- **Create comprehensive customer support system** including:
-  - Help & FAQ page with searchable content
-  - Contact Support form with ticket system
-  - User Guide/Tutorial pages for app features
-  - Feedback & Suggestion submission system
-  - Live Chat widget interface (UI only, no backend integration needed)
-- **Deliverables:**
-  - Help & FAQ page with categorized questions and answers
-  - Contact Support form with form validation
-  - User onboarding tutorial pages
-  - Feedback submission form
-  - Customer service dashboard layout
-- **Bonus:** 
-  - Knowledge base with article categories
-  - User satisfaction survey component
-  - Support ticket tracking interface
-  - Multi-language support structure
-  - Customer service analytics dashboard mockup
+- [🔹 **Fullstack**](TASKS_FULLSTACK.md) - Complete Library Browse page features
+- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
+- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
+- [🔹 **DevOps**](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
+- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
+- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
+- [🔹 **Project/Product Manager**](TASKS_PM.md) - Create project timelines and task breakdowns
+- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
+- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
 
 ---
 
