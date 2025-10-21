@@ -258,12 +258,14 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
 - Bonus: Add more timeline for other essential feature
 
 
-### 🔹 Data
-- Give me example dashboard using context or data related to book tracker apps that had feature
-    - Books library
-    - User Books Library
-    - Rent or Buy Books
-- Bonus: Output result as Graphic or add business related insight
+### 🔹 Data Analytic Engineer
+- **📋 [Follow detailed test scenarios here](DATA_ANALYTIC_ENGINEER_TEST_SCENARIOS.md)** for complete instructions
+- Create a data analytics solution for the Book Tracker App (2-3 hours)
+    - Data preparation & ETL using Python/pandas
+    - Design simple data model with 3-4 tables
+    - Build dashboard with 4-5 visualizations
+    - Generate business insights and recommendations
+- Bonus: Advanced SQL techniques or interactive dashboard features
 
 ---
 
