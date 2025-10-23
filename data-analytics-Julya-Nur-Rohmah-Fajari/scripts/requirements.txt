@@ -1,9 +1,8 @@
-#import library
-import pandas as pd
-import ast
-import numpy as np
-import os
-import sqlite3
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+sqlite3
+os
+ast
