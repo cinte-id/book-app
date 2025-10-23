@@ -1,29 +1,43 @@
-#Data Analytics - Julya Nur Rohmah Fajari
+# Data Analytics - Julya Nur Rohmah Fajari
 
-##Project Overview
+## Project Overview
 This project focuses on data analysis for the **Book App** platform.  
 The goal is to analyze reading patterns, user engagement, and book performance metrics.
 
-##Project Structure
+---
+
+## Project Structure
+```text
 data-analytics-Julya-Nur-Rohmah-Fajari/
-├── data/
+├── data
 │ ├── raw/
 │ ├── processed/
 │ └── sample_data_generator.py
-├── sql/
+├── sql
 │ ├── data_model.sql
 │ └── analytical_queries.sql
-├── notebooks/
+├── notebooks
 │ └── data_analysis.ipynb
-├── dashboard/
+├── dashboard
 │ ├── dashboard.html
 │ └── dashboard_screenshots/
-└── scripts/
+└── scripts
 ├── data_preparation.py
 └── requirements.txt
+```
+---
 
-##Steps
-1. Data preparation and cleaning (ETL)
-2. Data modeling and SQL query
-3. Visualization dashboard
-4. Documentation and insights
+## Steps
+1. **Data preparation and cleaning (ETL)**  
+2. **Data modeling and SQL query**  
+3. **Visualization dashboard**  
+4. **Documentation and insights**
+
+## Insight
+1. Berdasarkan analisis *Top Rated Book* dan *Distribusi Genre*, genre *Fantasi* menjadi yang paling diminati. Hal ini menunjukkan potensi peningkatan *produksi* dan *promosi* genre buku ini.
+2. Aktivitas user meningkat *di awal dan pertengahan tahun*, namun tingakat penyelesain bacaan *menurun*.
+3. Strategi yang diaarankan:
+   
+- **a. *Promosi* dan *peningkatan produksi* buku genre fantasi pada *awal dan pertengahan tahun*.**
+- **b. Fitur *reminder* agar user terdorong menyelesaikan bacaan.**
+- **c. Buat *tips & trik membaca cepat* dan memahami isi buku untuk meningkatkan jeterlibatan user.**
