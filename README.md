@@ -1,257 +1,107 @@
-# Book Tracker App
+# Book App Performance Data Analytics Solution
+## Brief Introduction
+Proyek ini berfokus pada pengembangan *data pipeline* dan analisis data sederhana untuk aplikasi *book app*. Tujuannya adalah untuk mensimulasikan alur kerja dunia nyata, di mana data dikumpulkan, dibersihkan, dimodelkan, dan divisualisasikan guna memperoleh wawasan mengenai perilaku pengguna dalam membaca serta performa aplikasi *book app*.
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
+## Setup Instruction
+**Tools yang digunakan**
+- Python ≥ 3.8 — untuk tahap ETL (data preparation)
+- Microsoft SQL Server — untuk tahap data modeling & query analysis
+- SQL Server Management Studio (SSMS) — untuk menjalankan perintah SQL
+- Microsoft Power BI Desktop — untuk tahap dashboard creation
 
-<img src="./assets/home.png" height="200" alt="Home">
-<img src="./assets/library.png" height="200" alt="Library">
+**Instalasi Python dependencies**
+Semua dependensi sudah tercantum dalam file `requirements.txt.` 
 
-## Features
-
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
-
-## Tech Stack
-
-### Backend
-- Python 3.x
-- Flask
-- Flask-CORS
-- SQLAlchemy
-- python-dotenv
-
-### Frontend
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Axios
-- shadcn/ui components
-
-## Prerequisites
-
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
-
-### Backend Setup
-
-1. Create and activate a virtual environment:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+**Sturuktur folder**
+```text
+data-analytics-muhammad-raihan-nur-rasyad/
+├── README.md                           # Setup instructions and findings
+├── data/
+│   ├── raw/
+│   │   └── books.json                  # Original data
+│   ├── processed/
+│   │   ├── books_clean.csv
+│   │   ├── user_interactions.csv
+│   │   └── reading_progress.csv
+│   └── sample_data_generator.py        # Script to create sample data
+├── sql/
+│   ├── data_model.sql                  # DDL scripts
+│   └── analytical_queries.sql          # Your SQL queries
+├── notebooks/
+│   └── data_analysis.ipynb             # Jupyter notebook (if using Python)
+├── dashboard/
+│   ├── dashboard.pbix
+│   └── dashboard_screenshots/          # Screenshots if needed
+└── scripts/
+    ├── data_preparation.py             # ETL scripts
+    └── requirements.txt                # Python dependencies
 ```
 
-2. Install backend dependencies:
-```bash
-pip install -r requirements.txt
+**Menjalankan Tahap ETL**
+
+Jalankan file `data_preparation.py`. Script akan:
+- Membaca file `books.json`
+- Membersihkan dan memproses data
+- Membuat data user interactions dan reading progress
+- Menghasilkan file `books_clean.csv`, `user_interaction.csv`, dan `reading_progress.csv` siap untuk analisis 
+
+**Memasukkan Data ke Microsoft SQL Server**
+
+- Jalankan script `sql/create_tables.sql` untuk membuat database serta struktur tabel. Impor file CSV menggunakan SSMS → Tasks → Import Data → Flat File Source.
+- Gunakan script `sql/analysis_queries.sql` untuk menjalankan query analisis.
+
+**Visualisasi di Power BI**
+- Buka Power BI → Get Data → SQL Server Database
+- Hubungkan ke database dan gunakan custom queries seperti berikut untuk mengambil data.
+```sql
+SELECT 
+    ui.user_id,
+    b.id AS book_id,
+    b.title,
+    b.author,
+    b.genre,
+    b.rating AS book_rating,
+    rp.pages_read,
+    rp.total_pages,
+    rp.completion_rate,
+    ui.action,
+    CAST(ui.timestamp AS DATE) AS date
+FROM user_interactions AS ui
+JOIN books AS b 
+    ON ui.book_id = b.id
+JOIN reading_progress AS rp 
+    ON ui.user_id = rp.user_id AND ui.book_id = rp.book_id
+ORDER BY ui.user_id, ui.timestamp;
 ```
 
-3. Start the Flask server:
-```bash
-cd backend
-python app.py
-```
+- Membuat visualisasi seperti Total buku per genre, Rata-rata completion rate per user, Aktivitas pengguna berdasarkan jenis interaksi, dsb.
+- Hasil berupa dashboard/dashboard.pbix.
 
-The backend server will start on http://localhost:5000
+## Key findings and recommendations
 
-### Frontend Setup
+<p align="center">
+  <kbd><img src="dashboard\Dashboard Screenshot.jpg" width=800px> </kbd> <br>
+ Book App Performance Dashboard
+</p>
 
-1. Install frontend dependencies:
-```bash
-cd frontend
-npm install
-```
+**Insight Utama**
 
-2. Start the development server:
-```bash
-npm run dev
-```
+- Genre Fantasy, Fiction, dan Classic memiliki jumlah pembaca tertinggi.
+- Aktivitas pengguna meningkat signifikan pada bulan Juni–Agustus.
+- Buku *The Lord of the Rings* dan *To Kill a Mockingbird* memperoleh rating tertinggi.
+- Rata-rata reading completion rate sekitar 50%.
+- Sebagian besar pengguna tergolong High Reader (51%), menunjukkan tingkat keterlibatan tinggi.
 
-The frontend will be available at http://localhost:5173
+**Rekomendasi Bisnis**
 
-## API Documentation
+- Fokuskan promosi dan rekomendasi buku pada genre populer (Fantasy & Fiction).
+- Lakukan kampanye membaca musiman di pertengahan tahun untuk menjaga momentum aktivitas pengguna.
+- Tambahkan fitur progress tracker atau reminder untuk meningkatkan completion rate.
+- Pertahankan loyalitas High Reader melalui sistem reward dan personalisasi rekomendasi.
 
-### Endpoints
+## Assumptions & Limitations
 
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
-
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
-```
-
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
-
-#### DELETE /api/books/<id>
-- Deletes a book by ID
-
-## Project Structure
-
-```
-book-app/
-├── backend/
-│   └── app.py              # Flask backend API
-├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
-```
-
-## Development
-
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
-
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Future Enhancements
-
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-# Test Instruction
-
-Hi there! 👋  
-Thanks for applying to our company.
-
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
-
----
-
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
-
----
-
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
-
----
-
-## ✅ What to Do
-
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
-
----
-
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack**](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps**](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager**](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
-
-
-
+- Data user interaction dan reading progress bersifat data sample, bukan data pengguna nyata.
+- Analisis dilakukan pada periode waktu terbatas (satu tahun), sehingga tren musiman mungkin belum sepenuhnya akurat.
+- Tidak semua faktor eksternal (seperti kampanye promosi atau perilaku pengguna di luar aplikasi) tercakup dalam data.
+- Genre dan rating buku bergantung pada dataset awal, sehingga hasil dapat berbeda jika data diperbarui.
