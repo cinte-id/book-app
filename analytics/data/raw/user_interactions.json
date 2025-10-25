@@ -1,0 +1,704 @@
+{
+    "user_interactions": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2023-10-30 08:57:13"
+        },
+        {
+            "id": 2,
+            "user_id": 10,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-02-19 02:01:43"
+        },
+        {
+            "id": 3,
+            "user_id": 3,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-01-14 08:41:17"
+        },
+        {
+            "id": 4,
+            "user_id": 3,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-02-15 14:27:49"
+        },
+        {
+            "id": 5,
+            "user_id": 8,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2023-08-07 14:20:36"
+        },
+        {
+            "id": 6,
+            "user_id": 5,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2023-05-12 12:19:39"
+        },
+        {
+            "id": 7,
+            "user_id": 9,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2023-11-23 01:04:58"
+        },
+        {
+            "id": 8,
+            "user_id": 5,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-12-30 18:47:11"
+        },
+        {
+            "id": 9,
+            "user_id": 2,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2023-09-30 16:48:22"
+        },
+        {
+            "id": 10,
+            "user_id": 1,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2023-05-07 06:02:52"
+        },
+        {
+            "id": 11,
+            "user_id": 4,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-10-09 04:06:31"
+        },
+        {
+            "id": 12,
+            "user_id": 10,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2023-10-10 06:05:35"
+        },
+        {
+            "id": 13,
+            "user_id": 7,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2024-04-30 16:55:42"
+        },
+        {
+            "id": 14,
+            "user_id": 7,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-10-24 14:28:03"
+        },
+        {
+            "id": 15,
+            "user_id": 5,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-03-13 12:33:03"
+        },
+        {
+            "id": 16,
+            "user_id": 4,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2023-04-11 11:52:03"
+        },
+        {
+            "id": 17,
+            "user_id": 10,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2024-05-19 22:35:02"
+        },
+        {
+            "id": 18,
+            "user_id": 4,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2023-12-10 10:41:21"
+        },
+        {
+            "id": 19,
+            "user_id": 7,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-04-18 12:21:56"
+        },
+        {
+            "id": 20,
+            "user_id": 5,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-03-02 08:09:45"
+        },
+        {
+            "id": 21,
+            "user_id": 6,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-11-14 07:38:08"
+        },
+        {
+            "id": 22,
+            "user_id": 4,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-02-29 12:02:21"
+        },
+        {
+            "id": 23,
+            "user_id": 6,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-07-12 11:42:11"
+        },
+        {
+            "id": 24,
+            "user_id": 10,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2023-12-20 21:05:08"
+        },
+        {
+            "id": 25,
+            "user_id": 4,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2023-03-18 02:55:20"
+        },
+        {
+            "id": 26,
+            "user_id": 2,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2024-08-03 04:18:23"
+        },
+        {
+            "id": 27,
+            "user_id": 7,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2023-12-03 03:18:21"
+        },
+        {
+            "id": 28,
+            "user_id": 8,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2023-01-15 13:39:32"
+        },
+        {
+            "id": 29,
+            "user_id": 10,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-11-21 14:44:50"
+        },
+        {
+            "id": 30,
+            "user_id": 5,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2023-03-28 08:12:18"
+        },
+        {
+            "id": 31,
+            "user_id": 4,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-01-14 22:25:28"
+        },
+        {
+            "id": 32,
+            "user_id": 3,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2023-02-21 16:31:34"
+        },
+        {
+            "id": 33,
+            "user_id": 3,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2024-12-08 18:52:48"
+        },
+        {
+            "id": 34,
+            "user_id": 1,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2024-02-26 08:36:55"
+        },
+        {
+            "id": 35,
+            "user_id": 10,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2024-04-11 00:04:11"
+        },
+        {
+            "id": 36,
+            "user_id": 7,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2023-03-17 00:30:20"
+        },
+        {
+            "id": 37,
+            "user_id": 7,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2024-05-18 15:54:47"
+        },
+        {
+            "id": 38,
+            "user_id": 3,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-03-19 22:57:14"
+        },
+        {
+            "id": 39,
+            "user_id": 5,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-12-07 04:25:20"
+        },
+        {
+            "id": 40,
+            "user_id": 9,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-05-02 00:56:46"
+        },
+        {
+            "id": 41,
+            "user_id": 9,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-04-18 01:31:52"
+        },
+        {
+            "id": 42,
+            "user_id": 8,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2023-07-13 01:43:40"
+        },
+        {
+            "id": 43,
+            "user_id": 9,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2023-06-14 11:17:29"
+        },
+        {
+            "id": 44,
+            "user_id": 2,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-02-11 18:32:52"
+        },
+        {
+            "id": 45,
+            "user_id": 4,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2024-03-08 20:15:46"
+        },
+        {
+            "id": 46,
+            "user_id": 9,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2024-03-18 23:11:38"
+        },
+        {
+            "id": 47,
+            "user_id": 4,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2024-04-16 01:15:14"
+        },
+        {
+            "id": 48,
+            "user_id": 5,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-08-05 11:26:32"
+        },
+        {
+            "id": 49,
+            "user_id": 10,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2023-11-01 07:27:59"
+        },
+        {
+            "id": 50,
+            "user_id": 4,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2024-11-28 18:02:34"
+        },
+        {
+            "id": 51,
+            "user_id": 4,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2024-12-11 15:03:46"
+        },
+        {
+            "id": 52,
+            "user_id": 8,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-06-01 21:12:45"
+        },
+        {
+            "id": 53,
+            "user_id": 7,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-07-26 02:45:23"
+        },
+        {
+            "id": 54,
+            "user_id": 4,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2023-05-31 19:31:48"
+        },
+        {
+            "id": 55,
+            "user_id": 1,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2024-03-02 06:42:06"
+        },
+        {
+            "id": 56,
+            "user_id": 2,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-04-09 04:16:29"
+        },
+        {
+            "id": 57,
+            "user_id": 9,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-01-27 21:55:05"
+        },
+        {
+            "id": 58,
+            "user_id": 7,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-07-22 04:03:30"
+        },
+        {
+            "id": 59,
+            "user_id": 9,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2024-08-31 05:30:51"
+        },
+        {
+            "id": 60,
+            "user_id": 3,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2024-09-25 01:32:58"
+        },
+        {
+            "id": 61,
+            "user_id": 6,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-06-27 08:04:34"
+        },
+        {
+            "id": 62,
+            "user_id": 7,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2024-01-21 20:32:27"
+        },
+        {
+            "id": 63,
+            "user_id": 2,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2023-01-12 22:08:28"
+        },
+        {
+            "id": 64,
+            "user_id": 1,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2023-04-22 08:58:22"
+        },
+        {
+            "id": 65,
+            "user_id": 4,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-04-23 01:09:32"
+        },
+        {
+            "id": 66,
+            "user_id": 7,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2024-10-18 17:30:37"
+        },
+        {
+            "id": 67,
+            "user_id": 2,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-07-18 15:19:35"
+        },
+        {
+            "id": 68,
+            "user_id": 5,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-03-02 18:23:09"
+        },
+        {
+            "id": 69,
+            "user_id": 4,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-12-18 19:41:43"
+        },
+        {
+            "id": 70,
+            "user_id": 9,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-12-17 14:36:49"
+        },
+        {
+            "id": 71,
+            "user_id": 4,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2024-09-09 16:38:41"
+        },
+        {
+            "id": 72,
+            "user_id": 3,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-07-18 14:53:24"
+        },
+        {
+            "id": 73,
+            "user_id": 7,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2023-04-03 19:17:44"
+        },
+        {
+            "id": 74,
+            "user_id": 6,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-07-10 05:41:30"
+        },
+        {
+            "id": 75,
+            "user_id": 2,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-05-16 11:29:53"
+        },
+        {
+            "id": 76,
+            "user_id": 2,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-11-28 19:05:33"
+        },
+        {
+            "id": 77,
+            "user_id": 5,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-12-08 08:28:48"
+        },
+        {
+            "id": 78,
+            "user_id": 2,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2023-12-19 15:59:32"
+        },
+        {
+            "id": 79,
+            "user_id": 6,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-04-29 17:01:29"
+        },
+        {
+            "id": 80,
+            "user_id": 9,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-06-25 09:50:28"
+        },
+        {
+            "id": 81,
+            "user_id": 7,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-10-20 17:24:25"
+        },
+        {
+            "id": 82,
+            "user_id": 4,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2023-11-28 07:18:03"
+        },
+        {
+            "id": 83,
+            "user_id": 3,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2023-11-11 07:45:30"
+        },
+        {
+            "id": 84,
+            "user_id": 1,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2024-04-05 21:21:11"
+        },
+        {
+            "id": 85,
+            "user_id": 5,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-12-29 04:59:34"
+        },
+        {
+            "id": 86,
+            "user_id": 10,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-02-03 20:43:42"
+        },
+        {
+            "id": 87,
+            "user_id": 1,
+            "book_id": 8,
+            "actions": "view",
+            "timestamp": "2023-12-31 12:42:23"
+        },
+        {
+            "id": 88,
+            "user_id": 2,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2023-08-21 17:46:55"
+        },
+        {
+            "id": 89,
+            "user_id": 7,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-10-17 23:23:19"
+        },
+        {
+            "id": 90,
+            "user_id": 2,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2024-08-07 15:19:30"
+        },
+        {
+            "id": 91,
+            "user_id": 4,
+            "book_id": 5,
+            "actions": "view",
+            "timestamp": "2024-10-30 16:49:25"
+        },
+        {
+            "id": 92,
+            "user_id": 6,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2024-05-04 07:42:07"
+        },
+        {
+            "id": 93,
+            "user_id": 1,
+            "book_id": 4,
+            "actions": "view",
+            "timestamp": "2023-12-07 02:24:27"
+        },
+        {
+            "id": 94,
+            "user_id": 3,
+            "book_id": 2,
+            "actions": "view",
+            "timestamp": "2023-04-17 20:25:57"
+        },
+        {
+            "id": 95,
+            "user_id": 9,
+            "book_id": 6,
+            "actions": "view",
+            "timestamp": "2024-02-29 04:50:38"
+        },
+        {
+            "id": 96,
+            "user_id": 9,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-08-12 20:48:17"
+        },
+        {
+            "id": 97,
+            "user_id": 4,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2023-11-14 03:00:12"
+        },
+        {
+            "id": 98,
+            "user_id": 3,
+            "book_id": 7,
+            "actions": "view",
+            "timestamp": "2024-07-13 09:49:09"
+        },
+        {
+            "id": 99,
+            "user_id": 5,
+            "book_id": 3,
+            "actions": "view",
+            "timestamp": "2024-10-28 04:05:49"
+        },
+        {
+            "id": 100,
+            "user_id": 9,
+            "book_id": 1,
+            "actions": "view",
+            "timestamp": "2023-11-29 19:43:19"
+        }
+    ]
+}
