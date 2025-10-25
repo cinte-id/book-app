@@ -1,0 +1,10 @@
+version: 2
+
+sources: 
+  - name: stg_reading_progress
+    database: book-app-476105
+    schema: dataset_book
+    tables: 
+    - name: stg_reading_progress
+
+
