@@ -1,6 +1,6 @@
 # Book Tracker App
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library.
+A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
 
 <img src="./assets/home.png" height="200" alt="Home">
 <img src="./assets/library.png" height="200" alt="Library">
@@ -110,7 +110,7 @@ The frontend will be available at http://localhost:5173
 ## Project Structure
 
 ```
-book-tracker-app/
+book-app/
 ├── backend/
 │   └── app.py              # Flask backend API
 ├── frontend/
@@ -167,7 +167,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 # Test Instruction
 
 Hi there! 👋  
-Thanks for applying to our internship program.
+Thanks for applying to our company.
 
 This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
 You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
@@ -187,7 +187,7 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
 ## ✅ What to Do
 
 1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're confident in:
+2. **Pick ONE area** you're applying in:
    - Frontend
    - Backend
    - DevOps
@@ -195,75 +195,30 @@ If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided
    - Data
    - Project/Product Manager
    - UI/UX
+   - Customer Services
 3. **Work only in the part that fits your chosen role.**
 4. Push your code and include in your `README.md`:
    - Your chosen role
    - How to run/test your part
    - Any notes or decisions you made
-   - Create Merge Request to the main branch
+5. Create a Pull Request (PR) to the main branch of this repository
+6. Share the PR link with us for review
 
 ---
 
 ## 🔧 Tasks by Role
 
-### 🔹 Fullstack
-- Complete feature for Library > Browse page
-    - implement search by name and category
-    - add detail page
-- Bonus: Add more Essential feature
+Choose your role and follow the detailed task instructions:
 
-### 🔹 Frontend
-- Build a UI to:
-  - User Authentication
-  - User Settings
-  - User Insight
-- No need to connect to BE if API was not available. just create dummy page on FE
-- Bonus: Add more Essential feature
-
-### 🔹 Backend
-- Build a REST API that supports:
-  - Search and filtering
-  - Books added to user library
-- Use in-memory storage or simple JSON file
-- Bonus: Add input validation or simple auth
-
-### 🔹 DevOps
-- Use `backend/` or `frontend/` as the app to work on
-- Create:
-  - `Dockerfile`
-  - (Optional) `docker-compose.yml`
-  - (Optional) GitHub Actions CI (e.g., lint, test)
-- Bonus: Add environment config or deployment steps
-
-### 🔹 QA
-- Write test cases (unit/integration) for:
-  - API in `backend/`, or
-  - UI in `frontend/`
-- Tools you can use:
-  - Postman, Jest, Supertest, Cypress, Playwright, etc.
-- Bonus: Add a test report or coverage info
-
-### 🔹 UI/UX
-- Use Figma for Create new design for usecase User Authentication and User Settings/Profile
-- Bonus: Add more essential feature page
-
-### 🔹 Project/Product Manager
-- Create timeline if i need to add new checkout or payment feature
-    - task breakdown
-    - imagine you resource of 1 person for each role
-    - estimated time
-- Tools you can use:
-    - Notion, Any Project Management Tools
-- Delivery send document link to recruiter emails
-- Bonus: Add more timeline for other essential feature
-
-
-### 🔹 Data
-- Give me example dashboard using context or data related to book tracker apps that had feature
-    - Books library
-    - User Books Library
-    - Rent or Buy Books
-- Bonus: Output result as Graphic or add business related insight
+- [🔹 **Fullstack**](TASKS_FULLSTACK.md) - Complete Library Browse page features
+- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
+- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
+- [🔹 **DevOps**](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
+- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
+- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
+- [🔹 **Project/Product Manager**](TASKS_PM.md) - Create project timelines and task breakdowns
+- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
+- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
 
 ---
 
@@ -290,7 +245,11 @@ No need to overengineer — focus on clarity and your best work in a short time.
 
 ## 📩 Submission
 
-Once you're done, share your GitHub repo link with us.
+Once you're done:
+1. Create a Pull Request (PR) to the main branch of this repository
+2. Share the PR link with us for review
+
+**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
 
 Good luck, and have fun! 🚀
 

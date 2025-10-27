@@ -1,0 +1,20 @@
+version: 2
+
+models:
+    - name: dim_users
+      description: Cleansed table users.
+      columns:              
+          - name: id
+            description: Primary key for the product
+            tests:
+                - not_null
+                - unique
+
+    - name: dim_books
+      columns:
+          - name: id
+            description: Primary key for the fact inventory table
+            tests:
+                - not_null
+                - unique
+          

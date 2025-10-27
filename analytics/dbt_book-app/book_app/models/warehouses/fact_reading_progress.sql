@@ -1,0 +1,5 @@
+{{ config(materialized='table') }}
+
+select *,
+current_timestamp() as insertion_timestamp
+ from {{ source('stg_reading_progress','stg_reading_progress')}}
