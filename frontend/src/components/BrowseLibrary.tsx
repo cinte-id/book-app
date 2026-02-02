@@ -1,7 +1,7 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import api from '../services/api';
-import BookCard from './BookCard';
+import { Search, Filter, Star, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import api from "../services/api";
+import BookCard from "./BookCard";
 
 // Define the Book interface
 interface Book {
@@ -12,12 +12,12 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: "read" | "reading" | "want-to-read";
 }
 
 const BrowseLibrary = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("all");
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,12 +27,12 @@ const BrowseLibrary = () => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
-        const response = await api.get<Book[]>('/api/books');
+        const response = await api.get<Book[]>("/api/books");
         setBooks(response.data);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch books. Please try again later.');
-        console.error('Error fetching books:', err);
+        setError("Failed to fetch books. Please try again later.");
+        console.error("Error fetching books:", err);
       } finally {
         setLoading(false);
       }
@@ -42,13 +42,15 @@ const BrowseLibrary = () => {
   }, []);
 
   // Get unique genres from books
-  const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
+  const genres = ["all", ...new Set(books.map((book) => book.genre))];
+
   // Filter books based on search term and selected genre
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
+  const filteredBooks = books.filter((book) => {
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGenre =
+      selectedGenre === "all" || book.genre === selectedGenre;
     return matchesSearch && matchesGenre;
   });
 
@@ -56,17 +58,17 @@ const BrowseLibrary = () => {
   const handleAddBook = async (bookId: number) => {
     try {
       await api.put(`/api/books/${bookId}`, {
-        status: 'want-to-read'
+        status: "want-to-read",
       });
       // Update local state
-      setBooks(books.map(book => 
-        book.id === bookId 
-          ? { ...book, status: 'want-to-read' }
-          : book
-      ));
+      setBooks(
+        books.map((book) =>
+          book.id === bookId ? { ...book, status: "want-to-read" } : book,
+        ),
+      );
     } catch (err) {
-      console.error('Error adding book:', err);
-      setError('Failed to add book. Please try again.');
+      console.error("Error adding book:", err);
+      setError("Failed to add book. Please try again.");
     }
   };
 
@@ -115,18 +117,18 @@ const BrowseLibrary = () => {
             onClick={() => setSelectedGenre(genre)}
             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               selectedGenre === genre
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            {genre === 'all' ? 'All Genres' : genre}
+            {genre === "all" ? "All Genres" : genre}
           </button>
         ))}
       </div>
 
       {/* Results Count */}
       <p className="text-sm text-gray-600">
-        {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
+        {filteredBooks.length} book{filteredBooks.length !== 1 ? "s" : ""} found
       </p>
 
       {/* Books Grid */}
@@ -134,8 +136,8 @@ const BrowseLibrary = () => {
         {filteredBooks.map((book) => (
           <div key={book.id} className="relative">
             <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
-              <button 
+            {book.status === "want-to-read" ? (
+              <button
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
                 onClick={() => handleAddBook(book.id)}
               >

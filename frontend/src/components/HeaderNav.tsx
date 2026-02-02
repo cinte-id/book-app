@@ -1,5 +1,4 @@
-
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search } from "lucide-react";
 
 interface HeaderNavProps {
   activeTab: string;
@@ -8,11 +7,16 @@ interface HeaderNavProps {
 const HeaderNav = ({ activeTab }: HeaderNavProps) => {
   const getTitle = () => {
     switch (activeTab) {
-      case 'library': return 'My Library';
-      case 'discover': return 'Discover';
-      case 'reading': return 'Reading';
-      case 'profile': return 'Profile';
-      default: return 'BookTracker';
+      case "library":
+        return "My Library";
+      case "discover":
+        return "Discover";
+      case "reading":
+        return "Reading";
+      case "profile":
+        return "Profile";
+      default:
+        return "BookTracker";
     }
   };
 
@@ -21,7 +25,7 @@ const HeaderNav = ({ activeTab }: HeaderNavProps) => {
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">{getTitle()}</h1>
         <div className="flex items-center space-x-3">
-          {activeTab !== 'discover' && (
+          {activeTab !== "discover" && (
             <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors">
               <Search size={20} />
             </button>
