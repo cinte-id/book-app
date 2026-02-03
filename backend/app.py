@@ -60,7 +60,21 @@ def get_books():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
     
-    return jsonify(books)
+    # Get query parameters for filtering
+    genre = request.args.get('genre')
+    status = request.args.get('status')
+    
+    filtered_books = books
+    
+    # Filter by genre if provided
+    if genre and genre.lower() != 'all':
+        filtered_books = [b for b in filtered_books if b.get('genre', '').lower() == genre.lower()]
+    
+    # Filter by status if provided
+    if status and status.lower() != 'all':
+        filtered_books = [b for b in filtered_books if b.get('status', '').lower() == status.lower()]
+    
+    return jsonify(filtered_books)
 
 @app.route('/api/books', methods=['POST'])
 def add_book():
@@ -79,7 +93,24 @@ def add_book():
     save_books(books)  # Save to JSON file
     return jsonify(book), 201
 
-@app.route('/api/books/<int:book_id>', methods=['PUT', 'OPTIONS'])
+@app.route('/api/books/search', methods=['GET'])
+def search_books():
+    query = request.args.get('q', '').lower()
+    
+    if not query:
+        return jsonify(books)
+    
+    # Search by title, author, or genre
+    results = [
+        book for book in books 
+        if query in book.get('title', '').lower() 
+        or query in book.get('author', '').lower()
+        or query in book.get('genre', '').lower()
+    ]
+    
+    return jsonify(results)
+
+@app.route('/api/books/<int:book_id>', methods=['GET','PUT', 'OPTIONS'])
 def update_book(book_id):
     if request.method == 'OPTIONS':
         # Handle preflight request
@@ -88,6 +119,12 @@ def update_book(book_id):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
+
+    if request.method == 'GET':
+        for book in books:
+            if book['id'] == book_id:
+                return jsonify(book)
+        return jsonify({'error': 'Book not found'}), 404
     
     data = request.json
     for book in books:
