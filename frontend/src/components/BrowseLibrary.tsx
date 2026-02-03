@@ -42,13 +42,16 @@ const BrowseLibrary = () => {
   }, []);
 
   // Get unique genres from books
-  const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
+  const genres = ['all', ...new Set(books.map((book) => book.genre))];
+
   // Filter books based on search term and selected genre
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
+  const filteredBooks = books.filter((book) => {
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.genre.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGenre =
+      selectedGenre === 'all' || book.genre === selectedGenre;
     return matchesSearch && matchesGenre;
   });
 
@@ -56,14 +59,14 @@ const BrowseLibrary = () => {
   const handleAddBook = async (bookId: number) => {
     try {
       await api.put(`/api/books/${bookId}`, {
-        status: 'want-to-read'
+        status: 'want-to-read',
       });
       // Update local state
-      setBooks(books.map(book => 
-        book.id === bookId 
-          ? { ...book, status: 'want-to-read' }
-          : book
-      ));
+      setBooks(
+        books.map((book) =>
+          book.id === bookId ? { ...book, status: 'want-to-read' } : book,
+        ),
+      );
     } catch (err) {
       console.error('Error adding book:', err);
       setError('Failed to add book. Please try again.');
@@ -135,7 +138,7 @@ const BrowseLibrary = () => {
           <div key={book.id} className="relative">
             <BookCard book={book} variant="discover" />
             {book.status === 'want-to-read' ? (
-              <button 
+              <button
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
                 onClick={() => handleAddBook(book.id)}
               >

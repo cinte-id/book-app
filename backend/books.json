@@ -79,6 +79,16 @@
       "pages": 688,
       "genre": "Sci-Fi",
       "status": "reading"
+    },
+    {
+      "id": 9,
+      "title": "Harry Potter and the Sorcerer's Stone",
+      "author": "J.K. Rowling",
+      "cover": "https://covers.openlibrary.org/b/id/12749899-L.jpg",
+      "rating": 4.7,
+      "pages": 309,
+      "genre": "Sci-Fi",
+      "status": "read"
     }
   ]
 }
