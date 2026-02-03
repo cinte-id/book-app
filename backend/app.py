@@ -60,7 +60,36 @@ def get_books():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
     
-    return jsonify(books)
+    # Get query parameters
+    search_query = request.args.get('search', '').lower()
+    genre_filter = request.args.get('category', 'all') # frontend uses 'category' or 'genre'? check BrowseLibrary.tsx. It uses 'selectedGenre'. But query param name?
+    # Task says "implement search by name and category". 
+    
+    if genre_filter == 'all':
+        genre_filter = request.args.get('genre', 'all')
+
+    filtered_books = books
+    
+    if search_query:
+        filtered_books = [
+            book for book in filtered_books 
+            if search_query in book['title'].lower() or search_query in book['author'].lower()
+        ]
+        
+    if genre_filter != 'all':
+        filtered_books = [
+            book for book in filtered_books 
+            if book['genre'].lower() == genre_filter.lower()
+        ]
+    
+    return jsonify(filtered_books)
+
+@app.route('/api/books/<int:book_id>', methods=['GET'])
+def get_book_detail(book_id):
+    book = next((b for b in books if b['id'] == book_id), None)
+    if book:
+        return jsonify(book)
+    return jsonify({"error": "Book not found"}), 404
 
 @app.route('/api/books', methods=['POST'])
 def add_book():

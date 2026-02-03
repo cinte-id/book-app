@@ -1,15 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
 import HeaderNav from '../components/HeaderNav';
 import BrowseLibrary from '../components/BrowseLibrary';
-import { books, currentlyReading, readingStats } from '../data/dummyData';
+import { currentlyReading, readingStats, books } from '../data/dummyData';
+import api from '../services/api';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const [myBooks, setMyBooks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/api/books');
+        // Filter out books with 'discover' status for My Library
+        const libraryBooks = (response.data as any[]).filter((book: any) => book.status !== 'discover');
+        setMyBooks(libraryBooks);
+      } catch (err) {
+        console.error('Failed to fetch books:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (activeTab === 'library' && libraryView === 'my-books') {
+      fetchBooks();
+    }
+  }, [activeTab, libraryView]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -54,11 +78,19 @@ const Index = () => {
                     <Plus size={20} />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {books.slice(0, 6).map((book) => (
-                    <BookCard key={book.id} book={book} variant="library" />
-                  ))}
-                </div>
+                {loading ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    {myBooks.map((book) => (
+                      <Link key={book.id} to={`/books/${book.id}`}>
+                        <BookCard book={book} variant="library" />
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
               <BrowseLibrary />

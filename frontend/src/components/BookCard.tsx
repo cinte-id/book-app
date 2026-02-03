@@ -9,7 +9,7 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: 'read' | 'reading' | 'want-to-read' | 'discover';
 }
 
 interface BookCardProps {
@@ -17,7 +17,35 @@ interface BookCardProps {
   variant?: 'default' | 'compact' | 'library' | 'discover';
 }
 
+const getStatusConfig = (status: Book['status']) => {
+  switch (status) {
+    case 'read':
+      return {
+        className: 'bg-green-100 text-green-700',
+        label: 'Read'
+      };
+    case 'reading':
+      return {
+        className: 'bg-blue-100 text-blue-700',
+        label: 'Reading'
+      };
+    case 'want-to-read':
+      return {
+        className: 'bg-gray-100 text-gray-700',
+        label: 'Want to Read'
+      };
+    case 'discover':
+    default:
+      return {
+        className: 'bg-gray-50 text-gray-500',
+        label: 'Discover'
+      };
+  }
+};
+
 const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
+  const statusConfig = getStatusConfig(book.status);
+
   if (variant === 'compact') {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105">
