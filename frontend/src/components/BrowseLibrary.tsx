@@ -2,6 +2,7 @@ import { Search, Filter, Star, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import BookCard from './BookCard';
+import { Link } from 'react-router-dom';
 
 // Define the Book interface
 interface Book {
@@ -136,7 +137,9 @@ const BrowseLibrary = () => {
       <div className="space-y-3">
         {filteredBooks.map((book) => (
           <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
+            <Link to={`/books/${book.id}`}>
+              <BookCard book={book} variant="discover" />
+            </Link>
             {book.status === 'want-to-read' ? (
               <button
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"

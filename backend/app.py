@@ -62,6 +62,21 @@ def get_books():
     
     return jsonify(books)
 
+@app.route('/api/books/<int:book_id>', methods=['GET', 'OPTIONS'])
+def get_book_detail(book_id):
+    if request.method == 'OPTIONS':
+        response = jsonify({})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
+
+    for book in books:
+        if book['id'] == book_id:
+            return jsonify(book)
+
+    return jsonify({'error': 'Book not found'}), 404
+
 @app.route('/api/books', methods=['POST'])
 def add_book():
     data = request.json
