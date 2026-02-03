@@ -1,15 +1,123 @@
-import { useState } from 'react';
-import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Book, Search, User, TrendingUp, Plus, Library, Trash2 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
 import HeaderNav from '../components/HeaderNav';
 import BrowseLibrary from '../components/BrowseLibrary';
 import { books, currentlyReading, readingStats } from '../data/dummyData';
+import api from '../services/api';
+import { toast } from '@/hooks/use-toast';
+
+interface LibraryBook {
+  id: number;
+  title: string;
+  author: string;
+  cover: string;
+  rating: number;
+  pages: number;
+  genre: string;
+  status: 'read' | 'reading' | 'want-to-read' | 'catalog';
+}
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const location = useLocation();
+  const [myBooks, setMyBooks] = useState<LibraryBook[]>([]);
+  const [myBooksLoading, setMyBooksLoading] = useState(true);
+  const [myBooksError, setMyBooksError] = useState<string | null>(null);
+
+  const visibleMyBooks = myBooks.filter((book) => book.status !== 'catalog');
+
+  useEffect(() => {
+    const state = location.state as { activeTab?: string; libraryView?: string; refreshMyBooks?: boolean } | null;
+    if (state?.activeTab) {
+      setActiveTab(state.activeTab);
+    }
+    if (state?.libraryView) {
+      setLibraryView(state.libraryView);
+    }
+    if (state?.refreshMyBooks) {
+      fetchMyBooks();
+    }
+  }, [location.state]);
+
+  const fetchMyBooks = async () => {
+    try {
+      setMyBooksLoading(true);
+      const response = await api.get<LibraryBook[]>('/api/books');
+      setMyBooks(response.data);
+      setMyBooksError(null);
+    } catch (err) {
+      console.error('Error fetching my books:', err);
+      setMyBooksError('Failed to load your books.');
+    } finally {
+      setMyBooksLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMyBooks();
+  }, []);
+
+  const handleRemoveFromMyBooks = async (bookId: number) => {
+    try {
+      await api.put(`/api/books/${bookId}`, {
+        status: 'catalog'
+      });
+      setMyBooks((prev) =>
+        prev.map((book) =>
+          book.id === bookId ? { ...book, status: 'catalog' } : book
+        )
+      );
+      toast({
+        title: 'Removed from My Books',
+        description: 'Book moved back to catalog.',
+      });
+    } catch (err) {
+      console.error('Error removing book:', err);
+      setMyBooksError('Failed to remove book.');
+      toast({
+        title: 'Remove failed',
+        description: 'Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleUpdateMyBookStatus = async (bookId: number, status: LibraryBook['status']) => {
+    try {
+      await api.put(`/api/books/${bookId}`, { status });
+      setMyBooks((prev) => {
+        const exists = prev.some((book) => book.id === bookId);
+        if (!exists) {
+          fetchMyBooks();
+          return prev;
+        }
+        return prev.map((book) =>
+          book.id === bookId ? { ...book, status } : book
+        );
+      });
+    } catch (err) {
+      console.error('Error updating status:', err);
+      setMyBooksError('Failed to update status.');
+    }
+  };
+
+  const handleSyncMyBookStatus = (bookId: number, status: LibraryBook['status']) => {
+    setMyBooks((prev) => {
+      const exists = prev.some((book) => book.id === bookId);
+      if (!exists) {
+        fetchMyBooks();
+        return prev;
+      }
+      return prev.map((book) =>
+        book.id === bookId ? { ...book, status } : book
+      );
+    });
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -54,14 +162,42 @@ const Index = () => {
                     <Plus size={20} />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  {books.slice(0, 6).map((book) => (
-                    <BookCard key={book.id} book={book} variant="library" />
-                  ))}
-                </div>
+                {myBooksLoading ? (
+                  <div className="flex items-center justify-center h-48">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                  </div>
+                ) : myBooksError ? (
+                  <div className="text-center py-6 text-red-500">{myBooksError}</div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    {visibleMyBooks.map((book) => (
+                      <div key={book.id} className="relative">
+                        <Link
+                          to={`/books/${book.id}`}
+                          state={{ returnTo: '/', activeTab: 'library', libraryView: 'my-books' }}
+                          className="block"
+                        >
+                          <BookCard book={book} variant="library" />
+                        </Link>
+                        <button
+                          onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            handleRemoveFromMyBooks(book.id);
+                          }}
+                          className="absolute top-3 right-3 bg-white/90 text-gray-700 p-2 rounded-full hover:bg-white shadow"
+                          aria-label="Remove from My Books"
+                          title="Remove from My Books"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
-              <BrowseLibrary />
+              <BrowseLibrary onStatusChange={handleSyncMyBookStatus} />
             )}
           </div>
         );

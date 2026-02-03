@@ -18,7 +18,7 @@
       "rating": 4.8,
       "pages": 376,
       "genre": "Fiction",
-      "status": "read"
+      "status": "want-to-read"
     },
     {
       "id": 3,
@@ -28,7 +28,7 @@
       "rating": 4.6,
       "pages": 328,
       "genre": "Dystopian",
-      "status": "reading"
+      "status": "want-to-read"
     },
     {
       "id": 4,
@@ -48,7 +48,7 @@
       "rating": 3.8,
       "pages": 277,
       "genre": "Coming-of-age",
-      "status": "read"
+      "status": "want-to-read"
     },
     {
       "id": 6,
@@ -58,7 +58,7 @@
       "rating": 4.7,
       "pages": 309,
       "genre": "Fantasy",
-      "status": "read"
+      "status": "want-to-read"
     },
     {
       "id": 7,
@@ -78,7 +78,7 @@
       "rating": 4.3,
       "pages": 688,
       "genre": "Sci-Fi",
-      "status": "reading"
+      "status": "want-to-read"
     }
   ]
 }

@@ -1,7 +1,16 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
+import { Search, Filter, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import BookCard from './BookCard';
+import { toast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 // Define the Book interface
 interface Book {
@@ -12,12 +21,18 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: 'read' | 'reading' | 'want-to-read' | 'catalog';
 }
 
-const BrowseLibrary = () => {
+interface BrowseLibraryProps {
+  onStatusChange?: (bookId: number, status: Book['status']) => void;
+}
+
+const BrowseLibrary = ({ onStatusChange }: BrowseLibraryProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('all');
+  const [sortBy, setSortBy] = useState<'title' | 'rating' | 'pages'>('title');
+  const [filterOpen, setFilterOpen] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +67,16 @@ const BrowseLibrary = () => {
     return matchesSearch && matchesGenre;
   });
 
+  const sortedBooks = [...filteredBooks].sort((a, b) => {
+    if (sortBy === 'rating') {
+      return b.rating - a.rating;
+    }
+    if (sortBy === 'pages') {
+      return b.pages - a.pages;
+    }
+    return a.title.localeCompare(b.title);
+  });
+
   // Handle adding a book to library
   const handleAddBook = async (bookId: number) => {
     try {
@@ -64,9 +89,21 @@ const BrowseLibrary = () => {
           ? { ...book, status: 'want-to-read' }
           : book
       ));
+      if (onStatusChange) {
+        onStatusChange(bookId, 'want-to-read');
+      }
+      toast({
+        title: 'Added to My Books',
+        description: 'Book moved to your library.',
+      });
     } catch (err) {
       console.error('Error adding book:', err);
       setError('Failed to add book. Please try again.');
+      toast({
+        title: 'Add failed',
+        description: 'Please try again.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -90,7 +127,11 @@ const BrowseLibrary = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-800">Browse Library</h2>
-        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+        <button
+          className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+          onClick={() => setFilterOpen(true)}
+          aria-label="Open filters"
+        >
           <Filter size={20} />
         </button>
       </div>
@@ -124,6 +165,32 @@ const BrowseLibrary = () => {
         ))}
       </div>
 
+      <Dialog open={filterOpen} onOpenChange={setFilterOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Sort & Filter</DialogTitle>
+            <DialogDescription>Adjust how books are shown.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Sort by</label>
+              <select
+                value={sortBy}
+                onChange={(e) => {
+                  setSortBy(e.target.value as typeof sortBy);
+                  setFilterOpen(false);
+                }}
+                className="mt-2 w-full text-sm bg-white border border-gray-200 rounded-md px-3 py-2 text-gray-700"
+              >
+                <option value="title">Title</option>
+                <option value="rating">Rating</option>
+                <option value="pages">Pages</option>
+              </select>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Results Count */}
       <p className="text-sm text-gray-600">
         {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
@@ -131,19 +198,29 @@ const BrowseLibrary = () => {
 
       {/* Books Grid */}
       <div className="space-y-3">
-        {filteredBooks.map((book) => (
+        {sortedBooks.map((book) => (
           <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
+            <Link
+              to={`/books/${book.id}`}
+              state={{ returnTo: '/', activeTab: 'library', libraryView: 'browse' }}
+              className="block"
+            >
+              <BookCard book={book} variant="discover" />
+            </Link>
+            {book.status === 'catalog' ? (
               <button 
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
-                onClick={() => handleAddBook(book.id)}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  handleAddBook(book.id);
+                }}
               >
                 <Plus size={16} />
               </button>
             ) : (
               <div className="absolute top-4 right-4 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
-                {book.status}
+                {book.status === 'read' ? 'Read' : book.status === 'reading' ? 'Reading' : 'Want to Read'}
               </div>
             )}
           </div>
