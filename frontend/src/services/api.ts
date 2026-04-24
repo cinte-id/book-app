@@ -1,61 +1,102 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Get API configuration from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5001';
-const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || '10000');
-const IS_DEBUG = import.meta.env.VITE_ENABLE_DEBUG === 'true';
+// Dengan Vite proxy aktif, cukup pakai path relatif.
+// Request ke /api/... akan otomatis di-forward ke backend.
+const API_BASE_URL = "/";
+
+const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || "10000");
+const IS_DEBUG = import.meta.env.VITE_ENABLE_DEBUG === "true";
 
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  withCredentials: false, // Set to false for CORS
+  withCredentials: false,
   timeout: API_TIMEOUT,
 });
 
-// Add request interceptor for error handling
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
     if (IS_DEBUG) {
-      console.log('Making request to:', config.baseURL + config.url);
+      console.log("Making request to:", config.baseURL + config.url);
     }
     return config;
   },
   (error) => {
-    console.error('Request error:', error);
+    console.error("Request error:", error);
     return Promise.reject(error);
-  }
+  },
 );
 
-// Add response interceptor for error handling
+// Response interceptor
 api.interceptors.response.use(
   (response) => {
     if (IS_DEBUG) {
-      console.log('Response received:', response.status, response.statusText);
+      console.log("Response received:", response.status, response.statusText);
     }
     return response;
   },
   (error) => {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error('Response error:', {
+      console.error("Response error:", {
         status: error.response.status,
         statusText: error.response.statusText,
         data: error.response.data,
-        headers: error.response.headers
       });
     } else if (error.request) {
-      // The request was made but no response received
-      console.error('Request error - no response received:', error.request);
+      console.error("Request error - no response received:", error.request);
     } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
     }
     return Promise.reject(error);
-  }
+  },
 );
 
-export default api; 
+// ── typed helpers ────────────────────────────────────────────────────────────
+
+export interface Book {
+  id: number;
+  title: string;
+  author: string;
+  cover: string;
+  rating: number;
+  pages: number;
+  genre: string;
+  status: "read" | "reading" | "want-to-read";
+}
+
+export interface BooksParams {
+  search?: string;
+  genre?: string;
+  status?: string;
+}
+
+/** Fetch all books with optional search / genre / status filters */
+export const getBooks = (params: BooksParams = {}) => {
+  const query = new URLSearchParams();
+  if (params.search) query.append("search", params.search);
+  if (params.genre && params.genre !== "all")
+    query.append("genre", params.genre);
+  if (params.status) query.append("status", params.status);
+  const qs = query.toString();
+  return api.get<Book[]>(`/api/books${qs ? `?${qs}` : ""}`);
+};
+
+/** Fetch a single book by ID */
+export const getBookById = (id: number) => api.get<Book>(`/api/books/${id}`);
+
+/** Update a book's fields */
+export const updateBook = (id: number, data: Partial<Book>) =>
+  api.put<Book>(`/api/books/${id}`, data);
+
+/** Add a new book */
+export const createBook = (data: Omit<Book, "id">) =>
+  api.post<Book>("/api/books", data);
+
+/** Delete a book */
+export const deleteBook = (id: number) => api.delete(`/api/books/${id}`);
+
+export default api;
