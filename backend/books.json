@@ -58,7 +58,7 @@
       "rating": 4.7,
       "pages": 309,
       "genre": "Fantasy",
-      "status": "read"
+      "status": "want-to-read"
     },
     {
       "id": 7,
@@ -78,7 +78,7 @@
       "rating": 4.3,
       "pages": 688,
       "genre": "Sci-Fi",
-      "status": "reading"
+      "status": "want-to-read"
     }
   ]
 }

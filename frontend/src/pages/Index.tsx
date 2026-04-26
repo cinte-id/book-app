@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
+import { Book, Search, User, TrendingUp, Plus, Library, X } from 'lucide-react'; // Tambah icon X untuk hapus search
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
@@ -9,21 +9,25 @@ import { books, currentlyReading, readingStats } from '../data/dummyData';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
-  const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const [libraryView, setLibraryView] = useState('my-books');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Logika filter buku
+  const searchedBooks = books.filter(book => 
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const renderContent = () => {
     switch (activeTab) {
       case 'library':
         return (
           <div className="space-y-4">
-            {/* Library Navigation */}
             <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setLibraryView('my-books')}
                 className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                  libraryView === 'my-books'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                  libraryView === 'my-books' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                 }`}
               >
                 <Book size={16} />
@@ -32,9 +36,7 @@ const Index = () => {
               <button
                 onClick={() => setLibraryView('browse')}
                 className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                  libraryView === 'browse'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-800'
+                  libraryView === 'browse' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-800'
                 }`}
               >
                 <Library size={16} />
@@ -42,7 +44,6 @@ const Index = () => {
               </button>
             </div>
 
-            {/* Content based on selected view */}
             {libraryView === 'my-books' ? (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -65,6 +66,7 @@ const Index = () => {
             )}
           </div>
         );
+
       case 'discover':
         return (
           <div className="space-y-4">
@@ -72,18 +74,48 @@ const Index = () => {
               <Search className="absolute left-3 top-3 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search books..."
-                className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Search books or authors..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              {/* Tombol X untuk menghapus teks pencarian */}
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                >
+                  <X size={18} />
+                </button>
+              )}
             </div>
-            <h2 className="text-xl font-bold text-gray-800">Trending Now</h2>
+
+            {/* Judul dinamis berdasarkan status pencarian */}
+            <h2 className="text-xl font-bold text-gray-800">
+              {searchQuery ? `Results for "${searchQuery}"` : "Trending Now"}
+            </h2>
+
             <div className="space-y-3">
-              {books.slice(3, 8).map((book) => (
-                <BookCard key={book.id} book={book} variant="discover" />
-              ))}
+              {/* Tampilkan searchedBooks jika ada input, jika tidak tampilkan default */}
+              {searchQuery ? (
+                searchedBooks.length > 0 ? (
+                  searchedBooks.map((book) => (
+                    <BookCard key={book.id} book={book} variant="discover" />
+                  ))
+                ) : (
+                  <div className="text-center py-10">
+                    <p className="text-gray-500">No books found matching your search.</p>
+                  </div>
+                )
+              ) : (
+                books.slice(3, 8).map((book) => (
+                  <BookCard key={book.id} book={book} variant="discover" />
+                ))
+              )}
             </div>
           </div>
         );
+
       case 'reading':
         return (
           <div className="space-y-4">
@@ -95,6 +127,7 @@ const Index = () => {
             </div>
           </div>
         );
+
       case 'profile':
         return (
           <div className="space-y-6">
@@ -122,6 +155,7 @@ const Index = () => {
             </div>
           </div>
         );
+
       default:
         return (
           <div className="space-y-6">
@@ -158,11 +192,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 max-w-md mx-auto">
       <HeaderNav activeTab={activeTab} />
-      
       <main className="px-4 py-6 pb-20">
         {renderContent()}
       </main>
-
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>
   );
