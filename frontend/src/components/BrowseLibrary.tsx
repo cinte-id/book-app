@@ -1,7 +1,7 @@
 import { Search, Filter, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import BookCard from './BookCard';
+import BookCard from '../components/BookCard';
 import { useNavigate } from 'react-router-dom';
 
 interface Book {
