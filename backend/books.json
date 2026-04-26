@@ -8,7 +8,7 @@
       "rating": 4.2,
       "pages": 180,
       "genre": "Classic",
-      "status": "reading"
+      "status": "none"
     },
     {
       "id": 2,
@@ -18,7 +18,7 @@
       "rating": 4.8,
       "pages": 376,
       "genre": "Fiction",
-      "status": "want-to-read"
+      "status": "none"
     },
     {
       "id": 3,
@@ -28,7 +28,7 @@
       "rating": 4.6,
       "pages": 328,
       "genre": "Dystopian",
-      "status": "reading"
+      "status": "none"
     },
     {
       "id": 4,
@@ -38,7 +38,7 @@
       "rating": 4.4,
       "pages": 432,
       "genre": "Romance",
-      "status": "want-to-read"
+      "status": "none"
     },
     {
       "id": 5,
@@ -78,7 +78,7 @@
       "rating": 4.3,
       "pages": 688,
       "genre": "Sci-Fi",
-      "status": "want-to-read"
+      "status": "none"
     }
   ]
 }

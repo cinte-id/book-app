@@ -5,28 +5,26 @@ import json
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+# 1. INITIALIZATION
 load_dotenv()
-
 app = Flask(__name__)
 
-# Get configuration from environment variables
+# Konfigurasi dari .env
 FLASK_HOST = os.getenv('FLASK_HOST', '0.0.0.0')
 FLASK_PORT = int(os.getenv('FLASK_PORT', 5001))
 FLASK_DEBUG = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
-CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:8080,http://localhost:5173').split(',')
 DATA_FILE = os.getenv('DATA_FILE', 'books.json')
-SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
+SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-tania-sija')
 
 app.secret_key = SECRET_KEY
 
-# Configure CORS
+# 2. CORS CONFIGURATION (Full Access for Development)
 CORS(app, 
-     origins="*", # Izinkan semua origin sementara
+     origins="*", 
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
      allow_headers=["Content-Type", "Authorization"])
 
-# Load books from JSON file
+# 3. HELPER FUNCTIONS (Database JSON)
 def load_books():
     try:
         if not os.path.exists(DATA_FILE):
@@ -37,90 +35,101 @@ def load_books():
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-# Save books to JSON file
 def save_books(books_data):
     with open(DATA_FILE, 'w') as f:
         json.dump({'books': books_data}, f, indent=2)
 
-# GET Books
+# 4. API ROUTES
+
+# GET ALL BOOKS (Browse & Filter)
 @app.route('/api/books', methods=['GET', 'OPTIONS'])
 def get_books():
-    if request.method == 'OPTIONS':
-        return jsonify({})
-    
-    # Selalu load data terbaru dari file
+    if request.method == 'OPTIONS': return jsonify({})
     all_books = load_books()
     
-    # Ambil parameter query dari URL 
     search_query = request.args.get('search', '').lower()
     genre_filter = request.args.get('genre', '').lower()
     
     filtered_books = all_books
     
-    # 1. Logika Filter Pencarian (Judul atau Penulis)
     if search_query:
-        filtered_books = [
-            b for b in filtered_books 
-            if search_query in b.get('title', '').lower() or 
-               search_query in b.get('author', '').lower()
-        ]
-        
-    # 2. Logika Filter Genre
+        filtered_books = [b for b in filtered_books if search_query in b.get('title', '').lower() or search_query in b.get('author', '').lower()]
+    
     if genre_filter and genre_filter != 'all':
-        filtered_books = [
-            b for b in filtered_books 
-            if b.get('genre', '').lower() == genre_filter
-        ]
-    print(f"DEBUG: Data yang dikirim -> {filtered_books}") 
-    return jsonify(list(filtered_books)) 
+        filtered_books = [b for b in filtered_books if b.get('genre', '').lower() == genre_filter]
+        
+    return jsonify(list(filtered_books))
 
-# Detail
+# GET DETAIL (Trigger: Update to 'reading')
 @app.route('/api/books/<int:book_id>', methods=['GET'])
 def get_book_detail(book_id):
     all_books = load_books()
     book = next((b for b in all_books if b['id'] == book_id), None)
+    
     if book:
+        # LOGIKA: Jika user buka detail buku yang masih 'want-to-read', ubah ke 'reading'
+        if book.get('status') == 'want-to-read':
+            book['status'] = 'reading'
+            save_books(all_books)
+            
         return jsonify(book)
     return jsonify({'error': 'Book not found'}), 404
 
+# POST ADD BOOK (Trigger: Set to 'want-to-read')
 @app.route('/api/books', methods=['POST'])
 def add_book():
     all_books = load_books()
     data = request.json
+    
+    # ID Auto Increment sederhana
+    new_id = max([b['id'] for b in all_books], default=0) + 1
+    
     book = {
-        'id': max([b['id'] for b in all_books], default=0) + 1,
+        'id': new_id,
         'title': data.get('title'),
         'author': data.get('author'),
         'cover': data.get('cover', ''),
         'rating': data.get('rating', 0),
         'pages': data.get('pages', 0),
         'genre': data.get('genre', ''),
-        'status': data.get('status', 'want-to-read')
+        # Default saat klik Tambah adalah 'want-to-read'
+        'status': data.get('status', 'want-to-read'),
+        'completed_at': None,
+        'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
+    
     all_books.append(book)
     save_books(all_books)
     return jsonify(book), 201
 
+# PUT UPDATE (Trigger: Set to 'read' & Record History)
 @app.route('/api/books/<int:book_id>', methods=['PUT', 'OPTIONS'])
 def update_book(book_id):
-    if request.method == 'OPTIONS':
-        return jsonify({})
+    if request.method == 'OPTIONS': return jsonify({})
     
     all_books = load_books()
     data = request.json
+    
     for book in all_books:
         if book['id'] == book_id:
-            book['title'] = data.get('title', book.get('title'))
-            book['author'] = data.get('author', book.get('author'))
-            book['cover'] = data.get('cover', book.get('cover'))
+            old_status = book.get('status')
+            new_status = data.get('status', old_status)
+            
+            # LOGIKA HISTORY: Jika status berubah jadi 'read', catat tanggalnya
+            if new_status == 'read' and old_status != 'read':
+                book['completed_at'] = datetime.now().strftime("%d %B %Y, %H:%M")
+            
+            # Update data lainnya
+            book['status'] = new_status
             book['rating'] = data.get('rating', book.get('rating'))
-            book['pages'] = data.get('pages', book.get('pages'))
-            book['genre'] = data.get('genre', book.get('genre'))
-            book['status'] = data.get('status', book.get('status'))
+            book['pages_read'] = data.get('pages_read', book.get('pages_read', 0))
+            
             save_books(all_books)
             return jsonify(book)
+            
     return jsonify({'error': 'Book not found'}), 404
 
+# DELETE BOOK
 @app.route('/api/books/<int:book_id>', methods=['DELETE'])
 def delete_book(book_id):
     all_books = load_books()
@@ -130,6 +139,7 @@ def delete_book(book_id):
         return jsonify({'message': 'Book deleted'})
     return jsonify({'error': 'Book not found'}), 404
 
+# 5. SERVER RUN
 if __name__ == '__main__':
-    print(f"Starting Flask server on http://{FLASK_HOST}:{FLASK_PORT}")
+    print(f" Backend aktif di http://{FLASK_HOST}:{FLASK_PORT}")
     app.run(debug=FLASK_DEBUG, port=FLASK_PORT, host=FLASK_HOST)

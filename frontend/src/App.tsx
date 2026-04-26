@@ -13,12 +13,12 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster /> {/* Ini bawaan shadcn */}
-      <Sonner position="top-center" /> {/* Ini yang akan kita pakai buat notif modern */}
+      <Toaster /> 
+      <Sonner position="top-center" /> 
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/book/:id" element={<BookDetail />} />
+          <Route path="/book-detail/:id" element={<BookDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

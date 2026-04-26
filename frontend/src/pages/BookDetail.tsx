@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, BookOpen, Star, Heart, CheckCircle, XCircle, Clock, Library } from 'lucide-react';
-import { toast } from "sonner"; // Pakai sonner
-import api from '../services/api';
+import { ArrowLeft, BookOpen, Star, Heart, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { toast } from "sonner";
+import api, { fetchBookById, updateBookStatus } from '../services/api';
 
 const BookDetail = () => {
   const { id } = useParams();
@@ -13,10 +13,15 @@ const BookDetail = () => {
 
   const fetchDetail = async () => {
     try {
-      const res = await api.get(`/api/books/${id}`);
+      if (!id) return;
+      const res = await fetchBookById(id);
       setBook(res.data);
+      
+      // Ikon hati menyala jika statusnya 'reading' ATAU 'want-to-read'
+      setIsFavorite(res.data.status === 'reading' || res.data.status === 'want-to-read');
+      
     } catch (err) {
-      toast.error("Gagal memuat detail buku");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -26,22 +31,37 @@ const BookDetail = () => {
     fetchDetail();
   }, [id]);
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    if (!isFavorite) {
-      toast.success("Ditambahkan ke Favorit! 💖");
-    } else {
-      toast("Dihapus dari Favorit 💔");
+  const toggleFavorite = async () => {
+    try {
+      if (!id || !book) return;
+
+      let newStatus;
+      if (isFavorite) {
+        // Jika sedang 'reading', kita tidak mau hapus statusnya hanya karena klik Love.
+        // Tapi jika user ingin benar-benar menghapus dari saved:
+        newStatus = 'none';
+        toast("Removed from My Library");
+      } else {
+        // Jika belum saved, jadikan 'want-to-read'
+        newStatus = 'want-to-read';
+        toast.success("Added to My Library!");
+      }
+      
+      await updateBookStatus(id, newStatus);
+      setIsFavorite(!isFavorite);
+      fetchDetail(); 
+    } catch (err) {
+      toast.error("Failed to update library");
     }
   };
 
-  const handleUpdateStatus = async (newStatus: string) => {
-    // Jika membatalkan, gunakan toast konfirmasi (fitur Sonner)
-    if (book.status === 'reading' && newStatus === 'none') {
-      toast("Yakin ingin membatalkan progres?", {
+  const handleUpdateStatus = async (newStatus: 'reading' | 'none' | 'want-to-read') => {
+    // Jika user klik "Berhenti Membaca", kita kembalikan ke 'want-to-read' (agar tetap tersimpan/saved)
+    if (newStatus === 'none' && book.status === 'reading') {
+      toast("Stopped reading? The book is still in your library.", {
         action: {
-          label: "Ya, Batalkan",
-          onClick: () => processUpdate('want-to-read')
+          label: "Yes, Stop",
+          onClick: () => processUpdate('want-to-read') 
         },
       });
       return;
@@ -49,32 +69,39 @@ const BookDetail = () => {
     await processUpdate(newStatus);
   };
 
-  const processUpdate = async (status: string) => {
+  const processUpdate = async (status: any) => {
     try {
-      await api.put(`/api/books/${id}`, { status });
-      toast.success(status === 'reading' ? "Mulai membaca! Semangat! 📖" : "Status diperbarui");
-      fetchDetail();
+      if (!id) return;
+      await updateBookStatus(id, status);
+      const successMsg = status === 'reading' ? "Started reading! Keep it up! 📖" : "Status updated ✨";
+      toast.success(successMsg);
+      fetchDetail(); 
     } catch (err) {
-      toast.error("Gagal memperbarui status");
+        console.error(err);
     }
   };
 
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 space-y-4">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+      <p className="text-gray-400 text-sm">Preparing page...</p>
     </div>
   );
 
-  if (!book) return <div className="text-center p-10">Buku tidak ditemukan!</div>;
+  if (!book) return (
+    <div className="text-center p-10">
+      <p className="text-gray-500 mb-4">Book not found!</p>
+      <button onClick={() => navigate('/')} className="text-blue-500 font-bold">Back to Home</button>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 max-w-md mx-auto relative pb-20">
-      {/* Navigasi Atas */}
+    <div className="min-h-screen bg-gray-50 max-w-md mx-auto relative pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="sticky top-0 bg-white/80 backdrop-blur-md z-10 px-4 py-4 flex items-center justify-between border-b border-gray-100">
-        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full">
+        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <ArrowLeft size={20} className="text-gray-700" />
         </button>
-        <h2 className="text-lg font-bold text-gray-800">Detail Buku</h2>
+        <h2 className="text-lg font-bold text-gray-800">Book Detail</h2>
         <button 
           onClick={toggleFavorite}
           className={`p-2 rounded-full transition-all ${isFavorite ? 'bg-pink-50 text-pink-500' : 'text-gray-300'}`}
@@ -84,76 +111,80 @@ const BookDetail = () => {
       </div>
 
       <main className="px-6 py-8">
-        {/* Cover Buku */}
         <div className="flex justify-center mb-8">
-          <div className="relative">
+          <div className="relative group">
             <img 
               src={book.cover} 
               alt={book.title}
-              className="w-44 h-64 object-cover rounded-[2rem] shadow-2xl border-4 border-white"
+              className="w-48 h-64 object-cover rounded-[2.5rem] shadow-2xl border-4 border-white transition-transform group-hover:scale-105 duration-300"
             />
             {book.status === 'reading' && (
-              <div className="absolute -top-2 -right-2 bg-orange-500 text-white p-2 rounded-full shadow-lg">
-                <Clock size={16} />
+              <div className="absolute -top-2 -right-2 bg-orange-500 text-white p-2.5 rounded-full shadow-lg border-2 border-white animate-bounce">
+                <Clock size={18} />
+              </div>
+            )}
+            {book.status === 'want-to-read' && (
+              <div className="absolute -top-2 -right-2 bg-blue-500 text-white p-2.5 rounded-full shadow-lg border-2 border-white">
+                <CheckCircle size={18} />
               </div>
             )}
           </div>
         </div>
 
-        {/* Info Buku */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-extrabold text-gray-800 leading-tight mb-1">{book.title}</h1>
-          <p className="text-blue-500 font-semibold">{book.author}</p>
+          <h1 className="text-2xl font-extrabold text-gray-800 leading-tight mb-2">{book.title}</h1>
+          <div className="inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold">
+            {book.author}
+          </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-3">
-            <div className="p-2 bg-blue-50 text-blue-500 rounded-xl">
+          <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex items-center space-x-3">
+            <div className="p-2.5 bg-blue-50 text-blue-500 rounded-2xl">
               <BookOpen size={20} />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-bold uppercase">Halaman</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Pages</p>
               <p className="text-base font-bold text-gray-800">{book.pages}</p>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-3">
-            <div className="p-2 bg-yellow-50 text-yellow-500 rounded-xl">
+          <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 flex items-center space-x-3">
+            <div className="p-2.5 bg-yellow-50 text-yellow-500 rounded-2xl">
               <Star size={20} fill="currentColor" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-bold uppercase">Rating</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Rating</p>
               <p className="text-base font-bold text-gray-800">{book.rating}/5.0</p>
             </div>
           </div>
         </div>
 
-        {/* Sinopsis */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 mb-8">
-          <h3 className="text-md font-bold text-gray-800 mb-3">Sinopsis</h3>
-          <p className="text-gray-600 leading-relaxed text-sm">
-            {book.description || "Belum ada sinopsis untuk buku ini."}
+        <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 mb-8">
+          <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-widest">Synopsis</h3>
+          <p className="text-gray-600 leading-relaxed text-sm italic">
+            {book.description || "No synopsis available for this book."}
           </p>
         </div>
 
-        {/* Tombol Aksi */}
-        {book.status === 'reading' ? (
-          <button 
-            onClick={() => handleUpdateStatus('none')}
-            className="w-full bg-white text-red-500 py-4 rounded-2xl font-bold border-2 border-red-50 flex items-center justify-center space-x-2 active:scale-95 transition-all"
-          >
-            <XCircle size={20} />
-            <span>Batalkan Membaca</span>
-          </button>
-        ) : (
-          <button 
-            onClick={() => handleUpdateStatus('reading')}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 flex items-center justify-center space-x-2 active:scale-95 transition-all"
-          >
-            <CheckCircle size={20} />
-            <span>Mulai Membaca</span>
-          </button>
-        )}
+        <div className="fixed bottom-6 left-0 right-0 px-6 max-w-md mx-auto">
+          {book.status === 'reading' ? (
+            <button 
+              onClick={() => handleUpdateStatus('none')}
+              className="w-full bg-white text-red-500 py-4 rounded-2xl font-bold border-2 border-red-50 shadow-xl flex items-center justify-center space-x-2 active:scale-95 transition-all"
+            >
+              <XCircle size={20} />
+              <span>Stop Reading</span>
+            </button>
+          ) : (
+            <button 
+              onClick={() => handleUpdateStatus('reading')}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-bold shadow-xl flex items-center justify-center space-x-2 active:scale-95 transition-all"
+            >
+              <CheckCircle size={20} />
+              <span>Start Reading</span>
+            </button>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { Star, BookOpen, Clock } from 'lucide-react';
 
 interface Book {
@@ -15,16 +14,38 @@ interface Book {
 interface BookCardProps {
   book: Book;
   variant?: 'default' | 'compact' | 'library' | 'discover';
+  onClick?: () => void; // Tambahkan ini
+  onToggleFavorite?: () => void; // Tambahkan ini jika dibutuhkan
 }
 
-const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
+const BookCard = ({ book, variant = 'default', onClick }: BookCardProps) => {
+  // Helper to render the cover or the gradient fallback
+  const RenderCover = ({ className, iconSize }: { className: string; iconSize: number }) => (
+    <div className={`${className} relative overflow-hidden`}>
+      {book.cover ? (
+        <img 
+          src={book.cover} 
+          alt={book.title} 
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <BookOpen className="opacity-40" size={iconSize} />
+        </div>
+      )}
+    </div>
+  );
+
+  const cardStyle = "cursor-pointer transition-all duration-200 active:scale-95";
+
   if (variant === 'compact') {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105">
+      <div 
+        onClick={onClick} 
+        className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:scale-105 ${cardStyle}`}
+      >
         <div className="aspect-[3/4] bg-gradient-to-br from-blue-100 to-purple-100 relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <BookOpen className="text-blue-500" size={32} />
-          </div>
+          <RenderCover className="w-full h-full" iconSize={32} />
           <div className="absolute top-2 right-2 bg-white/90 rounded-full px-2 py-1">
             <span className="text-xs font-medium text-gray-700">{book.rating}★</span>
           </div>
@@ -39,11 +60,12 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
 
   if (variant === 'library') {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div 
+        onClick={onClick} 
+        className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden ${cardStyle}`}
+      >
         <div className="aspect-[3/4] bg-gradient-to-br from-green-100 to-blue-100 relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <BookOpen className="text-green-500" size={28} />
-          </div>
+          <RenderCover className="w-full h-full" iconSize={28} />
           <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium ${
             book.status === 'read' ? 'bg-green-100 text-green-700' :
             book.status === 'reading' ? 'bg-blue-100 text-blue-700' :
@@ -69,11 +91,15 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
 
   if (variant === 'discover') {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200">
+      <div 
+        onClick={onClick} 
+        className={`bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md ${cardStyle}`}
+      >
         <div className="flex space-x-3">
-          <div className="w-16 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center flex-shrink-0">
-            <BookOpen className="text-purple-500" size={24} />
-          </div>
+          <RenderCover 
+            className="w-16 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex-shrink-0" 
+            iconSize={24} 
+          />
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-gray-800 mb-1 line-clamp-2">{book.title}</h3>
             <p className="text-sm text-gray-600 mb-2">{book.author}</p>
@@ -93,11 +119,15 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div 
+      onClick={onClick} 
+      className={`bg-white rounded-xl shadow-sm border border-gray-100 p-4 ${cardStyle}`}
+    >
       <div className="flex space-x-4">
-        <div className="w-20 h-28 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <BookOpen className="text-blue-500" size={28} />
-        </div>
+        <RenderCover 
+          className="w-20 h-28 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex-shrink-0" 
+          iconSize={28} 
+        />
         <div className="flex-1">
           <h3 className="font-semibold text-gray-800 mb-1">{book.title}</h3>
           <p className="text-sm text-gray-600 mb-2">{book.author}</p>
