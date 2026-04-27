@@ -110,9 +110,9 @@ export const currentlyReading = [
 ];
 
 export const readingStats = {
-  totalBooks: 47,
+  totalBooks: 8,
   currentStreak: 12,
-  avgRating: 4.3,
+  avgRating: 4.5,
   pagesThisWeek: 245,
   booksThisMonth: 3,
   favoriteGenre: "Science Fiction"
