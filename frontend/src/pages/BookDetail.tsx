@@ -63,7 +63,7 @@ const BookDetail = () => {
         );
     }
 
-    // ── error ─────────────────────────────────────────────────────────────────
+    // ── Error ─────────────────────────────────────────────────────────────────
     if (error || !book) {
         return (
             <div className="min-h-screen bg-gray-50 max-w-md mx-auto flex flex-col items-center justify-center px-4">
