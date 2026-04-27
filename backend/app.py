@@ -45,7 +45,7 @@ def save_books(books_data):
 # Initialize books from JSON file
 books = load_books()
 
-# ── routes ───────────────────────────────────────────────────────────────────
+# ── Routes ───────────────────────────────────────────────────────────────────
 
 @app.route('/api/test', methods=['GET', 'OPTIONS'])
 def test_cors():
