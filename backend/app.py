@@ -61,7 +61,7 @@ def get_books():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
-    # ── Search & filter query params ──────────────────────────────────────
+    # ── Search & Filter query params ──────────────────────────────────────
     search = request.args.get('search', '').strip().lower()
     genre  = request.args.get('genre', '').strip().lower()
     status = request.args.get('status', '').strip().lower()
