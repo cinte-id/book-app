@@ -114,7 +114,7 @@ const BrowseLibrary = ({ books, onBooksChange }: BrowseLibraryProps) => {
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
-                        {genre === 'all' ? 'Semua Genre' : genre}
+                        {genre === 'all' ? 'All Genre' : genre}
                     </button>
                 ))}
             </div>
