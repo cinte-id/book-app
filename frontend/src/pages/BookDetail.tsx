@@ -226,7 +226,7 @@ const BookDetail = () => {
                                 ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                 : <Plus size={15} />
                             }
-                            Tambah
+                            Add
                         </button>
                     </div>
                 )}
@@ -237,9 +237,9 @@ const BookDetail = () => {
                         <p className="text-sm font-medium text-gray-700">Ubah Status Bacaan</p>
                         {(
                             [
-                                { status: 'want-to-read' as const, label: 'Ingin Dibaca', Icon: Clock, color: 'border-gray-300 text-gray-700 hover:bg-gray-50' },
-                                { status: 'reading' as const, label: 'Sedang Dibaca', Icon: BookMarked, color: 'border-blue-300 text-blue-700 hover:bg-blue-50' },
-                                { status: 'read' as const, label: 'Sudah Dibaca', Icon: CheckCircle, color: 'border-green-300 text-green-700 hover:bg-green-50' },
+                                { status: 'want-to-read' as const, label: 'Want to Read', Icon: Clock, color: 'border-gray-300 text-gray-700 hover:bg-gray-50' },
+                                { status: 'reading' as const, label: 'Reading', Icon: BookMarked, color: 'border-blue-300 text-blue-700 hover:bg-blue-50' },
+                                { status: 'read' as const, label: 'Read', Icon: CheckCircle, color: 'border-green-300 text-green-700 hover:bg-green-50' },
                             ] as const
                         ).map(({ status, label, Icon, color }) => (
                             <button
