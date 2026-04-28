@@ -1,5 +1,5 @@
-import { Search, Plus, Loader2, Check } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { Search, Plus, Loader2, Check, Clock, CheckCircle } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 import api, { fetchBooks, updateBookStatus } from '../services/api';
 import BookCard from '../components/BookCard';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,13 @@ interface Book {
   status: 'read' | 'reading' | 'want-to-read' | 'none';
 }
 
-const BrowseLibrary = () => {
+interface BrowseLibraryProps {
+  onBookAdded?: () => void;
+  onBookClick?: (id: number | string) => void;
+}
+
+
+const BrowseLibrary = ({ onBookAdded, onBookClick }: BrowseLibraryProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('all');
   const [books, setBooks] = useState<Book[]>([]);
@@ -24,8 +30,8 @@ const BrowseLibrary = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // 1. Fungsi Load Data menggunakan fungsi yang sudah kita buat di api.ts
-  const loadData = async () => {
+  // 1. Load Data
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetchBooks(
@@ -34,49 +40,52 @@ const BrowseLibrary = () => {
       );
       
       const dataX = response.data;
-      const finalData = Array.isArray(dataX) ? dataX : (dataX.books || []);
+      const finalData: Book[] = Array.isArray(dataX) ? dataX : (dataX.books || []);
       
       setBooks(finalData);
 
-      // Ambil list genre secara dinamis dari data buku
-      if (availableGenres.length <= 1 && finalData.length > 0) {
-        const genres = ['all', ...new Set(finalData.map((b: any) => b.genre))];
-        setAvailableGenres(genres as string[]);
-      }
+      setAvailableGenres(prevGenres => {
+        if (prevGenres.length <= 1 && finalData.length > 0) {
+          return ['all', ...new Set(finalData.map((b: Book) => b.genre))];
+        }
+        return prevGenres;
+      });
+
     } catch (err) {
-      // Error sudah dihandle oleh Interceptor API (toast otomatis muncul)
       console.error('Browse Error:', err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm, selectedGenre]); 
 
-  // 2. Debounce Search agar tidak spam request ke server
+  // 2. Debounce Search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       loadData();
     }, 400);
     return () => clearTimeout(timeoutId);
-  }, [searchTerm, selectedGenre]);
+  }, [loadData]);
 
-  // 3. Handle Tambah ke Library
+  // 3. Handle Add Book
   const handleAddBook = async (bookId: number, title: string) => {
     try {
+      // Set status to 'want-to-read'
       await updateBookStatus(bookId, 'want-to-read');
       
-      // Update UI local agar langsung berubah tanpa reload
+      // Update UI local SAVED
       setBooks(prev => prev.map(b => 
         b.id === bookId ? { ...b, status: 'want-to-read' } : b
       ));
       
-      toast.success(`"${title}" Your book has been saved to the library!`);
+      toast.success(`"${title}" added to your collection!`);
+      if (onBookAdded) onBookAdded();
     } catch (err) {
-      // Error dihandle interceptor
+      toast.error("Failed to add book");
     }
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-500">
+    <div className="space-y-5 animate-in fade-in duration-500 pb-32">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight">Discover</h2>
       </div>
@@ -105,41 +114,40 @@ const BrowseLibrary = () => {
                 : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
             }`}
           >
-            {genre === 'all' ? 'Semua Genre' : genre}
+            {genre === 'all' ? 'All Genre' : genre}
           </button>
         ))}
       </div>
 
-      {/* Loading and Empty State */}
+      {/* List Buku */}
       <div className="space-y-4">
         {loading && books.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-20 space-y-3">
             <Loader2 className="animate-spin text-blue-500" size={32} />
-            <p className="text-gray-400 text-sm italic">Searching your favorite books...</p>
+            <p className="text-gray-400 text-sm italic">Finding books for you...</p>
           </div>
         ) : (
           books.map((book) => (
-            <div key={book.id} className="relative group transition-all duration-300 active:scale-[0.98]">
-              <div className="relative group transition-all duration-300 active:scale-[0.98]">
+            <div key={book.id} className="relative group transition-all duration-300">
               <BookCard 
                 book={book} 
                 variant="discover" 
                 onClick={() => navigate(`/book-detail/${book.id}`)} 
-              /></div>
+              />
 
               {/* Status Button Overlay */}
-              <div className="absolute top-4 right-4">
+              <div className="absolute top-4 right-4 z-10">
                 {book.status === 'want-to-read' ? (
-                  <div className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-blue-100 shadow-sm">
+                  <div className="bg-pink-50 text-pink-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-pink-100 shadow-sm">
                     <Check size={12} /> SAVED
                   </div>
                 ) : book.status === 'reading' ? (
-                  <div className="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl text-[10px] font-bold border border-orange-100">
-                    READING
+                  <div className="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-orange-100">
+                    <Clock size={12} /> READING
                   </div>
                 ) : book.status === 'read' ? (
-                  <div className="bg-green-50 text-green-600 px-3 py-1.5 rounded-xl text-[10px] font-bold border border-green-100">
-                    FINISHED
+                  <div className="bg-green-50 text-green-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-green-100">
+                    <CheckCircle size={12} /> FINISHED
                   </div>
                 ) : (
                   <button 
@@ -158,8 +166,8 @@ const BrowseLibrary = () => {
         )}
 
         {books.length === 0 && !loading && (
-          <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-            <p className="text-gray-400">Sorry, we couldn’t find the book you’re looking for.</p>
+          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
+            <p className="text-gray-400 text-sm">No books found in this genre.</p>
           </div>
         )}
       </div>

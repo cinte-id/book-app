@@ -1,15 +1,16 @@
 import { BookOpen, Play } from 'lucide-react';
-import { updateBookProgress } from '../services/api'; // Pastikan fungsi ini ada di api.ts
-import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
+// Interface sesuai backend (snake_case)
 interface BookProgress {
   id: number;
   title: string;
   author: string;
-  currentPage: number;
-  totalPages: number;
-  lastRead: string;
+  current_page: number; 
+  pages: number;        
   cover?: string;
+  completed_at?: string; 
+  status: string;
 }
 
 interface ProgressCardProps {
@@ -18,74 +19,74 @@ interface ProgressCardProps {
   onUpdate?: () => void; 
 }
 
-const ProgressCard = ({ book, onClick, onUpdate }: ProgressCardProps) => {
-  
-  const progress = book.totalPages > 0 ? (book.currentPage / book.totalPages) * 100 : 0;
-  
-  const handleUpdateProgress = async (e: React.MouseEvent) => {
-    e.stopPropagation(); 
-    
-    const newPage = prompt(`Which page are you currently on? (Total: ${book.totalPages})`, book.currentPage.toString());
-    
-    if (newPage !== null) {
-      const pageNum = parseInt(newPage);
-      
-      if (isNaN(pageNum) || pageNum < 0 || pageNum > book.totalPages) {
-        toast.error(`Invalid page number! Please enter a number between 0 and ${book.totalPages}`);
-        return;
-      }
+const ProgressCard = ({ book, onUpdate }: ProgressCardProps) => {
+  const navigate = useNavigate();
 
-      try {
-        // Panggil API untuk update progress
-        await updateBookProgress(book.id, pageNum); 
-        toast.success(`Progress updated to page ${pageNum} ✨`);
-        
-        // Panggil onUpdate agar Index.tsx refresh data terbaru
-        if (onUpdate) onUpdate(); 
-      } catch (err) {
-        toast.error("Couldn’t update your reading progress. Please try again.");
-      }
-    }
+  // Hitung progress
+  const total = book.pages || 0;
+  const current = Math.min(book.current_page || 0, total);
+  const progress = total > 0 ? (current / total) * 100 : 0;
+  
+  // Fungsi navigasi ke halaman grid pembaca
+  const goToReader = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/reader/${book.id}`);
   };
 
   return (
     <div 
-      onClick={onClick}
-      className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98]"
+      onClick={() => navigate(`/book-detail/${book.id}`)}
+      className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98]"
     >
       <div className="flex items-center space-x-4">
-        <div className="w-16 h-20 bg-gradient-to-br from-orange-100 to-red-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative">
+        {/* Cover Buku */}
+        <div className="w-16 h-24 bg-gray-50 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden relative shadow-inner">
           {book.cover ? (
             <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
           ) : (
-            <BookOpen className="text-orange-500" size={24} />
+            <BookOpen className="text-blue-500/50" size={24} />
           )}
         </div>
         
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-gray-800 mb-1 line-clamp-1 text-sm">{book.title}</h3>
+          <h3 className="font-black text-gray-800 mb-1 line-clamp-1 text-sm">{book.title}</h3>
           
           <div className="space-y-2">
-            <div className="flex justify-between text-[10px] text-gray-500 font-medium">
-              <span>Page {book.currentPage} / {book.totalPages}</span>
-              <span>{Math.round(progress)}%</span>
+            <div className="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+              <span>Page {current} / {total}</span>
+              <span className="text-blue-600 font-black">{Math.round(progress)}%</span>
             </div>
+            
             {/* Progress Bar */}
-            <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+            <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
               <div 
-                className="bg-gradient-to-r from-orange-400 to-red-400 h-full rounded-full transition-all duration-500 ease-out"
+                className="bg-gradient-to-r from-blue-500 to-indigo-600 h-full rounded-full transition-all duration-700 ease-out"
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-[10px] text-gray-400 italic">Terakhir: {book.lastRead || 'Baru saja'}</p>
+            
+            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter italic">
+              Status: {
+                book.status === 'reading' ? 'In Progress' :
+                book.status === 'read' ? 'Finished' :
+                book.status === 'want-to-read' ? 'Saved' :
+                'Not Started'
+              }
+            </p>
           </div>
         </div>
         
+        {/* Tombol Play -> Ke ReaderPage */}
         <button 
-          onClick={handleUpdateProgress}
-          className="bg-blue-600 text-white p-2.5 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 active:scale-90"
+          onClick={goToReader}
+          disabled={book.status === 'none'}
+          className={`p-3.5 rounded-[1.2rem] transition-all shadow-lg active:scale-90 ${
+            book.status === 'none'
+              ? 'bg-gray-300 text-white cursor-not-allowed'
+              : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100'
+          }`}
         >
-          <Play size={16} fill="currentColor" />
+          <Play size={18} fill="currentColor" />
         </button>
       </div>
     </div>

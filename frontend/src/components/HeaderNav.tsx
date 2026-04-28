@@ -24,7 +24,7 @@ const HeaderNav = ({ activeTab, onSearchClick }: HeaderNavProps) => {
           {/* Tombol Search hanya muncul jika bukan di tab discover */}
           {activeTab !== 'discover' && (
             <button 
-              onClick={onSearchClick} // Pasang fungsinya di sini
+              onClick={onSearchClick}
               className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-full transition-colors active:scale-90"
             >
               <Search size={20} />

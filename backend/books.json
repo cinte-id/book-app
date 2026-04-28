@@ -5,10 +5,17 @@
       "title": "The Great Gatsby",
       "author": "F. Scott Fitzgerald",
       "cover": "https://covers.openlibrary.org/b/id/12749894-L.jpg",
-      "rating": 4.2,
+      "rating": 4.3,
+      "rating_sum": 47,
+      "rating_count": 11,
+      "user_rating": 5,
       "pages": 180,
       "genre": "Classic",
-      "status": "none"
+      "description": "Jay Gatsby, a self-made millionaire, passionately pursues the elusive Daisy Buchanan amidst the glamour and decadence of the Roaring Twenties.",
+      "status": "reading",
+      "completed_at": "null",
+      "current_page": 179,
+      "created_at": "28 April 2026, 08:00"
     },
     {
       "id": 2,
@@ -16,39 +23,67 @@
       "author": "Harper Lee",
       "cover": "https://covers.openlibrary.org/b/id/12749895-L.jpg",
       "rating": 4.8,
+      "rating_sum": 53,
+      "rating_count": 11,
+      "user_rating": 5,
       "pages": 376,
       "genre": "Fiction",
-      "status": "none"
+      "description": "Atticus Finch, a lawyer in the Depression-era South, defends a black man unjustly accused of raping a white woman, seen through the eyes of his children.",
+      "status": "read",
+      "completed_at": "28 April 2026, 12:06",
+      "current_page": 376,
+      "created_at": "27 April 2026, 09:10"
     },
     {
       "id": 3,
       "title": "1984",
       "author": "George Orwell",
       "cover": "https://covers.openlibrary.org/b/id/12749896-L.jpg",
-      "rating": 4.6,
+      "rating": 4.5,
+      "rating_sum": 50,
+      "rating_count": 11,
+      "user_rating": 4,
       "pages": 328,
       "genre": "Dystopian",
-      "status": "none"
+      "description": "In a world of perpetual war and omnipresent government surveillance, Winston Smith attempts to rebel against the terrifying Big Brother.",
+      "status": "read",
+      "completed_at": "28 April 2026, 12:07",
+      "current_page": 328,
+      "created_at": "27 April 2026, 09:10"
     },
     {
       "id": 4,
       "title": "Pride and Prejudice",
       "author": "Jane Austen",
       "cover": "https://covers.openlibrary.org/b/id/12749897-L.jpg",
-      "rating": 4.4,
+      "rating": 4.3,
+      "rating_sum": 47,
+      "rating_count": 11,
+      "user_rating": 4,
       "pages": 432,
       "genre": "Romance",
-      "status": "none"
+      "description": "The spirited Elizabeth Bennet navigates the complexities of manners, upbringing, and marriage in the British upper class, eventually falling for the enigmatic Mr. Darcy.",
+      "status": "want-to-read",
+      "completed_at": null,
+      "current_page": 432,
+      "created_at": "26 April 2026, 13:45"
     },
     {
       "id": 5,
       "title": "The Catcher in the Rye",
       "author": "J.D. Salinger",
       "cover": "https://covers.openlibrary.org/b/id/12749898-L.jpg",
-      "rating": 3.8,
+      "rating": 3.9,
+      "rating_sum": 43,
+      "rating_count": 11,
+      "user_rating": 5,
       "pages": 277,
       "genre": "Coming-of-age",
-      "status": "want-to-read"
+      "description": "Holden Caulfield, a cynical teenager, wanders through New York City after being expelled from prep school, grappling with the 'phoniness' of the adult world.",
+      "status": "read",
+      "completed_at": "28 April 2026, 12:07",
+      "current_page": 277,
+      "created_at": "27 April 2026, 09:10"
     },
     {
       "id": 6,
@@ -56,9 +91,16 @@
       "author": "J.K. Rowling",
       "cover": "https://covers.openlibrary.org/b/id/12749899-L.jpg",
       "rating": 4.7,
+      "rating_sum": 52,
+      "rating_count": 11,
+      "user_rating": 5,
       "pages": 309,
       "genre": "Fantasy",
-      "status": "want-to-read"
+      "description": "A young boy discovers he is a wizard on his eleventh birthday and is whisked away to Hogwarts School of Witchcraft and Wizardry to start his magical education.",
+      "status": "reading",
+      "completed_at": null,
+      "current_page": 15,
+      "created_at": "21 April 2026, 13:45"
     },
     {
       "id": 7,
@@ -66,19 +108,33 @@
       "author": "J.R.R. Tolkien",
       "cover": "https://covers.openlibrary.org/b/id/12749900-L.jpg",
       "rating": 4.9,
+      "rating_sum": 54,
+      "rating_count": 11,
+      "user_rating": 5,
       "pages": 1216,
       "genre": "Fantasy",
-      "status": "want-to-read"
+      "description": "A hobbit named Frodo Baggins embarks on a perilous quest across Middle-earth to destroy a powerful Ring before it falls into the hands of the Dark Lord Sauron.",
+      "status": "read",
+      "completed_at": "28 April 2026, 12:08",
+      "current_page": 1216,
+      "created_at": "26 April 2026, 13:45"
     },
     {
       "id": 8,
       "title": "Dune",
       "author": "Frank Herbert",
       "cover": "https://covers.openlibrary.org/b/id/12749901-L.jpg",
-      "rating": 4.3,
+      "rating": 4,
+      "rating_sum": 44,
+      "rating_count": 11,
+      "user_rating": 1,
       "pages": 688,
       "genre": "Sci-Fi",
-      "status": "none"
+      "description": "Set on the desert planet Arrakis, Paul Atreides must navigate politics, religion, and the deadly spice trade to lead his people and transform the galaxy.",
+      "status": "want-to-read",
+      "completed_at": null,
+      "current_page": 0,
+      "created_at": "26 April 2026, 13:45"
     }
   ]
 }
