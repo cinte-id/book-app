@@ -135,7 +135,12 @@ def update_book(book_id):
             book['rating'] = data.get('rating', book['rating'])
             book['pages']  = data.get('pages',  book['pages'])
             book['genre']  = data.get('genre',  book['genre'])
-            book['status'] = data.get('status', book['status'])
+
+            # ── Support null status (remove from My Library) ──────────────
+            if 'status' in data:
+                book['status'] = data['status']  # bisa null / None
+            # jika 'status' tidak ada di body request → tidak diubah
+
             save_books(books)
             return jsonify(book)
     return jsonify({'error': 'Book not found'}), 404
