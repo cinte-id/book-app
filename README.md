@@ -23,6 +23,12 @@ A full-stack web application for managing your reading list, built with **Flask*
 - ⚡ Local search & filter (no extra fetch on every keystroke)
 - 💀 Skeleton loading states on Library and Browse pages
 - 📱 Fully responsive mobile-first UI (max-w-md)
+- ➕ **Add book to My Library** from Browse page — sets initial status to `want-to-read`
+- 🗑️ **Remove book from My Library** — resets status to `null`, book remains in Browse Library
+- 📄 **Book Detail page** — view full book info, change reading status, add/remove from library
+- 🔍 **Search & filter support on API** — `GET /api/books` now accepts `?search=`, `?genre=`, and `?status=` query params
+- 🆔 **Single book endpoint** — `GET /api/books/<id>` to fetch one book by ID
+- ⚙️ **Backend config via environment variables** — host, port, debug mode, CORS origins, and data file path configurable via `.env`
 
 ---
 
@@ -97,13 +103,14 @@ Frontend runs at → `http://localhost:5173`
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/books` | Get all books (supports `?search=` and `?genre=` query params) |
+| `GET` | `/api/books` | Get all books (supports `?search=`, `?genre=`, and `?status=` query params) |
+| `GET` | `/api/books/<id>` | Get a single book by ID |
 | `POST` | `/api/books` | Add a new book |
-| `PUT` | `/api/books/<id>` | Update a book (e.g. change status) |
+| `PUT` | `/api/books/<id>` | Update a book (e.g. change status, set `null` to remove from library) |
 | `DELETE` | `/api/books/<id>` | Delete a book |
 | `GET` | `/api/test` | CORS health check |
 
-**Book status values:** `want-to-read` | `reading` | `read`
+**Book status values:** `want-to-read` | `reading` | `read` | `null` *(not in library)*
 
 ---
 
@@ -173,40 +180,47 @@ Index.tsx
 
 ### 📦 Changed Files
 
+#### `backend/app.py`
+- Added `?search=`, `?genre=`, and `?status=` query param support on `GET /api/books`
+- Added `GET /api/books/<id>` endpoint to fetch a single book by ID
+- Fixed ID generation on `POST /api/books` (use `max ID + 1` instead of `len`)
+- Support `null` status on `PUT /api/books/<id>` to remove a book from My Library without deleting it
+- Load server config from environment variables via `.env` (host, port, debug, CORS origins, data file path)
+- Changed default port from `5001` to `5000`
+- Refactored code structure with section comments for better readability
+
 #### `frontend/src/pages/Index.tsx`
 - Added `useEffect` + `useCallback` to fetch all books from backend on mount
 - Introduced `allBooks` state as global source of truth shared across all tabs
 - Replaced static `books` dummy import with live API data in: Home (Recommended), Library (My Books grid), Discover (Trending Now)
 - Added `handleStatusChange()` — calls `PUT /api/books/:id` and updates local state optimistically
 - Added `handleBooksChange()` — propagates BrowseLibrary status changes back up
-- **Profile tab** completely rebuilt: stats (Books Read, Reading, Want to Read, Avg Rating, Total Books, Pages Read, Favorite Genre, Recently Read) are now computed live from `allBooks` instead of hardcoded dummy values
-- Added skeleton loading state for My Books grid
-- Added empty-state message with CTA to Browse when library is empty
+- Added `handleRemoveFromLibrary()` — sets status to `null` via API, removes book from My Library view
+- Extracted `MyLibraryFilter` sub-component with status filter chips (All / Reading / Want to Read / Read) and per-book count badges
+- Added per-book remove confirmation overlay with loading spinner in My Library grid
+- Added skeleton loading state (`SkeletonCard`) for My Library grid
+- Added empty state with CTA to Browse Library when `myBooks` is empty
+- **Profile tab** completely rebuilt: all stats (Books Read, Reading, Want to Read, Avg Rating, In Library, Pages Read, Favorite Genre, Recently Read) are now computed live from `allBooks` instead of hardcoded dummy values
 
 #### `frontend/src/components/BrowseLibrary.tsx`
-- Removed self-contained fetch logic (`getBooks`, `useCallback`)
-- Now accepts `books: Book[]` and `onBooksChange` as props — no longer fetches independently
-- Genre list and filtered books are derived via `useMemo` from the `books` prop (no extra API call on filter/search change)
-- Local filtering replaces server-side filtering — instant results, no debounce delay for genre change
-- Status badge logic updated: **Want to Read** → blue badge; **Reading / Read** → gray badge; no status → green "+" button to add
+- Removed self-contained fetch logic — now receives `books: Book[]` and `onBooksChange` as props
+- Genre list and filtered books derived via `useMemo` from the `books` prop (no extra API call on filter/search change)
+- Added debounced search (400ms) on title and author fields
+- Added genre filter chips with "Semua Genre" option
+- Added "Add" button per book to set status to `want-to-read` via API with loading spinner
+- Show status badge (Read / Reading / Want to read) if book already in library, replacing the add button
+- Navigate to Book Detail page on card click
+- Show skeleton loading state and empty state with reset filter option
+- Display count of books already in library vs total
 
-#### `frontend/src/components/BookCard.tsx`
-- Added `onStatusChange?: (bookId, newStatus) => void` prop
-- Added `StatusDropdown` sub-component: a dropdown button on the library card that lets users switch status between Want to Read / Reading / Read — with optimistic loading spinner
-- `library` variant now shows `StatusDropdown` instead of static text badge
-- Cleaned up JSX formatting with consistent 4-space indentation
-
-#### `frontend/src/components/BottomNav.tsx`
-- Minor formatting cleanup (4-space indent, self-closing tags)
-- No functional changes
-
-#### `frontend/src/components/HeaderNav.tsx`
-- Minor formatting cleanup (4-space indent, self-closing `<span />`)
-- No functional changes
-
-#### `frontend/src/data/dummyData.ts`
-- Updated `readingStats.totalBooks` from `47` → `8` (realistic seed value)
-- Updated `readingStats.avgRating` from `4.3` → `4.5`
+#### `frontend/src/pages/BookDetail.tsx` *(new file)*
+- Fetch single book by ID from `GET /api/books/<id>` on mount
+- Display book cover, title, author, rating, pages, and genre in a dedicated detail page
+- Show "Tambah ke My Library" CTA if book has no status yet
+- Allow changing reading status (want-to-read / reading / read) inline via API
+- Add remove-from-library action (sets status to `null`) with bottom-sheet confirmation dialog
+- Show current status badge in sticky header; disable all buttons during update
+- Handle skeleton loading state and error state
 
 ---
 
@@ -219,6 +233,8 @@ Index.tsx
 | `StatusDropdown` in BookCard | Better UX — status change is inline, no page reload needed |
 | Optimistic UI update before API resolves | Feels faster; reverts on failure |
 | Profile stats computed from `allBooks` | Stats always reflect actual backend data, not stale dummy values |
+| `null` status = not in library | Keeps all books in the catalogue while cleanly separating My Library view |
+| Book Detail as separate route `/books/:id` | Allows deep-linking and cleaner separation of browse vs detail concerns |
 
 ---
 
