@@ -206,7 +206,7 @@ Index.tsx
 - Removed self-contained fetch logic — now receives `books: Book[]` and `onBooksChange` as props
 - Genre list and filtered books derived via `useMemo` from the `books` prop (no extra API call on filter/search change)
 - Added debounced search (400ms) on title and author fields
-- Added genre filter chips with "Semua Genre" option
+- Added genre filter chips with "All Genre" option
 - Added "Add" button per book to set status to `want-to-read` via API with loading spinner
 - Show status badge (Read / Reading / Want to read) if book already in library, replacing the add button
 - Navigate to Book Detail page on card click
