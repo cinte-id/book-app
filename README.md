@@ -12,7 +12,7 @@ A full-stack web application for managing your reading list, built with **Flask*
 ## ✨ Features
 
 - 📖 Browse all books from the backend with live search & genre filter
-- 🏷️ Change reading status per book via interactive dropdown (**Want to Read / Reading / Read**)
+- 🏷️ Change reading status per book via interactive dropdown (**Want to read / Reading / Read**)
 - 🏠 Home dashboard with "Continue Reading" and "Recommended for You" sections
 - 📊 **Profile page** with live reading stats synced from backend data:
   - Books Read, Currently Reading, Want to Read counts
