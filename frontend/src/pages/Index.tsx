@@ -279,7 +279,7 @@ const Index = () => {
 
 // ── My Library ───────────────────────────────
 const STATUS_FILTERS = [
-    { key: 'all', label: 'Semua' },
+    { key: 'all', label: 'All' },
     { key: 'reading', label: 'Reading' },
     { key: 'want-to-read', label: 'Want to read' },
     { key: 'read', label: 'Read' },
