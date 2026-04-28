@@ -1,162 +1,228 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import api from '../services/api';
+import { Search, Filter, Plus, X, BookOpen, Check } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { updateBook, Book } from '../services/api';
 import BookCard from './BookCard';
 
-// Define the Book interface
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  cover: string;
-  rating: number;
-  pages: number;
-  genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+interface BrowseLibraryProps {
+    books: Book[];
+    onBooksChange: (updated: Book[]) => void;
 }
 
-const BrowseLibrary = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('all');
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// Buku sudah ada di My Library jika punya status
+const isInLibrary = (book: Book) =>
+    book.status !== null && book.status !== undefined;
 
-  // Fetch books from the backend
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get<Book[]>('/api/books');
-        setBooks(response.data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch books. Please try again later.');
-        console.error('Error fetching books:', err);
-      } finally {
-        setLoading(false);
-      }
+const BrowseLibrary = ({ books, onBooksChange }: BrowseLibraryProps) => {
+    const navigate = useNavigate();
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [selectedGenre, setSelectedGenre] = useState('all');
+    const [error, setError] = useState<string | null>(null);
+    const [addingId, setAddingId] = useState<number | null>(null);
+
+    // Debounce search — 400ms
+    useEffect(() => {
+        const t = setTimeout(() => setDebouncedSearch(searchTerm), 400);
+        return () => clearTimeout(t);
+    }, [searchTerm]);
+
+    // Derive genre list from books prop
+    const genres = useMemo(() => {
+        const unique = Array.from(new Set(books.map((b) => b.genre).filter(Boolean)));
+        return ['all', ...unique];
+    }, [books]);
+
+    // Filter books locally
+    const filteredBooks = useMemo(() => {
+        return books.filter((b) => {
+            const matchesSearch =
+                !debouncedSearch ||
+                b.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+                b.author.toLowerCase().includes(debouncedSearch.toLowerCase());
+            const matchesGenre = selectedGenre === 'all' || b.genre === selectedGenre;
+            return matchesSearch && matchesGenre;
+        });
+    }, [books, debouncedSearch, selectedGenre]);
+
+    // Tambah buku ke My Library → set status = 'want-to-read'
+    const handleAddToLibrary = async (bookId: number) => {
+        try {
+            setError(null);
+            setAddingId(bookId);
+            await updateBook(bookId, { status: 'want-to-read' });
+            const updated = books.map((b) =>
+                b.id === bookId ? { ...b, status: 'want-to-read' as const } : b
+            );
+            onBooksChange(updated);
+        } catch {
+            setError('Gagal menambahkan buku. Coba lagi.');
+        } finally {
+            setAddingId(null);
+        }
     };
 
-    fetchBooks();
-  }, []);
+    const clearSearch = () => setSearchTerm('');
+    const isLoading = books.length === 0 && !error;
 
-  // Get unique genres from books
-  const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
-  // Filter books based on search term and selected genre
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
-    return matchesSearch && matchesGenre;
-  });
+    const inLibraryCount = books.filter(isInLibrary).length;
 
-  // Handle adding a book to library
-  const handleAddBook = async (bookId: number) => {
-    try {
-      await api.put(`/api/books/${bookId}`, {
-        status: 'want-to-read'
-      });
-      // Update local state
-      setBooks(books.map(book => 
-        book.id === bookId 
-          ? { ...book, status: 'want-to-read' }
-          : book
-      ));
-    } catch (err) {
-      console.error('Error adding book:', err);
-      setError('Failed to add book. Please try again.');
-    }
-  };
-
-  if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+        <div className="space-y-4">
+            {/* Header */}
+            <div className="flex justify-between items-center">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-800">Browse Library</h2>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                        {inLibraryCount} dari {books.length} buku sudah di library-mu
+                    </p>
+                </div>
+                <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    <Filter size={20} />
+                </button>
+            </div>
 
-  if (error) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
+            {/* Search */}
+            <div className="relative">
+                <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+                <input
+                    type="text"
+                    placeholder="Search by title or author..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-10 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {searchTerm && (
+                    <button
+                        onClick={clearSearch}
+                        className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                    >
+                        <X size={20} />
+                    </button>
+                )}
+            </div>
 
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-800">Browse Library</h2>
-        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors">
-          <Filter size={20} />
-        </button>
-      </div>
+            {/* Genre chips */}
+            <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+                {genres.map((genre) => (
+                    <button
+                        key={genre}
+                        onClick={() => setSelectedGenre(genre)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${selectedGenre === genre
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                    >
+                        {genre === 'all' ? 'All Genre' : genre}
+                    </button>
+                ))}
+            </div>
 
-      {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-3 text-gray-400" size={20} />
-        <input
-          type="text"
-          placeholder="Search books or authors..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      {/* Genre Filter */}
-      <div className="flex space-x-2 overflow-x-auto pb-2">
-        {genres.map((genre) => (
-          <button
-            key={genre}
-            onClick={() => setSelectedGenre(genre)}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              selectedGenre === genre
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {genre === 'all' ? 'All Genres' : genre}
-          </button>
-        ))}
-      </div>
-
-      {/* Results Count */}
-      <p className="text-sm text-gray-600">
-        {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
-      </p>
-
-      {/* Books Grid */}
-      <div className="space-y-3">
-        {filteredBooks.map((book) => (
-          <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
-              <button 
-                className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
-                onClick={() => handleAddBook(book.id)}
-              >
-                <Plus size={16} />
-              </button>
-            ) : (
-              <div className="absolute top-4 right-4 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
-                {book.status}
-              </div>
+            {/* Error */}
+            {error && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center">
+                    <p className="text-red-600 text-sm">{error}</p>
+                    <button
+                        onClick={() => setError(null)}
+                        className="mt-2 text-sm text-red-700 underline"
+                    >
+                        Tutup
+                    </button>
+                </div>
             )}
-          </div>
-        ))}
-      </div>
 
-      {filteredBooks.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-gray-500">No books found matching your criteria</p>
+            {/* Result count */}
+            {!isLoading && !error && (
+                <p className="text-sm text-gray-500">
+                    {filteredBooks.length} buku ditemukan
+                    {debouncedSearch && (
+                        <span className="text-gray-400"> untuk &quot;{debouncedSearch}&quot;</span>
+                    )}
+                </p>
+            )}
+
+            {/* Book list */}
+            <div className="space-y-3">
+                {isLoading ? (
+                    Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="bg-white rounded-xl border border-gray-100 p-4 animate-pulse">
+                            <div className="flex space-x-3">
+                                <div className="w-16 h-20 bg-gray-200 rounded-lg flex-shrink-0" />
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                                    <div className="h-3 bg-gray-200 rounded w-1/2" />
+                                    <div className="h-3 bg-gray-200 rounded w-1/4 mt-2" />
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : filteredBooks.length === 0 ? (
+                    <div className="text-center py-12">
+                        <p className="text-gray-500 text-sm">Tidak ada buku yang ditemukan</p>
+                        {(debouncedSearch || selectedGenre !== 'all') && (
+                            <button
+                                onClick={() => { clearSearch(); setSelectedGenre('all'); }}
+                                className="mt-2 text-blue-500 text-sm underline"
+                            >
+                                Reset filter
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    filteredBooks.map((book) => {
+                        const alreadyInLibrary = isInLibrary(book);
+                        return (
+                            <div key={book.id} className="relative">
+                                {/* Klik area → buka detail page */}
+                                <div
+                                    className="cursor-pointer"
+                                    onClick={() => navigate(`/books/${book.id}`)}
+                                >
+                                    <BookCard book={book} variant="discover" />
+                                </div>
+
+                                {/* Tombol tambah / badge sudah ada */}
+                                <div
+                                    className="absolute top-4 right-4"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {alreadyInLibrary ? (
+                                        // Sudah ada di My Library — tampilkan badge status
+                                        <span className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${book.status === 'read'
+                                            ? 'bg-green-100 text-green-700'
+                                            : book.status === 'reading'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : 'bg-gray-100 text-gray-600'
+                                            }`}>
+                                            <Check size={10} />
+                                            {book.status === 'read' ? 'Read'
+                                                : book.status === 'reading' ? 'Reading'
+                                                    : 'Want to read'}
+                                        </span>
+                                    ) : (
+                                        <button
+                                            disabled={addingId === book.id}
+                                            className="flex items-center gap-1.5 bg-blue-500 text-white pl-2 pr-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-600 transition-colors shadow-md disabled:opacity-60"
+                                            onClick={() => handleAddToLibrary(book.id)}
+                                            title="Tambah ke My Library"
+                                        >
+                                            {addingId === book.id ? (
+                                                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <Plus size={13} />
+                                            )}
+                                            {addingId === book.id ? 'Menambahkan...' : 'Add'}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default BrowseLibrary;
