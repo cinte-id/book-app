@@ -1,0 +1,49 @@
+
+# GET DATA BOOK BY ID
+GET http://127.0.0.1:5001/api/books/8
+
+# GET ALL DATA BOOKS
+###
+GET http://127.0.0.1:5001/api/books
+
+# CREATE BOOK
+###
+POST http://127.0.0.1:5001/api/books
+Content-Type: application/json
+
+{
+  "title": "1984",
+  "author": "George Orwell",
+  "cover": "https://covers.openlibrary.org/b/id/12749896-L.jpg",
+  "rating": 4.6,
+  "pages": 328,
+  "genre": "Dystopian",
+  "status": "reading"
+}
+
+# UPDATE DATA BOOK
+###
+PUT http://127.0.0.1:5001/api/books/9
+Content-Type: application/json
+
+{
+  "title": "1984",
+  "author": "George Orwell diubah",
+  "cover": "https://covers.openlibrary.org/b/id/12749896-L.jpg",
+  "rating": 4.6,
+  "pages": 328,
+  "genre": "Dystopian",
+  "status": "reading"
+}
+
+# UPDATE DATA BOOK
+###
+DELETE http://127.0.0.1:5001/api/books/9
+
+###
+GET http://127.0.0.1:5001/api/books/search?query=1984
+Content-Type: application/json
+
+###
+GET http://127.0.0.1:5001/api/books/category?category=Classic
+Content-Type: application/json
