@@ -1,9 +1,9 @@
 ### This dockerfile adjusted with multistage for reduce container size and security
-# Stage 1 Build
+# Stage 1 : Build image
 FROM python:3.11-slim AS builder
 WORKDIR /app
 
-# Instal dependensi sistem yang diperlukan (build dependencies)
+# Install dependencies system (build dependencies)
 RUN apt-get update && apt-get install -y --no-install-recommends \
   libpq-dev \
   python3-dev \
@@ -17,12 +17,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy all to workdir
+# install requirements to workdir
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# STAGE RUNNER for lightweight image
+# STAGE 2: Runner for lightweight image
 FROM python:3.11-slim AS runner
 WORKDIR /app
 

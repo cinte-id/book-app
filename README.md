@@ -111,6 +111,29 @@ book-app/
 
 ## 🎬 Proof of Execution (Test Results)
 This section documents the actual successful execution and live verification of the deployment, proving that both the infrastructure layers and API routing are functioning flawlessly.
+<img src="./assets/1_docker build.jpeg" height="400" alt="Successful Multi-Stage Docker Build Process">
+<p align="center"><i>*Figure 1: Multi-stage Dockerfile build execution*</i></p>
+
+<img src="./assets/1_docker run.jpeg" height="400" alt="Docker Compose Up and Live Logging Output">
+<p align="center"><i>*Figure 2: Container deployment and live initialization logs*</i></p>
+
+<img src="./assets/2_docker run.jpeg" height="400" alt="Postman POST Request">
+<p align="center"><i>*Figure 3: Sending a POST request payload using Postman*</i></p>
+
+<img src="./assets/3_docker run.jpeg" height="400" alt="Postman Successful JSON Response">
+<p align="center"><i>**Figure 4: Received successful response and state verification after the POST operation. In this session, I ignored `books.json` in the Dockerfile for a cleaner view.*</i></p>
+
+<img src="./assets/1_docker compose.jpeg" height="400" alt="Successful Docker Compose Up Process">
+<p align="center"><i>*Figure 5: Using docker-compose methode*</i></p>
+
+<img src="./assets/2_docker compose.jpeg" height="400" alt="Display default database books.json">
+<p align="center"><i>*Figure 6: Default database*</i></p>
+
+<img src="./assets/3_docker compose.jpeg" height="400" alt="Postman POST Request">
+<p align="center"><i>*Figure 7: Sending a POST request payload using Postman*</i></p>
+
+<img src="./assets/4_docker compose.jpeg" height="400" alt="Postman Successful JSON Respons">
+<p align="center"><i>*Figure : Received successful response and state verification after the POST operation.*</i></p>
 
 ## License
 
