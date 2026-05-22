@@ -163,6 +163,74 @@ book-app/
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+# Recruitment Contribution
+
+**Contributor:** Fikri Andra Irham  
+**Chosen Role:** DevOps Engineer
+
+This contribution focuses on improving containerization & adding basic CI validation for reproducible local development workflows.
+
+## Changes Made
+
+### Backend
+- Simplified Dockerfile by removing unused system packages
+- Added `.dockerignore` to exclude `venv`, `.git`, cache files, & environment files from image build context
+- Kept container setup minimal & aligned with current Flask application requirements
+
+### Frontend
+- Refactored Dockerfile into multi-stage build
+- Replaced development container approach (`npm run dev`) with static production build serving
+- Added `.dockerignore` to reduce image context size
+
+### Deployment
+- Added `docker-compose.yml` to run frontend & backend services with a single command
+
+### CI
+- Added GitHub Actions workflow to validate:
+  - Backend dependency installation
+  - Python syntax check (`py_compile`)
+  - Frontend dependency installation
+  - Frontend production build
+
+## Run/Test
+
+Start services:
+
+```
+docker compose up --build
+```
+
+Access:
+
+* Frontend: http://localhost:8080
+* Backend test endpoint: http://localhost:5001/api/test
+* Books API: http://localhost:5001/api/books
+
+Stop services:
+
+```
+docker compose down
+```
+
+Local validation performed:
+
+* `docker build`
+* `docker run`
+* `docker compose up --build`
+* `npm run build`
+* `python -m py_compile app.py`
+
+CI workflow runs automatically on:
+
+- push
+- pull request
+
+## Notes/Decisions
+
+- `npm ci` is used in CI to provide deterministic dependency installation based on lockfile
+- Frontend image uses multi-stage build to separate build dependencies from runtime container
+- CI workflow is intentionally limited to build validation & syntax checks to keep implementation proportional to assignment scope
+- Additional production concerns (reverse proxy configuration, Gunicorn, image scanning, deployment pipeline) were intentionally excluded
 
 # Test Instruction
 
