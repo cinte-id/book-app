@@ -70,7 +70,7 @@ book-app/
 3.  **Verify Application Logs**
     To ensure the Flask server started properly, monitor the real-time container output:
     ```bash
-    docker compose logs -f backend
+    docker compose logs -f backend-appbook-dzikri
     ```
     The backend API will be live and listening at:
     * Localhost: **`http://localhost:5001`**
