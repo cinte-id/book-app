@@ -28,9 +28,9 @@ jobs:
 
     - name: Lint Code with Flake8
       run: |
-        # Stop build jika ada Python syntax errors atau undefined names
+        # Stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # Exit-status 0 jika hanya isu style (mencegah pipeline gagal karena spasi)
+        # Exit with status 0 if it's just a styling issue (to prevent the pipeline from failing due to spaces)
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   docker-build-verify:
