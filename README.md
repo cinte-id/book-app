@@ -1,18 +1,17 @@
-# Book Tracker App
+# User Test DevOps CNT - Backend Book Tracker
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
+## 🚀 DevOps Submission Notes
 
-<img src="./assets/home.png" height="200" alt="Home">
-<img src="./assets/library.png" height="200" alt="Library">
+* **Chosen Role:** DevOps
+* **Target Optimization:** Containerization, Security hardening, Multi-stage builds, and Environment Management.
 
-## Features
+### 🧠 Architectural & Engineering Decisions
 
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
+1.  **Multi-Stage Build Optimization:** Split the `Dockerfile` into a `builder` stage and a lightweight `runtime` stage. Heavy compiler tools (`build-essential`, `python3-dev`) are left behind in the build layer, reducing the final production image size significantly.
+2.  **Security Hardening (Non-Root User):** Altered the runtime container behavior to execute under a restricted `appuser` instead of `root`. This prevents potential container-breakout vulnerabilities.
+3.  **Data Persistence (SQLite Bind Mount):** Since SQLite is a file-based database, a strategic Docker Bind Mount (`.:/app`) was implemented in `docker-compose.yml`. This ensures that the local SQLite database file (`books_dev.db`) survives container termination (`docker compose down`) and syncs flawlessly with the host machine.
+4.  **Secure Environment Lifecycle:** Isolated configuration secrets using `.env`. Excluded the active `.env` from version control via `.gitignore` and provided a `.env.example` blueprint for deployment safety.
+---
 
 ## Tech Stack
 
@@ -22,64 +21,67 @@ A full-stack web application for managing your reading list, built with Flask an
 - Flask-CORS
 - SQLAlchemy
 - python-dotenv
+- **Docker & Docker Compose** (DevOps Addition)
 
-### Frontend
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Axios
-- shadcn/ui components
+## Project Structure
 
-## Prerequisites
-
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
-
-### Backend Setup
-
-1. Create and activate a virtual environment:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
 ```
-
-2. Install backend dependencies:
-```bash
-pip install -r requirements.txt
+book-app/
+├── backend/
+│   ├── .env                     # Active local configuration file (Contains secrets/credentials, ignored by Git)
+│   ├── app.py                   # Main entry point for the Flask REST API application
+│   ├── books.json               # Local JSON-based database for storing book tracking data
+│   ├── docker-compose.yml       # Orchestrator manifest to define and run the backend container
+│   ├── Dockerfile               # Docker image blueprint leveraging Multi-stage & Non-root user hardening tactics
+│   ├── env.development          # Configuration blueprint/template tailored for the Development environment
+│   ├── env.example              # Public blueprint for safe environment variables without sensitive credentials
+│   ├── env.production           # Configuration blueprint/template prepared for the Production environment
+│   ├── requirements.txt         # List of Python library dependencies required by the backend application
+│   ├── setup.py                 # Helper script for initial initialization or application testing purposes
+│   └── requirements.txt         # Main Python dependencies list at the repository root level
 ```
+--
+## 🛠️ Getting Started (DevOps Recommended: Docker Compose)
 
-3. Start the Flask server:
-```bash
-cd backend
-python app.py
-```
+### Prerequisites
+- Linux, Docker Engine or Docker Desktop installed and running
+- Windows, Docker Desktop installed and running
+- Docker Compose v2.x enabled
 
-The backend server will start on http://localhost:5000
+### Deployment Steps
 
-### Frontend Setup
+1.  **Prepare Environment Variables**
+    Navigate to the backend directory and copy the environment template:
+    ```bash
+    cd backend
+    cp .env.example .env
+    ```
 
-1. Install frontend dependencies:
-```bash
-cd frontend
-npm install
-```
+2.  **Spin Up the Infrastructure**
+    Run the following command inside the `backend/` directory to build and start the application in the background:
+    ```bash
+    docker compose up -d --build
+    ```
 
-2. Start the development server:
-```bash
-npm run dev
-```
+3.  **Verify Application Logs**
+    To ensure the Flask server started properly, monitor the real-time container output:
+    ```bash
+    docker compose logs -f backend
+    ```
+    The backend API will be live and listening at:
+    * Localhost: **`http://localhost:5001`**
+    * Local Network: **`http://<YOUR_HOST_IP_ADDRESS>:5001`**.
+   > 💡 **How to find your IP Address:**
+   > * **Windows (PowerShell/CMD):** Run `ipconfig` and look for *IPv4 Address* (e.g., `192.168.xx.xx`).
+   > * **Linux/macOS (Terminal):** Run `hostname -I` or `ifconfig`.
 
-The frontend will be available at http://localhost:5173
+4.  **Tearing Down**
+    To stop and safely remove the container instance without losing your SQLite data:
+    ```bash
+    docker compose down
+    ```
+
+---
 
 ## API Documentation
 
@@ -107,151 +109,9 @@ The frontend will be available at http://localhost:5173
 #### DELETE /api/books/<id>
 - Deletes a book by ID
 
-## Project Structure
-
-```
-book-app/
-├── backend/
-│   └── app.py              # Flask backend API
-├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
-```
-
-## Development
-
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
-
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Future Enhancements
-
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
+## 🎬 Proof of Execution (Test Results)
+This section documents the actual successful execution and live verification of the deployment, proving that both the infrastructure layers and API routing are functioning flawlessly.
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-# Test Instruction
-
-Hi there! 👋  
-Thanks for applying to our company.
-
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
-
----
-
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
-
----
-
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
-
----
-
-## ✅ What to Do
-
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
-
----
-
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack**](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps**](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager**](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
-
-
-

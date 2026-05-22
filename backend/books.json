@@ -79,6 +79,16 @@
       "pages": 688,
       "genre": "Sci-Fi",
       "status": "reading"
+    },
+    {
+      "id": 9,
+      "title": "Kubernetes Best Practices Blueprints for Building Successful Applications on Kubernetes",
+      "author": "Joseph D. Moore",
+      "cover": "https://covers.openlibrary.org/b/id/14563303-L.jpg",
+      "rating": 4.6,
+      "pages": 328,
+      "genre": "Brendan Burns, Eddie Villalba, Dave Strebel, and Lachlan Evenson",
+      "status": "reading"
     }
   ]
 }
