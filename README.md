@@ -45,7 +45,7 @@ book-app/
 
 ### Prerequisites
 - Linux, Docker Engine or Docker Desktop installed and running
-- Windows, Docker Desktop installed and running
+- Windows/MacOS, Docker Desktop installed and running
 - Docker Compose v2.x enabled
 
 ### Deployment Steps
