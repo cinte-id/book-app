@@ -62,6 +62,10 @@ book-app/
     ```bash
     docker compose up -d --build
     ```
+    or
+    ```bash
+    docker compose up -d
+    ```
 
 3.  **Verify Application Logs**
     To ensure the Flask server started properly, monitor the real-time container output:
@@ -133,8 +137,12 @@ This section documents the actual successful execution and live verification of 
 <p align="center"><i>*Figure 7: Sending a POST request payload using Postman*</i></p>
 
 <img src="./assets/4_docker compose.jpeg" height="400" alt="Postman Successful JSON Respons">
-<p align="center"><i>*Figure : Received successful response and state verification after the POST operation.*</i></p>
+<p align="center"><i>*Figure 8: Received successful response and state verification after the POST operation.*</i></p>
 
+<img src="./assets/1_docker logs_realtime.jpeg" alt="Docker real-time logs">
+<p align="center"><i>*Figure 9:💡 Postman Troubleshooting (Avoid Error 415):** If you receive a `415 Unsupported Media Type` error, navigate to the <b>Body</b> tab in Postman, select the <b>raw</b> radio button, and change the format dropdown option from <b>Text</b> to <b>JSON</b>. This automatically injects the correct `Content-Type` header.</i></p>
+
+---
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
