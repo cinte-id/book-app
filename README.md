@@ -58,137 +58,15 @@ A full-stack web application for managing your reading list, built with Flask an
 - Axios
 - shadcn/ui components
 
-## Prerequisites
+## API Endpoints
 
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
-
-### Backend Setup
-
-1. Create and activate a virtual environment:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-2. Install backend dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Start the Flask server:
-```bash
-cd backend
-python app.py
-```
-
-The backend server will start on http://localhost:5000
-
-### Frontend Setup
-
-1. Install frontend dependencies:
-```bash
-cd frontend
-npm install
-```
-
-2. Start the development server:
-```bash
-npm run dev
-```
-
-The frontend will be available at http://localhost:5173
-
-## API Documentation
-
-### Endpoints
-
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
-
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
-```
-
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
-
-#### DELETE /api/books/<id>
-- Deletes a book by ID
-
-## Project Structure
-
-```
-book-app/
-├── backend/
-│   └── app.py              # Flask backend API
-├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
-```
-
-## Development
-
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
-
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Future Enhancements
-
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/books` | List all books |
+| POST | `/api/books` | Add a book |
+| PUT | `/api/books/<id>` | Update a book |
+| DELETE | `/api/books/<id>` | Delete a book |
+| GET | `/api/test` | Health check |
 
 ---
 
@@ -236,17 +114,17 @@ Monitoring (separate compose):
 ## CI/CD Pipeline
 
 ```
-push / PR → main
+push / PR → main or staging
       │
-  ┌───▼────┐   ┌────────┐   ┌──────┐   ┌────────────────┐   ┌──────────────────┐
-  │  Lint  │──►│ Build  │──►│ Test │──►│  Trivy Scan    │──►│  Push to GHCR    │
-  │        │   │ Docker │   │ API  │   │  CRITICAL vulns│   │  (main only)     │
-  │ ruff   │   │ images │   │ e2e  │   │  block push    │   │  :latest + :sha  │
-  │ eslint │   │        │   │      │   │  SARIF → GH    │   │                  │
-  └────────┘   └────────┘   └──────┘   └────────────────┘   └──────────────────┘
+  ┌───▼────┐   ┌────────┐   ┌──────┐   ┌────────────────┐   ┌───────────────────────────┐
+  │  Lint  │──►│ Build  │──►│ Test │──►│  Trivy Scan    │──►│  Push to GHCR             │
+  │        │   │ Docker │   │ API  │   │  CRITICAL vulns│   │  main   → :latest + :sha  │
+  │ ruff   │   │ images │   │ e2e  │   │  block push    │   │  staging → :staging + :sha│
+  │ eslint │   │        │   │      │   │  SARIF → GH    │   │                           │
+  └────────┘   └────────┘   └──────┘   └────────────────┘   └───────────────────────────┘
 ```
 
-Images published to: `ghcr.io/<owner>/book-app-backend` and `ghcr.io/<owner>/book-app-frontend`
+Images published to: `ghcr.io/ndanhd/book-app-backend` and `ghcr.io/ndanhd/book-app-frontend`
 
 ## Deploy Runbook
 
@@ -452,9 +330,14 @@ book-app/
 │   └── README.md               # ArgoCD install + usage guide
 ├── docs/
 │   └── oncall-runbook.md       # On-call runbook: service down + high memory
+├── envs/
+│   ├── staging.env             # Staging env config (no secrets — injected at runtime)
+│   └── production.env          # Production env config (no secrets — injected at runtime)
 ├── scripts/
 │   └── healthcheck.sh          # HTTP poll script (used in CI + Ansible)
 ├── docker-compose.yml          # App stack: backend + frontend + nginx (sidecar)
+├── docker-compose.staging.yml  # Staging override (port 8080, staging env)
+├── docker-compose.production.yml # Production override (resource limits, prod env)
 ├── TASKS_DEVOPS_MID.md         # Task requirements reference
 └── .github/
     └── workflows/
