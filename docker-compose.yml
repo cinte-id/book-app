@@ -1,5 +1,9 @@
 services:
   backend:
+    # IMAGE_TAG env var selects source:
+    # - set (e.g. IMAGE_TAG=latest) → pull from GHCR (production deploy)
+    # - unset → build from local Dockerfile (dev/CI)
+    image: ${REGISTRY:-ghcr.io/ndanhd}/book-app-backend:${IMAGE_TAG:-local}
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -23,6 +27,7 @@ services:
       start_period: 10s
 
   frontend:
+    image: ${REGISTRY:-ghcr.io/ndanhd}/book-app-frontend:${IMAGE_TAG:-local}
     build:
       context: ./frontend
       dockerfile: Dockerfile
