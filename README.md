@@ -273,16 +273,26 @@ curl http://localhost/api/test
 ### Option B — Ansible Playbook (automated provisioning)
 
 ```bash
-cd ansible
-
 # Install Ansible if needed
-pip install ansible
-
-# Run the playbook (provisions local Docker environment end-to-end)
-ansible-playbook -i inventory.ini playbook.yml
+python3 -m venv .venv && .venv/bin/pip install ansible -q
 ```
 
-The playbook: checks Docker, creates data dir, builds images, starts services, waits for health check, and prints URLs.
+**Dev mode** — build image dari source lokal:
+```bash
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
+```
+
+**Production mode** — pull image dari GHCR (image harus sudah ada di registry):
+```bash
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -e "image_tag=latest"
+```
+
+Ganti `latest` dengan SHA commit tertentu untuk deploy versi spesifik:
+```bash
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -e "image_tag=<commit-sha>"
+```
+
+The playbook: checks Docker, creates data dir, pulls/builds images, starts services, waits for health check, and prints URLs.
 
 ### Start Monitoring Stack
 
