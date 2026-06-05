@@ -1,0 +1,15 @@
+# Staging override — use with:
+# IMAGE_TAG=<sha> SECRET_KEY=<value> docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+
+services:
+  backend:
+    # Override env with staging-specific values; SECRET_KEY injected at runtime
+    env_file:
+      - envs/staging.env
+    environment:
+      # Runtime override — takes precedence over env_file
+      SECRET_KEY: ${SECRET_KEY}
+
+  nginx:
+    ports:
+      - "8080:80"  # staging on port 8080 to avoid clash with prod on 80

@@ -20,6 +20,8 @@
 | 3 | Trivy image vulnerability scan in CI | ✅ |
 | 4 | IaC for networking resource (ufw firewall rules via Ansible) | ✅ |
 | 5 | On-call runbook (service down + high memory scenarios) | ✅ |
+| 6 | Secrets management (GitHub Secrets wired into CI) | ✅ |
+| 7 | Multi-environment config (staging + production) | ✅ |
 
 ---
 
@@ -314,6 +316,57 @@ Dashboard "Book App — Overview" is pre-provisioned — visible immediately on 
 ```bash
 # Poll until endpoint returns 2xx (useful in scripts/CI)
 bash scripts/healthcheck.sh http://localhost/api/test
+```
+
+## Multi-Environment Config
+
+| Environment | Branch | Image tag | Port | Config file |
+|-------------|--------|-----------|------|-------------|
+| Development | local  | `local` (built from source) | 80 | — |
+| Staging     | `staging` | `staging` / `staging-<sha>` | 8080 | `envs/staging.env` |
+| Production  | `main` | `latest` / `<sha>` | 80 | `envs/production.env` |
+
+**Deploy staging:**
+```bash
+IMAGE_TAG=staging SECRET_KEY=<value> \
+  docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+```
+
+**Deploy production:**
+```bash
+IMAGE_TAG=latest SECRET_KEY=<value> \
+  docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**Via Ansible:**
+```bash
+# Staging
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
+  -e "image_tag=staging"
+
+# Production
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
+  -e "image_tag=latest"
+```
+
+## Secrets Management
+
+Secrets are **never hardcoded** in env files or code. They are injected at runtime via GitHub Secrets.
+
+**GitHub Secrets to configure** (Settings → Secrets and variables → Actions):
+
+| Secret name | Used in | Description |
+|-------------|---------|-------------|
+| `SECRET_KEY` | CI test stage, deploy | Flask secret key (generate: `python3 -c "import secrets; print(secrets.token_hex(32))"`) |
+| `STAGING_SECRET_KEY` | Staging deploy | Separate key for staging environment |
+| `PROD_SECRET_KEY` | Production deploy | Separate key for production environment |
+
+`GITHUB_TOKEN` is auto-provided by GitHub Actions — no manual setup needed for GHCR push.
+
+**Local development** — create a local override (not committed):
+```bash
+cp envs/staging.env envs/staging.env.local
+# Edit staging.env.local and set real SECRET_KEY
 ```
 
 ## Rollback Runbook

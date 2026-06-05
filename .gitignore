@@ -2,3 +2,7 @@ docker-compose.override.yml
 evaluate.md
 results
 .remember/
+.venv/
+# Runtime secrets — never commit actual secret values
+*.env.local
+*.env.secret
