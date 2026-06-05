@@ -1,3 +1,5 @@
-docker-compose.*
 evaluate.md
-results
+fe.env
+be.env
+db.env
+.DS_Store
