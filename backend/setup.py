@@ -26,7 +26,7 @@ def setup_environment():
     
     if os.path.exists(source_file):
         if os.path.exists(target_file):
-            overwrite = input(f"⚠️  .env file already exists. Overwrite? (y/N): ").strip().lower()
+            overwrite = input("⚠️  .env file already exists. Overwrite? (y/N): ").strip().lower()
             if overwrite != 'y':
                 print("❌ Setup cancelled.")
                 return
@@ -41,7 +41,7 @@ def setup_environment():
             print("   - Update DATABASE_URL in .env file")
             print("   - Update CORS_ORIGINS in .env file")
         
-        print(f"\n🎯 Next steps:")
+        print("\n🎯 Next steps:")
         print("   1. Review and edit .env file if needed")
         print("   2. Install dependencies: pip install -r requirements.txt")
         print("   3. Run the app: python app.py")

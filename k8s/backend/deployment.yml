@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: book-app
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  # RollingUpdate so books.json PVC (ReadWriteOnce) is released before new pod claims it
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/ndanhd/book-app-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+          envFrom:
+            - configMapRef:
+                name: backend-config
+          volumeMounts:
+            - name: book-data
+              mountPath: /data
+          livenessProbe:
+            httpGet:
+              path: /api/test
+              port: 5001
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/test
+              port: 5001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+      volumes:
+        - name: book-data
+          persistentVolumeClaim:
+            claimName: book-data-pvc

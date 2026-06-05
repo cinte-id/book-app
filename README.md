@@ -1,100 +1,33 @@
-# Test Instruction
+# Book Tracker App — DevOps Mid-Level Submission
 
-Hi there! 👋  
-Thanks for applying to our company.
+**Role:** DevOps & Infrastructure Engineer (Mid-Level)
+**Task reference:** [TASKS_DEVOPS_MID.md](TASKS_DEVOPS_MID.md)
 
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
+## Deliverables
 
----
+| # | Required | Status |
+|---|----------|--------|
+| 1 | Multi-stage Dockerfile + docker-compose with sidecar (nginx) | ✅ |
+| 2 | CI/CD pipeline: lint → build → test → push to GHCR | ✅ |
+| 3 | IaC (Ansible) — local environment + firewall provisioning | ✅ |
+| 4 | Monitoring: Prometheus + Grafana, alerts, pre-built dashboard | ✅ |
+| 5 | README / Runbook — architecture diagram, deploy, rollback | ✅ |
 
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
-
----
-
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
-
----
-
-## ✅ What to Do
-
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
-
----
-
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
+| # | Bonus | Status |
+|---|-------|--------|
+| 1 | Kubernetes manifests (Deployment, Service, ConfigMap, Ingress) | ✅ |
+| 2 | GitOps with ArgoCD | ✅ |
+| 3 | Trivy image vulnerability scan in CI | ✅ |
+| 4 | IaC for networking resource (ufw firewall rules via Ansible) | ✅ |
+| 5 | On-call runbook (service down + high memory scenarios) | ✅ |
+| 6 | Secrets management (GitHub Secrets wired into CI) | ✅ |
+| 7 | Multi-environment config (staging + production) | ✅ |
 
 ---
 
 # Book Tracker App
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
+A full-stack web application for managing your reading list, built with Flask and React.
 
 <img src="./assets/home.png" height="200" alt="Home">
 <img src="./assets/library.png" height="200" alt="Library">
@@ -125,134 +58,350 @@ A full-stack web application for managing your reading list, built with Flask an
 - Axios
 - shadcn/ui components
 
-## Prerequisites
+## API Endpoints
 
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/books` | List all books |
+| POST | `/api/books` | Add a book |
+| PUT | `/api/books/<id>` | Update a book |
+| DELETE | `/api/books/<id>` | Delete a book |
+| GET | `/api/test` | Health check |
 
-## Getting Started
+---
 
-### Backend Setup
+# DevOps Setup — Infrastructure & Runbook
 
-1. Create and activate a virtual environment:
+> Role: DevOps Mid-Level
+> Stack: Docker (multi-stage) · Nginx · GitHub Actions · Ansible · Prometheus · Grafana
+
+## Screenshots
+
+### App Running
+![App Running](assets/app-running.png)
+
+### CI/CD Pipeline (GitHub Actions)
+![CI Pipeline](assets/ci-pipeline.png)
+
+### Grafana Dashboard
+![Grafana Dashboard](assets/grafana-dashboard.png)
+
+### Prometheus Alert Rules
+![Prometheus Alerts](assets/prometheus-alerts.png)
+
+### Trivy Vulnerability Scan
+![Trivy Scan](assets/trivy-scan.png)
+
+### GHCR Packages
+![GHCR Packages](assets/ghcr-packages.png)
+
+### Ansible Deploy
+![Ansible Deploy](assets/ansible-deploy.png)
+
+---
+
+## Architecture
+
+```
+                         Internet
+                             │
+                          :80
+                      ┌────────┐
+                      │ Nginx  │  ← reverse proxy (sidecar)
+                      └───┬────┘
+              ┌────────────┴────────────┐
+         /api/*                        /
+     ┌──────────┐               ┌──────────────┐
+     │ Backend  │               │  Frontend    │
+     │  Flask   │               │  nginx+SPA   │
+     │  :5001   │               │    :80       │
+     └────┬─────┘               └──────────────┘
+          │ books.json
+     ┌────▼─────┐
+     │  Volume  │  ← persistent data
+     └──────────┘
+
+Monitoring (separate compose):
+
+  ┌──────────────┐     scrape     ┌────────────┐
+  │  Prometheus  │ ◄──────────── │  cAdvisor  │  container metrics
+  │    :9090     │               └────────────┘
+  └──────┬───────┘
+         │            probe       ┌──────────────────┐
+         │ ◄──────────────────── │ blackbox-exporter │  HTTP health
+         │                       └──────────────────┘
+  ┌──────▼───────┐
+  │   Grafana    │  ← dashboards + alert rules
+  │    :3000     │
+  └──────────────┘
+```
+
+## CI/CD Pipeline
+
+```
+push / PR → main or staging
+      │
+  ┌───▼────┐   ┌────────┐   ┌──────┐   ┌────────────────┐   ┌───────────────────────────┐
+  │  Lint  │──►│ Build  │──►│ Test │──►│  Trivy Scan    │──►│  Push to GHCR             │
+  │        │   │ Docker │   │ API  │   │  CRITICAL vulns│   │  main   → :latest + :sha  │
+  │ ruff   │   │ images │   │ e2e  │   │  block push    │   │  staging → :staging + :sha│
+  │ eslint │   │        │   │      │   │  SARIF → GH    │   │                           │
+  └────────┘   └────────┘   └──────┘   └────────────────┘   └───────────────────────────┘
+```
+
+Images published to: `ghcr.io/ndanhd/book-app-backend` and `ghcr.io/ndanhd/book-app-frontend`
+
+## Deploy Runbook
+
+### Prerequisites
+
+- Docker >= 24
+- Docker Compose plugin (`docker compose version`)
+- Ansible >= 2.14 (`pip install ansible`) — for automated provisioning
+
+### Option A — Manual (Docker Compose)
+
 ```bash
-# Create virtual environment
-python -m venv venv
+# 1. Clone and enter the repo
+git clone <repo-url> && cd book-app
 
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+# 2. Build and start all services
+docker compose up -d --build
+
+# 3. Verify
+curl http://localhost/api/test
+# → {"message": "CORS is working!"}
+
+# App is live at http://localhost
 ```
 
-2. Install backend dependencies:
+### Option B — Ansible Playbook (automated provisioning)
+
 ```bash
-pip install -r requirements.txt
+# Install Ansible if needed
+python3 -m venv .venv && .venv/bin/pip install ansible -q
 ```
 
-3. Start the Flask server:
+**Dev mode** — build image dari source lokal:
 ```bash
-cd backend
-python app.py
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
 ```
 
-The backend server will start on http://localhost:5000
-
-### Frontend Setup
-
-1. Install frontend dependencies:
+**Production mode** — pull image dari GHCR (image harus sudah ada di registry):
 ```bash
-cd frontend
-npm install
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -e "image_tag=latest"
 ```
 
-2. Start the development server:
+Ganti `latest` dengan SHA commit tertentu untuk deploy versi spesifik:
 ```bash
-npm run dev
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml -e "image_tag=<commit-sha>"
 ```
 
-The frontend will be available at http://localhost:5173
+The playbook: checks Docker, creates data dir, pulls/builds images, starts services, waits for health check, and prints URLs.
 
-## API Documentation
+### Start Monitoring Stack
 
-### Endpoints
+```bash
+# App stack must be running first (monitoring connects to book-app_network)
+cd monitoring
+docker compose up -d
 
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
-
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
+# Access points:
+# Grafana   → http://localhost:3000  (admin / admin)
+# Prometheus → http://localhost:9090
+# Blackbox  → http://localhost:9115
 ```
 
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
+Dashboard "Book App — Overview" is pre-provisioned — visible immediately on login.
 
-#### DELETE /api/books/<id>
-- Deletes a book by ID
+### Health Check Script
+
+```bash
+# Poll until endpoint returns 2xx (useful in scripts/CI)
+bash scripts/healthcheck.sh http://localhost/api/test
+```
+
+## Multi-Environment Config
+
+| Environment | Branch | Image tag | Port | Config file |
+|-------------|--------|-----------|------|-------------|
+| Development | local  | `local` (built from source) | 80 | — |
+| Staging     | `staging` | `staging` / `staging-<sha>` | 8080 | `envs/staging.env` |
+| Production  | `main` | `latest` / `<sha>` | 80 | `envs/production.env` |
+
+**Deploy staging:**
+```bash
+IMAGE_TAG=staging SECRET_KEY=<value> \
+  docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+```
+
+**Deploy production:**
+```bash
+IMAGE_TAG=latest SECRET_KEY=<value> \
+  docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**Via Ansible:**
+```bash
+# Staging
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
+  -e "image_tag=staging"
+
+# Production
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
+  -e "image_tag=latest"
+```
+
+## Secrets Management
+
+Secrets are **never hardcoded** in env files or code. They are injected at runtime via GitHub Secrets.
+
+**GitHub Secrets to configure** (Settings → Secrets and variables → Actions):
+
+| Secret name | Used in | Description |
+|-------------|---------|-------------|
+| `SECRET_KEY` | CI test stage, deploy | Flask secret key (generate: `python3 -c "import secrets; print(secrets.token_hex(32))"`) |
+| `STAGING_SECRET_KEY` | Staging deploy | Separate key for staging environment |
+| `PROD_SECRET_KEY` | Production deploy | Separate key for production environment |
+
+`GITHUB_TOKEN` is auto-provided by GitHub Actions — no manual setup needed for GHCR push.
+
+### How secrets are injected at runtime
+
+**1. Via environment variable (inline)**
+```bash
+SECRET_KEY=mysecretvalue IMAGE_TAG=latest \
+  docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**2. Via shell export**
+```bash
+export SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+export IMAGE_TAG=latest
+docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**3. Via `.env` file at repo root** (not committed — in `.gitignore`)
+```bash
+# Create .env file
+cat > .env <<EOF
+SECRET_KEY=mysecretvalue
+IMAGE_TAG=latest
+EOF
+
+# Docker Compose auto-loads .env from the working directory
+docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**4. Via Ansible extra vars**
+```bash
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
+  -e "image_tag=latest" \
+  -e "secret_key=mysecretvalue"
+```
+> Then update `playbook.yml` to pass `SECRET_KEY: "{{ secret_key }}"` in the `environment:` block of the start task.
+
+**5. In GitHub Actions (CI)** — set in repo Settings → Secrets and variables → Actions:
+```yaml
+# Already wired in ci.yml test stage:
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+```
+The secret value is masked in logs and never exposed in plain text.
+
+## Rollback Runbook
+
+### Rollback to previous image (GHCR)
+
+```bash
+# Pull specific SHA tag
+docker pull ghcr.io/<owner>/book-app-backend:<previous-sha>
+docker pull ghcr.io/<owner>/book-app-frontend:<previous-sha>
+
+# Update compose to use that tag, then restart
+BACKEND_IMAGE=ghcr.io/<owner>/book-app-backend:<previous-sha> \
+FRONTEND_IMAGE=ghcr.io/<owner>/book-app-frontend:<previous-sha> \
+docker compose up -d
+```
+
+### Rollback config only
+
+```bash
+git revert HEAD        # revert the bad commit
+git push origin main   # triggers CI, new images built and pushed
+docker compose pull && docker compose up -d
+```
+
+### Emergency: restart single service
+
+```bash
+docker compose restart backend
+docker compose logs -f backend
+```
+
+## Troubleshooting
+
+| Symptom | Check |
+|---------|-------|
+| 502 Bad Gateway | `docker compose ps` — is backend healthy? `docker compose logs backend` |
+| books.json lost on restart | Volume `book_data` should persist it — run `docker volume inspect book-app_book_data` |
+| Grafana shows no data | Prometheus must be on `app-network` — check `docker network inspect book-app_network` |
+| cAdvisor empty metrics | Linux only — on macOS some cgroups metrics are unavailable, expected |
+| CI lint fails | Run `ruff check backend/` and `cd frontend && npm run lint` locally first |
 
 ## Project Structure
 
 ```
 book-app/
 ├── backend/
-│   └── app.py              # Flask backend API
+│   ├── app.py                  # Flask REST API
+│   ├── requirements.txt
+│   └── Dockerfile              # Multi-stage: builder → slim runtime
 ├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
+│   ├── src/                    # React + TypeScript source
+│   ├── nginx.conf              # SPA fallback + static asset cache headers
+│   └── Dockerfile              # Multi-stage: node build → nginx static
+├── nginx/
+│   └── nginx.conf              # Reverse proxy: /api → backend, / → frontend
+├── monitoring/
+│   ├── docker-compose.yml      # Prometheus + Grafana + blackbox + cAdvisor
+│   ├── prometheus/
+│   │   ├── prometheus.yml      # Scrape configs (blackbox + cAdvisor)
+│   │   └── alert-rules.yml     # BackendDown, HighResponseTime, HighMemory
+│   └── grafana/
+│       ├── provisioning/       # Auto-configured datasource + dashboard loader
+│       └── dashboards/
+│           └── book-app.json   # Pre-built dashboard (6 panels)
+├── k8s/
+│   ├── namespace.yml
+│   ├── configmap.yml           # Backend env config
+│   ├── ingress.yml             # nginx ingress: /api → backend, / → frontend
+│   ├── backend/
+│   │   ├── deployment.yml      # Liveness + readiness probes, resource limits
+│   │   ├── service.yml
+│   │   └── pvc.yml             # Persistent storage for books.json
+│   └── frontend/
+│       ├── deployment.yml      # 2 replicas
+│       └── service.yml
+├── ansible/
+│   ├── playbook.yml            # Provision + deploy local environment end-to-end
+│   ├── networking.yml          # Firewall rules via ufw (IaC networking resource)
+│   └── inventory.ini           # Target: localhost
+├── gitops/
+│   ├── argocd-app.yml          # ArgoCD Application — watches k8s/ dir, auto-syncs
+│   └── README.md               # ArgoCD install + usage guide
+├── docs/
+│   └── oncall-runbook.md       # On-call runbook: service down + high memory
+├── envs/
+│   ├── staging.env             # Staging env config (no secrets — injected at runtime)
+│   └── production.env          # Production env config (no secrets — injected at runtime)
+├── scripts/
+│   └── healthcheck.sh          # HTTP poll script (used in CI + Ansible)
+├── docker-compose.yml          # App stack: backend + frontend + nginx (sidecar)
+├── docker-compose.staging.yml  # Staging override (port 8080, staging env)
+├── docker-compose.production.yml # Production override (resource limits, prod env)
+├── TASKS_DEVOPS_MID.md         # Task requirements reference
+└── .github/
+    └── workflows/
+        └── ci.yml              # lint → build → test → Trivy scan → push to GHCR
 ```
-
-## Development
-
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
-
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Future Enhancements
-
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.

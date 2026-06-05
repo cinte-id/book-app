@@ -1,0 +1,102 @@
+---
+# Provisions and deploys Book App via Docker Compose.
+# Target: localhost (no cloud credentials needed).
+#
+# Usage:
+#   Dev (build from source):
+#     ansible-playbook -i inventory.ini playbook.yml
+#
+#   Production (pull from GHCR):
+#     ansible-playbook -i inventory.ini playbook.yml -e "image_tag=latest"
+
+- name: Deploy Book App (local environment)
+  hosts: local
+  connection: local
+  become: false
+
+  vars:
+    app_dir: "{{ playbook_dir }}/.."
+    data_dir: "{{ playbook_dir }}/../data"
+    # image_tag: set via -e to pull from GHCR; unset = build locally
+    image_tag: "{{ image_tag | default('') }}"
+
+  tasks:
+    - name: Verify Docker is installed
+      command: docker --version
+      register: docker_version
+      changed_when: false
+      failed_when: docker_version.rc != 0
+
+    - name: Print Docker version
+      debug:
+        msg: "{{ docker_version.stdout }}"
+
+    - name: Verify Docker Compose plugin is available
+      command: docker compose version
+      register: compose_version
+      changed_when: false
+      failed_when: compose_version.rc != 0
+
+    - name: Print Docker Compose version
+      debug:
+        msg: "{{ compose_version.stdout }}"
+
+    - name: Create persistent data directory for books.json
+      file:
+        path: "{{ data_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Pull images from GHCR
+      command: docker compose pull
+      args:
+        chdir: "{{ app_dir }}"
+      environment:
+        IMAGE_TAG: "{{ image_tag }}"
+      when: image_tag != ''
+
+    - name: Build images from source (dev mode)
+      command: docker compose build
+      args:
+        chdir: "{{ app_dir }}"
+      environment:
+        IMAGE_TAG: "local"
+      when: image_tag == ''
+
+    - name: Start all services
+      command: docker compose up -d --remove-orphans
+      args:
+        chdir: "{{ app_dir }}"
+      environment:
+        IMAGE_TAG: "{{ image_tag if image_tag != '' else 'local' }}"
+
+    - name: Wait for backend health check to pass
+      uri:
+        url: http://localhost/api/test
+        method: GET
+        return_content: true
+        status_code: 200
+      register: health
+      until: health.status == 200
+      retries: 15
+      delay: 4
+
+    - name: Show running containers
+      command: docker compose ps
+      args:
+        chdir: "{{ app_dir }}"
+      register: ps_output
+      changed_when: false
+
+    - name: Print container status
+      debug:
+        msg: "{{ ps_output.stdout_lines }}"
+
+    - name: Deployment summary
+      debug:
+        msg:
+          - "Book App is running."
+          - "App:        http://localhost"
+          - "API:        http://localhost/api/books"
+          - "To stop:    docker compose down (in {{ app_dir }})"
+          - "To monitor: cd monitoring && docker compose up -d"
