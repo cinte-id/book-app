@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: book-app
+data:
+  FLASK_HOST: "0.0.0.0"
+  FLASK_PORT: "5001"
+  FLASK_DEBUG: "false"
+  DATA_FILE: "/data/books.json"
+  # Allow traffic from nginx ingress controller and frontend service
+  CORS_ORIGINS: "http://frontend-service.book-app.svc.cluster.local,http://localhost"
