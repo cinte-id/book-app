@@ -241,11 +241,48 @@ Secrets are **never hardcoded** in env files or code. They are injected at runti
 
 `GITHUB_TOKEN` is auto-provided by GitHub Actions — no manual setup needed for GHCR push.
 
-**Local development** — create a local override (not committed):
+### How secrets are injected at runtime
+
+**1. Via environment variable (inline)**
 ```bash
-cp envs/staging.env envs/staging.env.local
-# Edit staging.env.local and set real SECRET_KEY
+SECRET_KEY=mysecretvalue IMAGE_TAG=latest \
+  docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
 ```
+
+**2. Via shell export**
+```bash
+export SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+export IMAGE_TAG=latest
+docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**3. Via `.env` file at repo root** (not committed — in `.gitignore`)
+```bash
+# Create .env file
+cat > .env <<EOF
+SECRET_KEY=mysecretvalue
+IMAGE_TAG=latest
+EOF
+
+# Docker Compose auto-loads .env from the working directory
+docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+```
+
+**4. Via Ansible extra vars**
+```bash
+.venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
+  -e "image_tag=latest" \
+  -e "secret_key=mysecretvalue"
+```
+> Then update `playbook.yml` to pass `SECRET_KEY: "{{ secret_key }}"` in the `environment:` block of the start task.
+
+**5. In GitHub Actions (CI)** — set in repo Settings → Secrets and variables → Actions:
+```yaml
+# Already wired in ci.yml test stage:
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+```
+The secret value is masked in logs and never exposed in plain text.
 
 ## Rollback Runbook
 
