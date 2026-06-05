@@ -1,0 +1,77 @@
+---
+# Provisions firewall rules for the Book App using ufw (Linux).
+# Simulates a networking IaC resource — equivalent to a cloud firewall/security group rule.
+# Run: ansible-playbook -i inventory.ini networking.yml --ask-become-pass
+
+- name: Configure firewall (ufw) for Book App
+  hosts: local
+  connection: local
+  become: true
+
+  vars:
+    app_port: 80
+    monitoring_port: 3000
+    prometheus_port: 9090
+    # Restrict monitoring ports to localhost — Grafana/Prometheus not exposed to internet
+    monitoring_allowed_src: "127.0.0.1"
+
+  tasks:
+    - name: Install ufw
+      apt:
+        name: ufw
+        state: present
+        update_cache: true
+
+    - name: Set default incoming policy to deny
+      ufw:
+        default: deny
+        direction: incoming
+
+    - name: Set default outgoing policy to allow
+      ufw:
+        default: allow
+        direction: outgoing
+
+    - name: Allow SSH (prevent lockout)
+      ufw:
+        rule: allow
+        port: "22"
+        proto: tcp
+        comment: SSH access
+
+    - name: Allow HTTP (app entry point via nginx)
+      ufw:
+        rule: allow
+        port: "{{ app_port }}"
+        proto: tcp
+        comment: Book App HTTP
+
+    - name: Allow Grafana from localhost only
+      ufw:
+        rule: allow
+        port: "{{ monitoring_port }}"
+        proto: tcp
+        src: "{{ monitoring_allowed_src }}"
+        comment: Grafana (localhost only)
+
+    - name: Allow Prometheus from localhost only
+      ufw:
+        rule: allow
+        port: "{{ prometheus_port }}"
+        proto: tcp
+        src: "{{ monitoring_allowed_src }}"
+        comment: Prometheus (localhost only)
+
+    - name: Enable ufw
+      ufw:
+        state: enabled
+
+    - name: Show ufw status
+      command: ufw status verbose
+      register: ufw_status
+      changed_when: false
+      become: true
+
+    - name: Print firewall rules
+      debug:
+        msg: "{{ ufw_status.stdout_lines }}"

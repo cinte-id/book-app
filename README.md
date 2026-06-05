@@ -3,6 +3,24 @@
 **Role:** DevOps & Infrastructure Engineer (Mid-Level)
 **Task reference:** [TASKS_DEVOPS_MID.md](TASKS_DEVOPS_MID.md)
 
+## Deliverables
+
+| # | Required | Status |
+|---|----------|--------|
+| 1 | Multi-stage Dockerfile + docker-compose with sidecar (nginx) | ✅ |
+| 2 | CI/CD pipeline: lint → build → test → push to GHCR | ✅ |
+| 3 | IaC (Ansible) — local environment + firewall provisioning | ✅ |
+| 4 | Monitoring: Prometheus + Grafana, alerts, pre-built dashboard | ✅ |
+| 5 | README / Runbook — architecture diagram, deploy, rollback | ✅ |
+
+| # | Bonus | Status |
+|---|-------|--------|
+| 1 | Kubernetes manifests (Deployment, Service, ConfigMap, Ingress) | ✅ |
+| 2 | GitOps with ArgoCD | ✅ |
+| 3 | Trivy image vulnerability scan in CI | ✅ |
+| 4 | IaC for networking resource (ufw firewall rules via Ansible) | ✅ |
+| 5 | On-call runbook (service down + high memory scenarios) | ✅ |
+
 ---
 
 # Book Tracker App
@@ -218,12 +236,12 @@ Monitoring (separate compose):
 ```
 push / PR → main
       │
-  ┌───▼────┐   ┌────────┐   ┌──────┐   ┌──────────────────┐
-  │  Lint  │──►│ Build  │──►│ Test │──►│  Push to GHCR    │
-  │        │   │ Docker │   │ API  │   │  (main only)     │
-  │ ruff   │   │ images │   │ e2e  │   │  :latest + :sha  │
-  │ eslint │   │        │   │      │   │                  │
-  └────────┘   └────────┘   └──────┘   └──────────────────┘
+  ┌───▼────┐   ┌────────┐   ┌──────┐   ┌────────────────┐   ┌──────────────────┐
+  │  Lint  │──►│ Build  │──►│ Test │──►│  Trivy Scan    │──►│  Push to GHCR    │
+  │        │   │ Docker │   │ API  │   │  CRITICAL vulns│   │  (main only)     │
+  │ ruff   │   │ images │   │ e2e  │   │  block push    │   │  :latest + :sha  │
+  │ eslint │   │        │   │      │   │  SARIF → GH    │   │                  │
+  └────────┘   └────────┘   └──────┘   └────────────────┘   └──────────────────┘
 ```
 
 Images published to: `ghcr.io/<owner>/book-app-backend` and `ghcr.io/<owner>/book-app-frontend`
@@ -364,12 +382,18 @@ book-app/
 │       └── service.yml
 ├── ansible/
 │   ├── playbook.yml            # Provision + deploy local environment end-to-end
+│   ├── networking.yml          # Firewall rules via ufw (IaC networking resource)
 │   └── inventory.ini           # Target: localhost
+├── gitops/
+│   ├── argocd-app.yml          # ArgoCD Application — watches k8s/ dir, auto-syncs
+│   └── README.md               # ArgoCD install + usage guide
+├── docs/
+│   └── oncall-runbook.md       # On-call runbook: service down + high memory
 ├── scripts/
 │   └── healthcheck.sh          # HTTP poll script (used in CI + Ansible)
 ├── docker-compose.yml          # App stack: backend + frontend + nginx (sidecar)
 ├── TASKS_DEVOPS_MID.md         # Task requirements reference
 └── .github/
     └── workflows/
-        └── ci.yml              # lint → build → test → push to GHCR
+        └── ci.yml              # lint → build → test → Trivy scan → push to GHCR
 ```
