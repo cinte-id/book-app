@@ -128,6 +128,9 @@ jobs:
     name: Vulnerability Scan (Trivy)
     runs-on: ubuntu-latest
     needs: test
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
 
@@ -170,7 +173,7 @@ jobs:
           ignore-unfixed: true
 
       - name: Upload backend SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: trivy-backend.sarif
