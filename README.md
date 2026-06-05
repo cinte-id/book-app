@@ -75,6 +75,31 @@ A full-stack web application for managing your reading list, built with Flask an
 > Role: DevOps Mid-Level
 > Stack: Docker (multi-stage) · Nginx · GitHub Actions · Ansible · Prometheus · Grafana
 
+## Screenshots
+
+### App Running
+![App Running](assets/app-running.png)
+
+### CI/CD Pipeline (GitHub Actions)
+![CI Pipeline](assets/ci-pipeline.png)
+
+### Grafana Dashboard
+![Grafana Dashboard](assets/grafana-dashboard.png)
+
+### Prometheus Alert Rules
+![Prometheus Alerts](assets/prometheus-alerts.png)
+
+### Trivy Vulnerability Scan
+![Trivy Scan](assets/trivy-scan.png)
+
+### GHCR Packages
+![GHCR Packages](assets/ghcr-packages.png)
+
+### Ansible Deploy
+![Ansible Deploy](assets/ansible-deploy.png)
+
+---
+
 ## Architecture
 
 ```
