@@ -1,94 +1,7 @@
-# Test Instruction
+# Book Tracker App — DevOps Mid-Level Submission
 
-Hi there! 👋  
-Thanks for applying to our company.
-
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
-
----
-
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
-
----
-
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
-
----
-
-## ✅ What to Do
-
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
-
----
-
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
+**Role:** DevOps & Infrastructure Engineer (Mid-Level)
+**Task reference:** [TASKS_DEVOPS_MID.md](TASKS_DEVOPS_MID.md)
 
 ---
 
@@ -415,33 +328,48 @@ docker compose logs -f backend
 | cAdvisor empty metrics | Linux only — on macOS some cgroups metrics are unavailable, expected |
 | CI lint fails | Run `ruff check backend/` and `cd frontend && npm run lint` locally first |
 
-## Project Structure (DevOps additions)
+## Project Structure
 
 ```
 book-app/
 ├── backend/
-│   └── Dockerfile              # Multi-stage: builder → runtime
+│   ├── app.py                  # Flask REST API
+│   ├── requirements.txt
+│   └── Dockerfile              # Multi-stage: builder → slim runtime
 ├── frontend/
-│   ├── Dockerfile              # Multi-stage: node build → nginx static
-│   └── nginx.conf              # SPA fallback + cache headers
+│   ├── src/                    # React + TypeScript source
+│   ├── nginx.conf              # SPA fallback + static asset cache headers
+│   └── Dockerfile              # Multi-stage: node build → nginx static
 ├── nginx/
-│   └── nginx.conf              # Reverse proxy: / → frontend, /api → backend
+│   └── nginx.conf              # Reverse proxy: /api → backend, / → frontend
 ├── monitoring/
 │   ├── docker-compose.yml      # Prometheus + Grafana + blackbox + cAdvisor
 │   ├── prometheus/
-│   │   ├── prometheus.yml      # Scrape configs
-│   │   └── alert-rules.yml     # BackendDown, HighResponseTime, HighMemory alerts
+│   │   ├── prometheus.yml      # Scrape configs (blackbox + cAdvisor)
+│   │   └── alert-rules.yml     # BackendDown, HighResponseTime, HighMemory
 │   └── grafana/
-│       ├── provisioning/       # Auto-configured datasource + dashboard
+│       ├── provisioning/       # Auto-configured datasource + dashboard loader
 │       └── dashboards/
 │           └── book-app.json   # Pre-built dashboard (6 panels)
+├── k8s/
+│   ├── namespace.yml
+│   ├── configmap.yml           # Backend env config
+│   ├── ingress.yml             # nginx ingress: /api → backend, / → frontend
+│   ├── backend/
+│   │   ├── deployment.yml      # Liveness + readiness probes, resource limits
+│   │   ├── service.yml
+│   │   └── pvc.yml             # Persistent storage for books.json
+│   └── frontend/
+│       ├── deployment.yml      # 2 replicas
+│       └── service.yml
 ├── ansible/
-│   ├── playbook.yml            # Provision + deploy local environment
-│   └── inventory.ini           # localhost target
+│   ├── playbook.yml            # Provision + deploy local environment end-to-end
+│   └── inventory.ini           # Target: localhost
 ├── scripts/
-│   └── healthcheck.sh          # HTTP poll script used in CI and Ansible
-├── docker-compose.yml          # App stack: backend + frontend + nginx
+│   └── healthcheck.sh          # HTTP poll script (used in CI + Ansible)
+├── docker-compose.yml          # App stack: backend + frontend + nginx (sidecar)
+├── TASKS_DEVOPS_MID.md         # Task requirements reference
 └── .github/
     └── workflows/
-        └── ci.yml              # lint → build → test → push (GHCR)
+        └── ci.yml              # lint → build → test → push to GHCR
 ```
