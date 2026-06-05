@@ -1,0 +1,83 @@
+---
+# Provisions and deploys Book App locally via Docker Compose.
+# Target: localhost (no cloud credentials needed).
+# Run: ansible-playbook -i inventory.ini playbook.yml
+
+- name: Deploy Book App (local environment)
+  hosts: local
+  connection: local
+  become: false
+
+  vars:
+    app_dir: "{{ playbook_dir }}/.."
+    data_dir: "{{ playbook_dir }}/../data"
+
+  tasks:
+    - name: Verify Docker is installed
+      command: docker --version
+      register: docker_version
+      changed_when: false
+      failed_when: docker_version.rc != 0
+
+    - name: Print Docker version
+      debug:
+        msg: "{{ docker_version.stdout }}"
+
+    - name: Verify Docker Compose plugin is available
+      command: docker compose version
+      register: compose_version
+      changed_when: false
+      failed_when: compose_version.rc != 0
+
+    - name: Print Docker Compose version
+      debug:
+        msg: "{{ compose_version.stdout }}"
+
+    - name: Create persistent data directory for books.json
+      file:
+        path: "{{ data_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Build Docker images
+      command: docker compose build --pull
+      args:
+        chdir: "{{ app_dir }}"
+      register: build_result
+      changed_when: "'Successfully built' in build_result.stdout or build_result.rc == 0"
+
+    - name: Start all services
+      command: docker compose up -d --remove-orphans
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Wait for backend health check to pass
+      uri:
+        url: http://localhost/api/test
+        method: GET
+        return_content: true
+        status_code: 200
+      register: health
+      until: health.status == 200
+      retries: 15
+      delay: 4
+
+    - name: Show running containers
+      command: docker compose ps
+      args:
+        chdir: "{{ app_dir }}"
+      register: ps_output
+      changed_when: false
+
+    - name: Print container status
+      debug:
+        msg: "{{ ps_output.stdout_lines }}"
+
+    - name: Deployment summary
+      debug:
+        msg:
+          - "Book App is running."
+          - "App:        http://localhost"
+          - "API:        http://localhost/api/books"
+          - "To stop:    docker compose down (in {{ app_dir }})"
+          - "To monitor: cd monitoring && docker compose up -d"

@@ -256,3 +256,192 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+# DevOps Setup — Infrastructure & Runbook
+
+> Role: DevOps Mid-Level
+> Stack: Docker (multi-stage) · Nginx · GitHub Actions · Ansible · Prometheus · Grafana
+
+## Architecture
+
+```
+                         Internet
+                             │
+                          :80
+                      ┌────────┐
+                      │ Nginx  │  ← reverse proxy (sidecar)
+                      └───┬────┘
+              ┌────────────┴────────────┐
+         /api/*                        /
+     ┌──────────┐               ┌──────────────┐
+     │ Backend  │               │  Frontend    │
+     │  Flask   │               │  nginx+SPA   │
+     │  :5001   │               │    :80       │
+     └────┬─────┘               └──────────────┘
+          │ books.json
+     ┌────▼─────┐
+     │  Volume  │  ← persistent data
+     └──────────┘
+
+Monitoring (separate compose):
+
+  ┌──────────────┐     scrape     ┌────────────┐
+  │  Prometheus  │ ◄──────────── │  cAdvisor  │  container metrics
+  │    :9090     │               └────────────┘
+  └──────┬───────┘
+         │            probe       ┌──────────────────┐
+         │ ◄──────────────────── │ blackbox-exporter │  HTTP health
+         │                       └──────────────────┘
+  ┌──────▼───────┐
+  │   Grafana    │  ← dashboards + alert rules
+  │    :3000     │
+  └──────────────┘
+```
+
+## CI/CD Pipeline
+
+```
+push / PR → main
+      │
+  ┌───▼────┐   ┌────────┐   ┌──────┐   ┌──────────────────┐
+  │  Lint  │──►│ Build  │──►│ Test │──►│  Push to GHCR    │
+  │        │   │ Docker │   │ API  │   │  (main only)     │
+  │ ruff   │   │ images │   │ e2e  │   │  :latest + :sha  │
+  │ eslint │   │        │   │      │   │                  │
+  └────────┘   └────────┘   └──────┘   └──────────────────┘
+```
+
+Images published to: `ghcr.io/<owner>/book-app-backend` and `ghcr.io/<owner>/book-app-frontend`
+
+## Deploy Runbook
+
+### Prerequisites
+
+- Docker >= 24
+- Docker Compose plugin (`docker compose version`)
+- Ansible >= 2.14 (`pip install ansible`) — for automated provisioning
+
+### Option A — Manual (Docker Compose)
+
+```bash
+# 1. Clone and enter the repo
+git clone <repo-url> && cd book-app
+
+# 2. Build and start all services
+docker compose up -d --build
+
+# 3. Verify
+curl http://localhost/api/test
+# → {"message": "CORS is working!"}
+
+# App is live at http://localhost
+```
+
+### Option B — Ansible Playbook (automated provisioning)
+
+```bash
+cd ansible
+
+# Install Ansible if needed
+pip install ansible
+
+# Run the playbook (provisions local Docker environment end-to-end)
+ansible-playbook -i inventory.ini playbook.yml
+```
+
+The playbook: checks Docker, creates data dir, builds images, starts services, waits for health check, and prints URLs.
+
+### Start Monitoring Stack
+
+```bash
+# App stack must be running first (monitoring connects to book-app_network)
+cd monitoring
+docker compose up -d
+
+# Access points:
+# Grafana   → http://localhost:3000  (admin / admin)
+# Prometheus → http://localhost:9090
+# Blackbox  → http://localhost:9115
+```
+
+Dashboard "Book App — Overview" is pre-provisioned — visible immediately on login.
+
+### Health Check Script
+
+```bash
+# Poll until endpoint returns 2xx (useful in scripts/CI)
+bash scripts/healthcheck.sh http://localhost/api/test
+```
+
+## Rollback Runbook
+
+### Rollback to previous image (GHCR)
+
+```bash
+# Pull specific SHA tag
+docker pull ghcr.io/<owner>/book-app-backend:<previous-sha>
+docker pull ghcr.io/<owner>/book-app-frontend:<previous-sha>
+
+# Update compose to use that tag, then restart
+BACKEND_IMAGE=ghcr.io/<owner>/book-app-backend:<previous-sha> \
+FRONTEND_IMAGE=ghcr.io/<owner>/book-app-frontend:<previous-sha> \
+docker compose up -d
+```
+
+### Rollback config only
+
+```bash
+git revert HEAD        # revert the bad commit
+git push origin main   # triggers CI, new images built and pushed
+docker compose pull && docker compose up -d
+```
+
+### Emergency: restart single service
+
+```bash
+docker compose restart backend
+docker compose logs -f backend
+```
+
+## Troubleshooting
+
+| Symptom | Check |
+|---------|-------|
+| 502 Bad Gateway | `docker compose ps` — is backend healthy? `docker compose logs backend` |
+| books.json lost on restart | Volume `book_data` should persist it — run `docker volume inspect book-app_book_data` |
+| Grafana shows no data | Prometheus must be on `app-network` — check `docker network inspect book-app_network` |
+| cAdvisor empty metrics | Linux only — on macOS some cgroups metrics are unavailable, expected |
+| CI lint fails | Run `ruff check backend/` and `cd frontend && npm run lint` locally first |
+
+## Project Structure (DevOps additions)
+
+```
+book-app/
+├── backend/
+│   └── Dockerfile              # Multi-stage: builder → runtime
+├── frontend/
+│   ├── Dockerfile              # Multi-stage: node build → nginx static
+│   └── nginx.conf              # SPA fallback + cache headers
+├── nginx/
+│   └── nginx.conf              # Reverse proxy: / → frontend, /api → backend
+├── monitoring/
+│   ├── docker-compose.yml      # Prometheus + Grafana + blackbox + cAdvisor
+│   ├── prometheus/
+│   │   ├── prometheus.yml      # Scrape configs
+│   │   └── alert-rules.yml     # BackendDown, HighResponseTime, HighMemory alerts
+│   └── grafana/
+│       ├── provisioning/       # Auto-configured datasource + dashboard
+│       └── dashboards/
+│           └── book-app.json   # Pre-built dashboard (6 panels)
+├── ansible/
+│   ├── playbook.yml            # Provision + deploy local environment
+│   └── inventory.ini           # localhost target
+├── scripts/
+│   └── healthcheck.sh          # HTTP poll script used in CI and Ansible
+├── docker-compose.yml          # App stack: backend + frontend + nginx
+└── .github/
+    └── workflows/
+        └── ci.yml              # lint → build → test → push (GHCR)
+```
