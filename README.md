@@ -25,7 +25,7 @@
 
 # Book Tracker App
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
+A full-stack web application for managing your reading list, built with Flask and React.
 
 <img src="./assets/home.png" height="200" alt="Home">
 <img src="./assets/library.png" height="200" alt="Library">
