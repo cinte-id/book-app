@@ -15,8 +15,7 @@ WORKDIR /app
 
 # Copy requirements and install dependencies
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir --upgrade pip && \
-    pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --user --no-cache-dir --default-timeout=1000 -r requirements.txt
 
 # ===== STAGE 2: Runtime =====
 FROM python:3.11-slim

@@ -1,31 +1,15 @@
-# ===== STAGE 1: Builder =====
-FROM node:20-alpine as builder
+FROM node:20-alpine
 
 WORKDIR /app
 
 # Copy dependency files
 COPY package*.json bun.lockb ./
 
-# Install dependencies
+# Install all dependencies (including devDependencies for dev server)
 RUN npm install
 
 # Copy application code
 COPY . .
-
-# Build the application
-RUN npm run build
-
-# ===== STAGE 2: Runtime =====
-FROM node:20-alpine
-
-WORKDIR /app
-
-# Install only production dependencies
-COPY package*.json bun.lockb ./
-RUN npm install --production
-
-# Copy built app from builder
-COPY --from=builder /app/dist ./dist
 
 # Expose port for Vite dev server
 EXPOSE 5173
