@@ -279,7 +279,7 @@ python app.py
 Backend akan berjalan di:
 
 ```text
-http://localhost:5001
+http://localhost:8080
 ```
 
 ---
