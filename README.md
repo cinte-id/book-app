@@ -1,258 +1,451 @@
-# Test Instruction
+# 📚 Book Tracker App - Fullstack Submission
+Name : Dika Jefrianto
 
-Hi there! 👋  
-Thanks for applying to our company.
+This repository contains my full-stack submission for the **Fullstack Developer (Mid-Level)** role.
 
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
-
----
-
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
+I have completed all the **core requirements of the Mid-Level task**, incorporated the **Junior-Level tasks as bonus features**, implemented **all optional tasks** (*Pagination, Authentication, and Dynamic Reading Statistics*), and added a **backend integration test suite** to ensure application reliability.
 
 ---
 
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
+# 👤 Chosen Role
+
+* **Role:** Fullstack Developer (Mid-Level)
+* **Position Applied:** Mid-Level Fullstack Developer (2–5 years experience)
 
 ---
 
-## ✅ What to Do
+# 🛠️ How to Run & Test
 
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
+## 1. Prerequisites
+
+Make sure the following software is installed:
+
+* Python 3.x
+* Node.js 16.x or later
+* npm or yarn
 
 ---
 
-## 🔧 Tasks by Role
+## 2. Environment Setup
 
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
-
----
-
-# Book Tracker App
-
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
-
-<img src="./assets/home.png" height="200" alt="Home">
-<img src="./assets/library.png" height="200" alt="Library">
-
-## Features
-
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
-
-## Tech Stack
-
-### Backend
-- Python 3.x
-- Flask
-- Flask-CORS
-- SQLAlchemy
-- python-dotenv
-
-### Frontend
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Axios
-- shadcn/ui components
-
-## Prerequisites
-
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
+Both frontend and backend are configured using environment-specific setups.
 
 ### Backend Setup
 
-1. Create and activate a virtual environment:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-2. Install backend dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Start the Flask server:
 ```bash
 cd backend
+
+# Create Virtual Environment
+python -m venv venv
+
+# Activate Virtual Environment
+
+# Windows (PowerShell)
+venv\Scripts\activate
+
+# macOS/Linux
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run environment setup
+python setup.py
+
+# Choose "development" when prompted
+
+# Start Flask API Server
 python app.py
 ```
 
-The backend server will start on http://localhost:5000
+Backend API will be available at:
+
+```text
+http://localhost:5000
+```
+
+---
 
 ### Frontend Setup
 
-1. Install frontend dependencies:
 ```bash
 cd frontend
-npm install
-```
 
-2. Start the development server:
-```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
 ```
 
-The frontend will be available at http://localhost:5173
+Frontend application will be available at:
 
-## API Documentation
-
-### Endpoints
-
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
-
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
+```text
+http://localhost:8080
 ```
 
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
+---
 
-#### DELETE /api/books/<id>
-- Deletes a book by ID
+## 3. Running Backend Integration Tests (Bonus)
 
-## Project Structure
+A backend integration test suite has been prepared using **pytest** to validate:
 
+* Core API endpoints
+* Authentication flow
+* Request payload validation
+* Unauthorized access restrictions
+
+Run the tests using:
+
+```bash
+cd backend
+
+pip install pytest
+
+pytest
 ```
-book-app/
+
+---
+
+# ✅ Implemented Features
+
+## Core Mid-Level Requirements
+
+### 🔍 Server-Side Search & Filter
+
+Replaced client-side filtering with real-time server-side processing.
+
+Supported query parameters:
+
+```http
+GET /api/books?q=
+GET /api/books?genre=
+```
+
+Features:
+
+* Keyword search
+* Genre filtering
+* Combined search and filter support
+
+---
+
+### 📖 Book Detail Page
+
+Implemented an interactive detail page:
+
+```text
+/books/:id
+```
+
+Displays complete book metadata:
+
+* Cover image
+* Title
+* Author
+* Rating
+* Page count
+* Genre
+
+---
+
+### 🔄 Persisted Reading Status Lifecycle
+
+Implemented reading status management with persistence:
+
+```text
+want-to-read ⇄ reading ⇄ completed
+```
+
+Changes are:
+
+* Saved globally
+* Synced through the API
+* Updated in real time
+
+---
+
+### 📊 Reading Progress Tracker
+
+Users can update their current reading page.
+
+Progress percentage is calculated dynamically:
+
+```text
+(currentPage / totalPages) × 100
+```
+
+Displayed on:
+
+* Library cards
+* Book detail page
+
+Only active when the book status is:
+
+```text
+reading
+```
+
+---
+
+### 🛡️ Backend Payload Validation
+
+Implemented robust Flask-side validation for:
+
+* POST requests
+* PUT requests
+
+Validation checks:
+
+* Required fields
+* Data types
+* Invalid values
+
+Invalid requests return:
+
+```http
+400 Bad Request
+```
+
+Including field-level validation messages.
+
+---
+
+# ⭐ Optional Tasks Implemented
+
+## 📄 Server-Side Pagination
+
+Implemented pagination support:
+
+```http
+GET /api/books?page=&limit=
+```
+
+Integrated with:
+
+* Next button
+* Previous button
+
+For efficient browsing of large datasets.
+
+---
+
+## 🔐 User Authentication
+
+Implemented authentication system with:
+
+### Register
+
+```http
+POST /api/auth/register
+```
+
+### Login
+
+```http
+POST /api/auth/login
+```
+
+Features:
+
+* User registration
+* User login
+* Session token validation
+* Protected library modifications
+
+---
+
+## 📈 Dynamic Profile Statistics
+
+Profile page displays statistics generated from live backend data.
+
+Examples:
+
+* Total books completed
+* Favorite genre
+* Reading activity summary
+
+All statistics are dynamically calculated.
+
+---
+
+# 🎁 Additional Enhancements (Bonus / Junior Tasks)
+
+## ⚡ Debounced Search Inputs
+
+Implemented a **300ms debounce mechanism** inside:
+
+```text
+BrowseLibrary.tsx
+```
+
+Benefits:
+
+* Reduces API requests
+* Improves responsiveness
+* Enhances user experience
+
+---
+
+## 🎯 Stable Genre Selection
+
+Genre categories are loaded once during initial mount.
+
+This prevents:
+
+* Buttons disappearing
+* Filter options changing unexpectedly
+* UI jumps during searches or pagination
+
+---
+
+## 👥 User-Specific Library Isolation
+
+Merged backend datasets dynamically against authenticated user sessions.
+
+Benefits:
+
+* User data isolation
+* Independent reading progress
+* Personalized library states
+
+---
+
+## 🧪 Backend Integration Test Suite
+
+Created a dedicated pytest suite covering:
+
+* API availability
+* CORS validation
+* Authentication flow
+* Unauthorized mutation protection
+
+---
+
+# 📝 Design Decisions & Technical Notes
+
+## 1. Safe localStorage Wrapper (Browser Security Fallback)
+
+Some environments (such as restricted iframes or privacy-focused browsers) may block access to browser storage and throw a fatal:
+
+```text
+SecurityError
+```
+
+To ensure application stability, a custom **safeLocalStorage** wrapper was implemented.
+
+### Behavior
+
+* Uses `try...catch` around storage operations
+* Automatically falls back to an in-memory session store
+* Prevents crashes caused by storage restrictions
+
+Benefits:
+
+* Improved browser compatibility
+* Graceful degradation
+* Better user experience
+
+---
+
+## 2. User Library Isolation
+
+Instead of storing user progress directly inside:
+
+```text
+books.json
+```
+
+a dedicated storage layer was introduced:
+
+```text
+user_libraries.json
+```
+
+This stores user-specific properties such as:
+
+* Reading status
+* Current page progress
+
+Mapped directly to the authenticated user.
+
+Benefits:
+
+* Prevents data leakage across accounts
+* Supports multi-user environments
+* Preserves personalized reading states
+
+---
+
+## 3. Event Bubbling Protection
+
+Book cards are wrapped with React Router:
+
+```jsx
+<Link>
+```
+
+for easier navigation.
+
+To avoid unintended navigation when interacting with overlay actions (e.g., **Add Book** buttons), click handlers utilize:
+
+```javascript
+e.stopPropagation();
+```
+
+Benefits:
+
+* Cleaner UX
+* Reliable button interactions
+* Prevention of accidental route changes
+
+---
+
+# 📂 Project Structure
+
+```text
+project-root/
+│
 ├── backend/
-│   └── app.py              # Flask backend API
+│   ├── app.py
+│   ├── routes/
+│   ├── tests/
+│   ├── requirements.txt
+│   └── setup.py
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+│
+└── README.md
 ```
 
-## Development
+---
 
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
+# 🚀 Submission Summary
 
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
+### Completed
 
-## Contributing
+✅ Mid-Level Core Requirements
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+✅ Junior-Level Bonus Features
 
-## Future Enhancements
+✅ Pagination
 
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
+✅ Authentication
 
-## License
+✅ Dynamic Reading Statistics
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+✅ Backend Payload Validation
+
+✅ Reading Progress Tracking
+
+✅ Integration Test Suite
+
+✅ User-Specific Library Persistence
+
+✅ Improved UX & Performance Optimizations
+
+This submission demonstrates a complete full-stack implementation with a focus on **scalability, maintainability, user experience, backend validation, authentication, and automated testing**.

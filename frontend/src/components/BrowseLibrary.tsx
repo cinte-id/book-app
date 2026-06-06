@@ -1,9 +1,8 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
+import { Search, Filter, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import BookCard from './BookCard';
 
-// Define the Book interface
 interface Book {
   id: number;
   title: string;
@@ -12,7 +11,8 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: 'read' | 'reading' | 'want-to-read' | string;
+  currentPage?: number; // Made optional to prevent dummy data mismatch
 }
 
 const BrowseLibrary = () => {
@@ -21,14 +21,56 @@ const BrowseLibrary = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Stable list to preserve genre filter categories
+  const [allGenres, setAllGenres] = useState<string[]>(['all']);
 
-  // Fetch books from the backend
+  // Pagination states (Optional Mid-Level specification)
+  const [page, setPage] = useState(1);
+  const [totalBooks, setTotalBooks] = useState(0);
+  const limit = 4; // Display 4 items per page for testing
+
+  // Fetch stable genre list once on initial component load
+  useEffect(() => {
+    const fetchAllGenres = async () => {
+      try {
+        const response = await api.get('/api/books');
+        const data = response.data as any; // Cast to bypass Axios unknown type compiler error
+        const rawList = data && typeof data === 'object' && 'books' in data ? data.books : data;
+        if (Array.isArray(rawList)) {
+          const uniqueGenres = ['all', ...new Set(rawList.map((book: Book) => book.genre))];
+          setAllGenres(uniqueGenres);
+        }
+      } catch (err) {
+        console.error('Failed to pre-fetch genres:', err);
+      }
+    };
+    fetchAllGenres();
+  }, []);
+
+  // Fetch books with server-side query params (GET /api/books?q=&genre=&page=&limit=)
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
-        const response = await api.get<Book[]>('/api/books');
-        setBooks(response.data);
+        const response = await api.get('/api/books', {
+          params: {
+            q: searchTerm ? searchTerm.trim() : undefined,
+            genre: selectedGenre !== 'all' ? selectedGenre : undefined,
+            page: page,
+            limit: limit
+          }
+        });
+
+        const data = response.data as any; // Cast to bypass Axios unknown type compiler error
+        // Parse structured vs flat response safely
+        if (data && typeof data === 'object' && 'books' in data) {
+          setBooks(data.books);
+          setTotalBooks(data.total);
+        } else if (Array.isArray(data)) {
+          setBooks(data);
+          setTotalBooks(data.length);
+        }
         setError(null);
       } catch (err) {
         setError('Failed to fetch books. Please try again later.');
@@ -38,37 +80,44 @@ const BrowseLibrary = () => {
       }
     };
 
-    fetchBooks();
-  }, []);
+    const delayDebounceFn = setTimeout(() => {
+      fetchBooks();
+    }, 300);
 
-  // Get unique genres from books
-  const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
-  // Filter books based on search term and selected genre
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
-    return matchesSearch && matchesGenre;
-  });
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, selectedGenre, page]);
 
-  // Handle adding a book to library
+  // Reset page to 1 when search or genre filters change
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, selectedGenre]);
+
+  // Books list derived from backend results
+  const filteredBooks = books;
+
+  // Add book to library with auth-gate handling
   const handleAddBook = async (bookId: number) => {
     try {
       await api.put(`/api/books/${bookId}`, {
         status: 'want-to-read'
       });
-      // Update local state
+      // Update state locally
       setBooks(books.map(book => 
         book.id === bookId 
           ? { ...book, status: 'want-to-read' }
           : book
       ));
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error adding book:', err);
-      setError('Failed to add book. Please try again.');
+      if (err.response?.status === 401) {
+        alert('Unauthorized! Please log in on the Profile tab first.');
+      } else {
+        setError('Failed to add book. Please try again.');
+      }
     }
   };
+
+  const totalPages = Math.ceil(totalBooks / limit);
 
   if (loading) {
     return (
@@ -109,7 +158,7 @@ const BrowseLibrary = () => {
 
       {/* Genre Filter */}
       <div className="flex space-x-2 overflow-x-auto pb-2">
-        {genres.map((genre) => (
+        {allGenres.map((genre) => (
           <button
             key={genre}
             onClick={() => setSelectedGenre(genre)}
@@ -126,29 +175,66 @@ const BrowseLibrary = () => {
 
       {/* Results Count */}
       <p className="text-sm text-gray-600">
-        {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
+        Showing books {Math.max((page - 1) * limit + 1, 1)} - {Math.min(page * limit, totalBooks)} of {totalBooks} found
       </p>
 
       {/* Books Grid */}
       <div className="space-y-3">
-        {filteredBooks.map((book) => (
-          <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
-              <button 
-                className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
-                onClick={() => handleAddBook(book.id)}
-              >
-                <Plus size={16} />
-              </button>
-            ) : (
-              <div className="absolute top-4 right-4 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
-                {book.status}
-              </div>
-            )}
-          </div>
-        ))}
+        {filteredBooks.map((book) => {
+          const isAdded = ['want-to-read', 'reading', 'read', 'completed'].includes(book.status);
+
+          return (
+            <div key={book.id} className="relative">
+              <BookCard book={book} variant="discover" />
+              
+              {/* Action overlay with bubbling protection */}
+              {!isAdded ? (
+                <button 
+                  className="absolute top-4 right-4 bg-blue-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg z-10"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card link navigation
+                    handleAddBook(book.id);
+                  }}
+                >
+                  <Plus size={16} />
+                </button>
+              ) : (
+                <div 
+                  className="absolute top-4 right-4 bg-green-100 text-green-700 font-semibold px-3 py-1 rounded-full text-xs z-10"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card link navigation
+                  }}
+                >
+                  {book.status === 'want-to-read' ? 'Want to Read' : book.status === 'reading' ? 'Reading' : 'Completed'}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center space-x-4 pt-4">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="p-2 border rounded-xl hover:bg-gray-100 disabled:opacity-40 transition-all"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <span className="text-sm font-semibold text-gray-600">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+            className="p-2 border rounded-xl hover:bg-gray-100 disabled:opacity-40 transition-all"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      )}
 
       {filteredBooks.length === 0 && (
         <div className="text-center py-8">
