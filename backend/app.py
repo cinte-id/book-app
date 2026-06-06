@@ -60,11 +60,47 @@ def get_books():
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
     
-    return jsonify(books)
+    q = request.args.get('q', '').lower()
+    genre = request.args.get('genre', '')
+    page = request.args.get('page', type=int, default=1)
+    limit = request.args.get('limit', type=int, default=10)
+
+    filtered_books = books
+    if q:
+        filtered_books = [b for b in filtered_books if q in b.get('title', '').lower() or q in b.get('author', '').lower()]
+    
+    if genre and genre.lower() != 'all':
+        filtered_books = [b for b in filtered_books if b.get('genre', '').lower() == genre.lower()]
+
+    total = len(filtered_books)
+    total_pages = (total + limit - 1) // limit if limit > 0 else 1
+    
+    start = (page - 1) * limit
+    end = start + limit
+    paged_books = filtered_books[start:end]
+
+    return jsonify({
+        'data': paged_books,
+        'total': total,
+        'page': page,
+        'totalPages': total_pages,
+        'limit': limit
+    })
 
 @app.route('/api/books', methods=['POST'])
 def add_book():
     data = request.json
+    errors = {}
+    if not data.get('title'): errors['title'] = 'Title is required'
+    if not data.get('author'): errors['author'] = 'Author is required'
+    if 'pages' in data and (not isinstance(data['pages'], int) or data['pages'] < 0):
+        errors['pages'] = 'Pages must be a positive number'
+    if 'currentPage' in data and (not isinstance(data['currentPage'], int) or data['currentPage'] < 0):
+        errors['currentPage'] = 'Current page must be a positive number'
+
+    if errors:
+        return jsonify({'errors': errors}), 400
+
     book = {
         'id': len(books) + 1,
         'title': data.get('title'),
@@ -72,12 +108,28 @@ def add_book():
         'cover': data.get('cover', ''),  # Book cover image URL
         'rating': data.get('rating', 0),  # Book rating (0-5)
         'pages': data.get('pages', 0),    # Number of pages
+        'currentPage': data.get('currentPage', 0), # Reading progress
         'genre': data.get('genre', ''),   # Book genre
         'status': data.get('status', 'want-to-read')  # Reading status
     }
     books.append(book)
     save_books(books)  # Save to JSON file
     return jsonify(book), 201
+
+@app.route('/api/books/<int:book_id>', methods=['GET', 'OPTIONS'])
+def get_book(book_id):
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        response = jsonify({})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
+        
+    for book in books:
+        if book['id'] == book_id:
+            return jsonify(book)
+    return jsonify({'error': 'Book not found'}), 404
 
 @app.route('/api/books/<int:book_id>', methods=['PUT', 'OPTIONS'])
 def update_book(book_id):
@@ -90,13 +142,30 @@ def update_book(book_id):
         return response
     
     data = request.json
+    errors = {}
+    if 'title' in data and not data['title']: errors['title'] = 'Title cannot be empty'
+    if 'author' in data and not data['author']: errors['author'] = 'Author cannot be empty'
+    if 'pages' in data and (not isinstance(data['pages'], int) or data['pages'] < 0):
+        errors['pages'] = 'Pages must be a positive number'
+    if 'currentPage' in data and (not isinstance(data['currentPage'], int) or data['currentPage'] < 0):
+        errors['currentPage'] = 'Current page must be a positive number'
+
+    if errors:
+        return jsonify({'errors': errors}), 400
+
     for book in books:
         if book['id'] == book_id:
+            # Validate currentPage against total pages
+            total_pages = data.get('pages', book.get('pages', 0))
+            if 'currentPage' in data and data['currentPage'] > total_pages:
+                return jsonify({'errors': {'currentPage': f'Current page cannot exceed total pages ({total_pages})'}}), 400
+
             book['title'] = data.get('title', book['title'])
             book['author'] = data.get('author', book['author'])
             book['cover'] = data.get('cover', book['cover'])
             book['rating'] = data.get('rating', book['rating'])
-            book['pages'] = data.get('pages', book['pages'])
+            book['pages'] = data.get('pages', book.get('pages', 0))
+            book['currentPage'] = data.get('currentPage', book.get('currentPage', 0))
             book['genre'] = data.get('genre', book['genre'])
             book['status'] = data.get('status', book['status'])
             save_books(books)  # Save to JSON file
@@ -116,4 +185,4 @@ if __name__ == '__main__':
     print(f"Starting Flask server on http://{FLASK_HOST}:{FLASK_PORT}")
     print("CORS enabled for development")
     print(f"Allowed origins: {CORS_ORIGINS}")
-    app.run(debug=FLASK_DEBUG, port=FLASK_PORT, host=FLASK_HOST) 
+    app.run(debug=FLASK_DEBUG, port=FLASK_PORT, host=FLASK_HOST)
