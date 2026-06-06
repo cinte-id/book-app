@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
+import api from '../services/api';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
 import HeaderNav from '../components/HeaderNav';
 import BrowseLibrary from '../components/BrowseLibrary';
-import { books, currentlyReading, readingStats } from '../data/dummyData';
+import { Link } from 'react-router-dom';
+import { currentlyReading, readingStats } from '../data/dummyData';
+
+interface BookData {
+  id: number;
+  title: string;
+  author: string;
+  cover: string;
+  rating: number;
+  pages: number;
+  genre: string;
+  status: 'read' | 'reading' | 'want-to-read' | 'unread' | string;
+}
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const [myBooks, setMyBooks] = useState<BookData[]>([]);
+
+  useEffect(() => {
+    api.get<{data: BookData[]}>('/api/books')
+      .then(res => setMyBooks(res.data.data))
+      .catch(err => console.error(err));
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -55,8 +75,10 @@ const Index = () => {
                   </button>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  {books.slice(0, 6).map((book) => (
-                    <BookCard key={book.id} book={book} variant="library" />
+                  {myBooks.filter(book => book.status !== 'unread').map((book) => (
+                    <Link to={`/books/${book.id}`} key={book.id} className="block">
+                      <BookCard book={book as any} variant="library" />
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -78,8 +100,10 @@ const Index = () => {
             </div>
             <h2 className="text-xl font-bold text-gray-800">Trending Now</h2>
             <div className="space-y-3">
-              {books.slice(3, 8).map((book) => (
-                <BookCard key={book.id} book={book} variant="discover" />
+              {myBooks.slice(3, 8).map((book) => (
+                <Link to={`/books/${book.id}`} key={book.id} className="block">
+                  <BookCard book={book as any} variant="discover" />
+                </Link>
               ))}
             </div>
           </div>
@@ -145,8 +169,10 @@ const Index = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Recommended for You</h3>
               <div className="grid grid-cols-2 gap-3">
-                {books.slice(0, 4).map((book) => (
-                  <BookCard key={book.id} book={book} variant="compact" />
+                {myBooks.slice(0, 4).map((book) => (
+                  <Link to={`/books/${book.id}`} key={book.id} className="block">
+                    <BookCard book={book as any} variant="compact" />
+                  </Link>
                 ))}
               </div>
             </div>

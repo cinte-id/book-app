@@ -1,4 +1,3 @@
-
 import { Star, BookOpen, Clock } from 'lucide-react';
 
 interface Book {
@@ -8,8 +7,9 @@ interface Book {
   cover: string;
   rating: number;
   pages: number;
+  currentPage?: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: 'read' | 'reading' | 'want-to-read' | 'unread' | string;
 }
 
 interface BookCardProps {
@@ -55,13 +55,18 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
         <div className="p-3">
           <h3 className="font-semibold text-sm text-gray-800 mb-1 line-clamp-2">{book.title}</h3>
           <p className="text-xs text-gray-600 mb-2">{book.author}</p>
-          <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
             <span>{book.pages} pages</span>
             <div className="flex items-center">
               <Star size={12} className="text-yellow-400 mr-1" />
               {book.rating}
             </div>
           </div>
+          {book.status === 'reading' && (
+            <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+              <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, ((book.currentPage || 0) / book.pages) * 100))}%` }}></div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -105,10 +110,15 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
             <Star size={16} className="text-yellow-400 mr-1" />
             <span className="text-sm text-gray-700">{book.rating}</span>
           </div>
-          <div className="flex items-center text-xs text-gray-500">
+          <div className="flex items-center text-xs text-gray-500 mb-2">
             <Clock size={12} className="mr-1" />
             {book.pages} pages
           </div>
+          {book.status === 'reading' && (
+            <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+              <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, Math.max(0, ((book.currentPage || 0) / book.pages) * 100))}%` }}></div>
+            </div>
+          )}
         </div>
       </div>
     </div>
