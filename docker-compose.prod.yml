@@ -39,6 +39,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: production
     container_name: book-app-frontend-prod
     ports:
       - "5173:5173"
