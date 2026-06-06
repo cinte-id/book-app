@@ -1,5 +1,6 @@
 # 📚 Book Tracker App - Fullstack Submission
 Name : Dika Jefrianto
+
 This repository contains my full-stack submission for the **Fullstack Developer (Mid-Level)** role.
 
 I have completed all the **core requirements of the Mid-Level task**, incorporated the **Junior-Level tasks as bonus features**, implemented **all optional tasks** (*Pagination, Authentication, and Dynamic Reading Statistics*), and added a **backend integration test suite** to ensure application reliability.
