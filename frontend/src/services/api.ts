@@ -21,6 +21,10 @@ api.interceptors.request.use(
     if (IS_DEBUG) {
       console.log('Making request to:', config.baseURL + config.url);
     }
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -39,8 +43,12 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
+      if (error.response.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        window.location.href = '/login';
+      }
+      
       console.error('Response error:', {
         status: error.response.status,
         statusText: error.response.statusText,
@@ -48,10 +56,8 @@ api.interceptors.response.use(
         headers: error.response.headers
       });
     } else if (error.request) {
-      // The request was made but no response received
       console.error('Request error - no response received:', error.request);
     } else {
-      // Something happened in setting up the request that triggered an Error
       console.error('Error:', error.message);
     }
     return Promise.reject(error);
