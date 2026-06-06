@@ -1,136 +1,197 @@
-# Book Tracker App Frontend
+📚 Book Tracker App (Fullstack Enhancement)
 
-A modern React application for managing your reading list, built with Vite, TypeScript, and shadcn/ui.
+    A modern full-stack web application for managing and tracking your reading activity.
+    This project is based on the original Book Tracker App, enhanced with additional features, improved UI/UX, and better user experience.
 
-## Features
+    🚀 Role: Fullstack Developer (Enhancement & Feature Development)
 
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
+✨ Key Improvements
 
-## Tech Stack
+    This project extends the base application with several new features and improvements:
 
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- shadcn/ui
-- ESLint
-- PostCSS
+    🔍 Smart Search Integration
+        - Search in Header Navbar is now connected to the Discover tab
+        - Real-time filtering of books based on user input
 
-## Project Structure
+    🏠 Home Dashboard Enhancement
+        - “Welcome Back” now dynamically shows:
+           - Total books being read
+           - Reading progress 📊
+        - Added Continue Reading section based on current reading status
 
-```
-frontend/
-├── src/
-│   ├── components/     # React components
-│   ├── data/          # Data and mock files
-│   ├── hooks/         # Custom React hooks
-│   ├── lib/           # Utility functions
-│   ├── pages/         # Page components
-│   ├── App.tsx        # Main React component
-│   ├── App.css        # App-specific styles
-│   ├── main.tsx       # React entry point
-│   └── index.css      # Global styles
-├── public/            # Static assets
-├── tailwind.config.ts # Tailwind configuration
-├── components.json    # shadcn/ui configuration
-├── postcss.config.js  # PostCSS configuration
-├── tsconfig.json      # TypeScript configuration
-├── vite.config.ts     # Vite configuration
-└── package.json       # Frontend dependencies
-```
+    📊 New Book Status System
+        Added a new status:
+        - none → default (not categorized yet)
+        Now statuses are:
+        - reading
+        - read (finished)
+        - want-to-read
+        - none
+        This allows better tracking and separation of book states.
 
-## Prerequisites
+    🤖 Smart Recommendation System
+        - Recommends books based on:
+           - User interest
+           - Author similarity
+        - If no none books left → fallback to random recommendation 
 
-- Node.js 16.x or later
-- npm or yarn
+    📚 Library Improvements
+        My Library:
+            Displays only:
+            - reading
+            - want-to-read
+            - read
+            Excludes none books
+        Browse Section:
+        🔍 Search by title
+        🏷️ Filter by genre (based on database)
+        ➕ Add book to collection
+        📌 Bookmark (Saved/Loved state)
 
-## Getting Started
+    📖 Book Detail Page
+        - Full book information
+        - ❤️ “Love” feature (same as bookmark)
+        - ⭐ Rating system:
+            - Add rating
+            - Edit rating
+            - Uses dummy rating database
+        - 🚀 “Start Reading” button:
+            - Changes status → reading
+            - Opens reading mode
 
-1. Install dependencies:
-```bash
-npm install
-```
+    📄 Reader Page (NEW 🔥)
+        - Page-by-page reading system
+        - Next / Previous navigation
+        - Manual page input
+        - Auto-save progress
+        - Manual save button
+        - Pause reading:
+            - Changes status → want-to-read
+            - Keeps progress saved
 
-2. Start the development server:
-```bash
-npm run dev
-```
+    🔄 Reading Logic Improvements
+        - If “Love” is removed while reading → book removed from reading list
+        - Reading tab now:
+            - Tracks progress 
+            - Allows continue reading
+            - Allows delete
 
-The application will be available at http://localhost:5173
+    🔎 Discover Page Upgrade
+        - Search feature
+        - Sorting system
+        - Better browsing experience
 
-## Development
+    👤 Profile Page Sync
+        - Automatically synced with:
+        - Books read
+        - Ratings average ⭐
+        - Ignores none status
+        - Shows real user reading stats
 
-### Component Structure
-- Use functional components with TypeScript
-- Implement proper type definitions
-- Follow shadcn/ui component patterns
+    🎨 UI/UX Enhancements
+        - Cleaner and modern design
+        - Better spacing & layout
+        - More intuitive navigation
 
-### State Management
-- Use React hooks for local state
-- Implement custom hooks for shared logic
-- Consider context for global state
+    🔔 Notifications & Alerts
+        - Toast notifications using Sonner
+        - Confirmation dialog:
+            - Delete book
+            - Remove from reading
+            - Remove from favorites
 
-### Styling
-- Use Tailwind CSS classes
-- Follow shadcn/ui design system
-- Maintain consistent spacing and colors
+    🛠️ Tech Stack
+    Backend:
+    - Python 3.x
+    - Flask
+    - Flask-CORS
+    - SQLAlchemy
+    - python-dotenv
+    Frontend:
+    - React 18
+    - TypeScript
+    - Vite
+    - Tailwind CSS
+    - Axios
+    - shadcn/ui
+    - Sonner (toast notifications)
 
-### Type Safety
-- Define interfaces for all data structures
-- Use TypeScript strict mode
-- Implement proper error handling
+    📁 Project Structure
+        book-app-tes/
+        ├── backend/
+        │   └── app.py
+        ├── frontend/
+        │   ├── src/
+        │   │   ├── components/
+        │   │   ├── pages/
+        │   │   ├── services/
+        │   │   ├── data/
+        │   │   └── App.tsx
+        │   └── package.json
+        └── requirements.txt
 
-## Configuration Files
+    ⚙️ Getting Started
 
-### tailwind.config.ts
-- Tailwind CSS configuration
-- Custom theme settings
-- Plugin configurations
+        Backend Setup:
 
-### components.json
-- shadcn/ui component configuration
-- Style and theme settings
+        python -m venv venv
+        # Windows
+        venv\Scripts\activate
+        # Install dependencies
+        pip install -r requirements.txt
+        # Run server
+        cd backend
+        python app.py
 
-### tsconfig.json
-- TypeScript configuration
-- Path aliases
-- Compiler options
+        Backend runs on:
+        http://localhost:5001
 
-### vite.config.ts
-- Vite bundler configuration
-- Plugin settings
-- Build options
+        Frontend Setup:
 
-## Available Scripts
+        cd frontend
+        npm install
+        npm run dev
+        
+        Frontend runs on:
+        http://localhost:5173
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint
-- `npm run preview` - Preview production build
+    🔌 API Endpoints
+    Method	        Endpoint	        Description
+    GET	           /api/books	        Get all books
+    GET	           /api/books/:id	    Get book detail
+    PUT	           /api/books/:id	    Update book
+    DELETE	       /api/books/:id	    Delete book
 
-## Contributing
+    🎯 Fullstack Task Completion
+        Based on TASKS_FULLSTACK.md:
+        ✅ Complete Library Browse page
+        ✅ Implement search (title & category)
+        ✅ Add Book Detail page
+        ✅ BONUS: Added advanced features:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+        - Reading system 📖
+        - Rating ⭐
+        - Recommendation 🤖
+        - Profile analytics 📊
+        - UI/UX improvements 🎨
 
-## Future Enhancements
+    🚀 Future Improvements
+        🔐 Authentication system
+        🧠 AI-based recommendations
+        🗂️ Book categories & tags
+        ☁️ Database integration (production)
+        👥 Multi-user support
+        
+    📄 License
+        This project is licensed under the MIT License.
 
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] User profiles and personal libraries
+    🙌 Notes
+        This project was developed as part of a Fullstack assignment, focusing on:
+        - Feature enhancement
+        - UI/UX improvement
+        - Clean architecture
+        - Real-world user experience
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+    Author
+        Raden Tania Cinta Kinan Lestari
+        Fullstack Developer (Candidate)

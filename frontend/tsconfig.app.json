@@ -21,6 +21,8 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
 
+    /* Perbaikan: Mengikuti saran compiler ke versi 6.0 */
+    "ignoreDeprecations": "6.0", 
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

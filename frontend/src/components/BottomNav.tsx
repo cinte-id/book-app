@@ -16,7 +16,7 @@ const BottomNav = ({ activeTab, setActiveTab }: BottomNavProps) => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200">
+    <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white/90 backdrop-blur-md border-t border-gray-100 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
       <div className="flex items-center justify-around py-2">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -32,7 +32,7 @@ const BottomNav = ({ activeTab, setActiveTab }: BottomNavProps) => {
                   : 'text-gray-600 hover:text-gray-800'
               }`}
             >
-              <Icon size={20} className={isActive ? 'mb-1' : 'mb-1'} />
+              <Icon size={20} className="mb-1" />
               <span className={`text-xs ${isActive ? 'font-medium' : ''}`}>
                 {item.label}
               </span>

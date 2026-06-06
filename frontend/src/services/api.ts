@@ -1,61 +1,98 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 
-// Get API configuration from environment variables
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5001';
-const API_TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || '10000');
-const IS_DEBUG = import.meta.env.VITE_ENABLE_DEBUG === 'true';
+const API_BASE_URL = 'http://127.0.0.1:5001';
+const API_TIMEOUT = 10000;
+const IS_DEBUG = true;
 
-// Create axios instance with base configuration
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: false, // Set to false for CORS
   timeout: API_TIMEOUT,
 });
 
-// Add request interceptor for error handling
+// REQUEST INTERCEPTOR
 api.interceptors.request.use(
   (config) => {
     if (IS_DEBUG) {
-      console.log('Making request to:', config.baseURL + config.url);
+      console.log(`[${config.method?.toUpperCase()}] ${config.url}`);
     }
     return config;
   },
-  (error) => {
-    console.error('Request error:', error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Add response interceptor for error handling
+// RESPONSE INTERCEPTOR
 api.interceptors.response.use(
-  (response) => {
-    if (IS_DEBUG) {
-      console.log('Response received:', response.status, response.statusText);
-    }
-    return response;
-  },
+  (response) => response,
   (error) => {
+    let errorMessage = "Something went wrong";
+
     if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error('Response error:', {
-        status: error.response.status,
-        statusText: error.response.statusText,
-        data: error.response.data,
-        headers: error.response.headers
-      });
+      const status = error.response.status;
+      const serverMessage = error.response.data?.message;
+
+      if (status === 404) {
+        errorMessage = "Data not found";
+      } else if (status === 400) {
+        errorMessage = serverMessage || "Invalid request data";
+      } else if (status === 500) {
+        errorMessage = "Server error. Please try again later";
+      } else if (serverMessage) {
+        errorMessage = serverMessage;
+      }
+
     } else if (error.request) {
-      // The request was made but no response received
-      console.error('Request error - no response received:', error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error:', error.message);
+      errorMessage = "Cannot connect to server. Please check your backend";
     }
+
+    toast.error(errorMessage);
     return Promise.reject(error);
   }
 );
 
-export default api; 
+/**
+ * API SERVICES
+ */
+
+// GET all books
+export const fetchBooks = (search?: string, genre?: string) => {
+  return api.get('/api/books', { params: { search, genre } });
+};
+
+// GET book detail
+export const fetchBookById = (id: number | string) => {
+  return api.get(`/api/books/${id}`);
+};
+
+// UPDATE book status
+export const updateBookStatus = (id: number | string, status: string) => {
+  return api.put(`/api/books/${id}`, { status });
+};
+
+// UPDATE reading progress
+export const updateBookProgress = (id: number | string, currentPage: number) => {
+  return api.put(`/api/books/${id}`, { current_page: currentPage });
+};
+
+// DELETE book
+export const deleteBook = (id: number | string) => {
+  return api.delete(`/api/books/${id}`);
+};
+
+// UPDATE rating
+export const updateBookRating = (
+  id: number | string,
+  ratingData: {
+    rating: number;
+    rating_sum: number;
+    rating_count: number;
+    user_rating: number;
+  }
+) => {
+  return api.put(`/api/books/${id}`, ratingData);
+};
+
+export default api;

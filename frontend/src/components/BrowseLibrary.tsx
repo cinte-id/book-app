@@ -1,9 +1,10 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import api from '../services/api';
-import BookCard from './BookCard';
+import { Search, Plus, Loader2, Check, Clock, CheckCircle } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import api, { fetchBooks, updateBookStatus } from '../services/api';
+import BookCard from '../components/BookCard';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-// Define the Book interface
 interface Book {
   id: number;
   title: string;
@@ -12,149 +13,164 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: 'read' | 'reading' | 'want-to-read' | 'none';
 }
 
-const BrowseLibrary = () => {
+interface BrowseLibraryProps {
+  onBookAdded?: () => void;
+  onBookClick?: (id: number | string) => void;
+}
+
+
+const BrowseLibrary = ({ onBookAdded, onBookClick }: BrowseLibraryProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('all');
   const [books, setBooks] = useState<Book[]>([]);
+  const [availableGenres, setAvailableGenres] = useState<string[]>(['all']);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Fetch books from the backend
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get<Book[]>('/api/books');
-        setBooks(response.data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch books. Please try again later.');
-        console.error('Error fetching books:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
-
-  // Get unique genres from books
-  const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
-  // Filter books based on search term and selected genre
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
-    return matchesSearch && matchesGenre;
-  });
-
-  // Handle adding a book to library
-  const handleAddBook = async (bookId: number) => {
+  // 1. Load Data
+  const loadData = useCallback(async () => {
     try {
-      await api.put(`/api/books/${bookId}`, {
-        status: 'want-to-read'
+      setLoading(true);
+      const response = await fetchBooks(
+        searchTerm, 
+        selectedGenre === 'all' ? undefined : selectedGenre
+      );
+      
+      const dataX = response.data;
+      const finalData: Book[] = Array.isArray(dataX) ? dataX : (dataX.books || []);
+      
+      setBooks(finalData);
+
+      setAvailableGenres(prevGenres => {
+        if (prevGenres.length <= 1 && finalData.length > 0) {
+          return ['all', ...new Set(finalData.map((b: Book) => b.genre))];
+        }
+        return prevGenres;
       });
-      // Update local state
-      setBooks(books.map(book => 
-        book.id === bookId 
-          ? { ...book, status: 'want-to-read' }
-          : book
-      ));
+
     } catch (err) {
-      console.error('Error adding book:', err);
-      setError('Failed to add book. Please try again.');
+      console.error('Browse Error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [searchTerm, selectedGenre]); 
+
+  // 2. Debounce Search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      loadData();
+    }, 400);
+    return () => clearTimeout(timeoutId);
+  }, [loadData]);
+
+  // 3. Handle Add Book
+  const handleAddBook = async (bookId: number, title: string) => {
+    try {
+      // Set status to 'want-to-read'
+      await updateBookStatus(bookId, 'want-to-read');
+      
+      // Update UI local SAVED
+      setBooks(prev => prev.map(b => 
+        b.id === bookId ? { ...b, status: 'want-to-read' } : b
+      ));
+      
+      toast.success(`"${title}" added to your collection!`);
+      if (onBookAdded) onBookAdded();
+    } catch (err) {
+      toast.error("Failed to add book");
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4">
+    <div className="space-y-5 animate-in fade-in duration-500 pb-32">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-800">Browse Library</h2>
-        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors">
-          <Filter size={20} />
-        </button>
+        <h2 className="text-2xl font-extrabold text-gray-800 tracking-tight">Discover</h2>
       </div>
 
       {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+      <div className="relative group">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
         <input
           type="text"
           placeholder="Search books or authors..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-100 shadow-sm rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
         />
       </div>
 
       {/* Genre Filter */}
-      <div className="flex space-x-2 overflow-x-auto pb-2">
-        {genres.map((genre) => (
+      <div className="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+        {availableGenres.map((genre) => (
           <button
             key={genre}
             onClick={() => setSelectedGenre(genre)}
-            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              selectedGenre === genre
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            className={`px-5 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 ${
+              selectedGenre === genre 
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
+                : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50'
             }`}
           >
-            {genre === 'all' ? 'All Genres' : genre}
+            {genre === 'all' ? 'All Genre' : genre}
           </button>
         ))}
       </div>
 
-      {/* Results Count */}
-      <p className="text-sm text-gray-600">
-        {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
-      </p>
-
-      {/* Books Grid */}
-      <div className="space-y-3">
-        {filteredBooks.map((book) => (
-          <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
-              <button 
-                className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
-                onClick={() => handleAddBook(book.id)}
-              >
-                <Plus size={16} />
-              </button>
-            ) : (
-              <div className="absolute top-4 right-4 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
-                {book.status}
-              </div>
-            )}
+      {/* List Buku */}
+      <div className="space-y-4">
+        {loading && books.length === 0 ? (
+          <div className="flex flex-col items-center justify-center p-20 space-y-3">
+            <Loader2 className="animate-spin text-blue-500" size={32} />
+            <p className="text-gray-400 text-sm italic">Finding books for you...</p>
           </div>
-        ))}
-      </div>
+        ) : (
+          books.map((book) => (
+            <div key={book.id} className="relative group transition-all duration-300">
+              <BookCard 
+                book={book} 
+                variant="discover" 
+                onClick={() => navigate(`/book-detail/${book.id}`)} 
+              />
 
-      {filteredBooks.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-gray-500">No books found matching your criteria</p>
-        </div>
-      )}
+              {/* Status Button Overlay */}
+              <div className="absolute top-4 right-4 z-10">
+                {book.status === 'want-to-read' ? (
+                  <div className="bg-pink-50 text-pink-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-pink-100 shadow-sm">
+                    <Check size={12} /> SAVED
+                  </div>
+                ) : book.status === 'reading' ? (
+                  <div className="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-orange-100">
+                    <Clock size={12} /> READING
+                  </div>
+                ) : book.status === 'read' ? (
+                  <div className="bg-green-50 text-green-600 px-3 py-1.5 rounded-xl text-[10px] font-bold flex items-center gap-1 border border-green-100">
+                    <CheckCircle size={12} /> FINISHED
+                  </div>
+                ) : (
+                  <button 
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl shadow-lg shadow-blue-200 transition-all active:scale-90"
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      handleAddBook(book.id, book.title); 
+                    }}
+                  >
+                    <Plus size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+
+        {books.length === 0 && !loading && (
+          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-100">
+            <p className="text-gray-400 text-sm">No books found in this genre.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
