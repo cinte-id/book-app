@@ -55,8 +55,8 @@ resource "aws_security_group" "web_sg" {
   # Izinkan Port Backend Flask (Port 5000)
   ingress {
     description = "Flask API Backend"
-    from_port   = 5000
-    to_port     = 5000
+    from_port   = 5001
+    to_port     = 5001
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
