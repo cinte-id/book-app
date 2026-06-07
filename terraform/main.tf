@@ -61,6 +61,35 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Izinkan Grafana (Port 3000)
+  ingress {
+    description = "Grafana Dashboard"
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Izinkan Prometheus (Port 9090)
+  # akan dibatasi jika ada vpn atau private network di production
+  ingress {
+    description = "Prometheus"
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Izinkan Node Exporter (Port 9100) - metrics sistem EC2
+  # akan dibatasi jika ada vpn atau private network di production
+  ingress {
+    description = "Node Exporter Metrics"
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Outbound Rules (Izinkan VM melakukan koneksi keluar untuk download library/update)
   egress {
     from_port   = 0
