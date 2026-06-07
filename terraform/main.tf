@@ -118,11 +118,30 @@ resource "aws_instance" "web_server" {
               # git clone https://github.com/EvoVincere/book-app.git /home/ubuntu/app
               # cd /home/ubuntu/app && docker-compose -f docker-compose.prod.yml up -d
               EOF
+   tags = {
+      Name        = "book-app-vm"
+      Environment = "Dev"
+      Project     = "book-app"
+      ManagedBy   = "Terraform"
+  }
+}  
+# 7. Membuat Elastic IP (IP Publik Statis)
+resource "aws_eip" "web_eip" {
+  domain = "vpc"
 
   tags = {
-    Name        = "book-app-vm"
+    Name        = "book-app-eip"
     Environment = "Dev"
     Project     = "book-app"
     ManagedBy   = "Terraform"
   }
 }
+
+# 8. Menghubungkan Elastic IP ke EC2 Instance
+resource "aws_eip_association" "web_eip_assoc" {
+  instance_id   = aws_instance.web_server.id
+  allocation_id = aws_eip.web_eip.id
+}
+
+ 
+

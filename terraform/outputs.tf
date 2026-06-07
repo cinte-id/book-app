@@ -1,14 +1,14 @@
-output "public_ip" {
-  description = "IP Publik dari EC2 Instance"
-  value       = aws_instance.web_server.public_ip
-}
-
-output "public_dns" {
-  description = "DNS Publik dari EC2 Instance"
-  value       = aws_instance.web_server.public_dns
+output "elastic_ip" {
+  description = "Elasitc IP"
+  value       = aws_eip.web_eip.public_ip
 }
 
 output "ssh_command" {
-  description = "Perintah untuk melakukan SSH ke VM"
-  value       = "ssh -i ~/.ssh/book-app-key.pem ubuntu@${aws_instance.web_server.public_ip}"
+  description = "SSH connect EC2"
+  value       = "ssh -i ~/.ssh/book-app-key.pem ubuntu@${aws_eip.web_eip.public_ip}"
+}
+
+output "instance_id" {
+  description = "ID EC2 Instance"
+  value       = aws_instance.web_server.id
 }
