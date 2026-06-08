@@ -1,13 +1,12 @@
-# 📚 Book Tracker Application - Recruitment Technical Assessment
+# 📚 Book Tracker Application - Fullstack Submission
 
 ## 👨‍💻 Candidate Information
 
 | Detail | Information |
 |----------|-------------|
 | **Name** | Muhammad 'Abdhu Syukra |
-| **Position Applied** | Fullstack Developer (Mid-Level) |
+| **Role** | Fullstack Developer (Mid-Level) |
 | **Project Type** | Technical Recruitment Assignment |
-| **Tech Stack** | Flask, React, TypeScript, Axios |
 
 ---
 
@@ -216,25 +215,6 @@ Tujuan:
 - Menjaga kualitas kode
 
 ---
-
-# 🏗️ Architecture Design
-
-## Data Separation Strategy
-
-```text
-┌────────────────────┐
-│    books.json      │
-│ Master Catalogue   │
-└─────────┬──────────┘
-          │
-          ▼
-┌────────────────────┐
-│ user_libraries.json│
-│ User Collections   │
-│ Reading Status     │
-│ Reading Progress   │
-└────────────────────┘
-```
 
 Pendekatan ini memastikan data katalog tetap konsisten dan tidak bergantung pada aktivitas pengguna tertentu.
 
