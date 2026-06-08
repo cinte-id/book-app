@@ -66,7 +66,7 @@ python app.py
 *Testing Backend:*
 bash
 cd backend
-python test_app.py
+python app.py
 
 
 *Frontend:*
