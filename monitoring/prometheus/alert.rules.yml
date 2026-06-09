@@ -1,0 +1,42 @@
+groups:
+  - name: book-app-alerts
+    rules:
+      # Alert jika backend Flask down
+      - alert: FlaskBackendDown
+        expr: up{job="flask-backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Flask Backend is down"
+          description: "book-app backend tidak merespon selama lebih dari 1 menit."
+
+      # Alert jika response time Flask lambat (>1 detik)
+      - alert: FlaskHighResponseTime
+        expr: flask_http_request_duration_seconds{quantile="0.9"} > 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Flask response time tinggi"
+          description: "90% request membutuhkan lebih dari 1 detik."
+
+      # Alert jika RAM EC2 hampir penuh (>85%)
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory usage tinggi"
+          description: "RAM usage di atas 85%."
+
+      # Alert jika CPU tinggi (>80%)
+      - alert: HighCPUUsage
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU usage tinggi"
+          description: "CPU usage di atas 80% selama 2 menit."
