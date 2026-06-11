@@ -134,6 +134,11 @@ resource "aws_instance" "web_server" {
   subnet_id              = data.aws_subnets.default.ids[0]
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
+  root_block_device {
+    volume_size = 20
+    volume_type = "gp3"
+  }
+
   # User Data: Script otomatis untuk menginstall Docker saat VM pertama kali menyala
   user_data = <<-EOF
               #!/bin/bash
@@ -154,6 +159,7 @@ resource "aws_instance" "web_server" {
       ManagedBy   = "Terraform"
   }
 }  
+
 # 7. Membuat Elastic IP (IP Publik Statis)
 resource "aws_eip" "web_eip" {
   domain = "vpc"
