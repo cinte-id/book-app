@@ -284,3 +284,18 @@ push to main
 > - Ganti `GF_SECURITY_ADMIN_PASSWORD` dengan password kuat
 > - Gunakan HTTPS (SSL/TLS) untuk semua endpoint publik
 > - Buat SSH key pair secara eksternal, bukan via `tls_private_key` Terraform
+
+
+## Result screenshots
+
+### CI CD Success
+![CI CD Success](assets/ci-cd.png)
+
+### Grafana Dashboard EC2
+![Grafana Dashboard EC2](assets/grafanaEC2.png)
+
+### Grafana Dashboard Flask
+![Grafana Dashboard Flask](assets/grafanaflask.png)
+
+### Prometheus Targets
+![Prometheus Targets](assets/prometheus.png)
