@@ -1,0 +1,27 @@
+# Local .terraform directories
+.terraform/
+
+# .tfstate files (sangat penting untuk tidak masuk git karena berisi data sensitif infrastruktur)
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude semua file .tfvars (karena bisa berisi variabel sensitif seperti password/keys)
+*.tfvars
+*.tfvars.json
+
+# Ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore SSH Private Key yang di-generate otomatis (.pem)
+*.pem

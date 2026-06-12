@@ -1,0 +1,146 @@
+version: '3.9'
+
+services:
+  # Backend Service (Development - SQLite + JSON)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: book-app-backend
+    environment:
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-True}
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 5001
+      DATABASE_URL: ${DATABASE_URL:-sqlite:///books.db}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:80}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key-change-in-production-123456789}
+      API_PREFIX: ${API_PREFIX:-/api}
+      DATA_FILE: ${DATA_FILE:-books.json}
+      DEBUG_METRICS: "1" 
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend:/app
+      - ./backend/data:/app/data
+      - /app/__pycache__
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+  # Frontend Service (Development - Vite dev server)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: book-app-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:5001}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:5001/api}
+      VITE_NODE_ENV: ${VITE_NODE_ENV:-development}
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: book-app-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+  # ── MONITORING STACK ──────────────────────────────────────
+
+  # Node Exporter - metrics sistem EC2 (CPU, RAM, disk, network)
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - book-app-network
+
+  # Prometheus - scrape & simpan metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: book-app-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=7d"
+    depends_on:
+      - node-exporter
+      - backend
+    networks:
+      - book-app-network
+
+  # Grafana - visualisasi dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - book-app-network
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  book-app-network:
+    driver: bridge

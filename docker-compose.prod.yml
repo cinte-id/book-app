@@ -1,0 +1,105 @@
+version: '3.9'
+
+services:
+  # Backend Service (Production - PostgreSQL)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: book-app-backend-prod
+    environment:
+      FLASK_ENV: production
+      FLASK_DEBUG: False
+      FLASK_HOST: 0.0.0.0
+      FLASK_PORT: 5001
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:password@postgres:5432/booktracker_prod}
+      CORS_ORIGINS: ${CORS_ORIGINS:?error - must set production domain}
+      SECRET_KEY: ${SECRET_KEY:?error - must set strong secret key}
+      API_PREFIX: /api
+      DATA_FILE: books_prod.json
+    ports:
+      - "5001:5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./backend/data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+  # Frontend Service (Production)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+    container_name: book-app-frontend-prod
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: ${VITE_API_URL:?error - must set production API URL}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:?error - must set production API base URL}
+      VITE_NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: book-app-db-prod
+    environment:
+      POSTGRES_DB: ${DB_NAME:-booktracker_prod}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?error - must set database password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: book-app-nginx-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - book-app-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  book-app-network:
+    driver: bridge

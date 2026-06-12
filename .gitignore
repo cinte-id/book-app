@@ -1,3 +1,8 @@
-docker-compose.*
+# Environment files (but docker-compose.yml should be tracked)
+.env
+.env.local
+.env.*.local
+
+# Evaluation files
 evaluate.md
 results
