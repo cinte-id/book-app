@@ -291,6 +291,12 @@ push to main
 ### CI CD Success
 ![CI CD Success](assets/ci-cd.png)
 
+### URL Grafana
+http://15.232.79.169:3000
+
+Username : admin
+Password : admin123
+
 ### Grafana Dashboard EC2
 ![Grafana Dashboard EC2](assets/grafanaEC2.png)
 
