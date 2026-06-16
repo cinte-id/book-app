@@ -1,258 +1,349 @@
-# Test Instruction
+# 📚 Book Tracker Application - Fullstack Submission
 
-Hi there! 👋  
-Thanks for applying to our company.
+## 👨‍💻 Candidate Information
 
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
-
----
-
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
+| Detail | Information |
+|----------|-------------|
+| **Name** | Muhammad 'Abdhu Syukra |
+| **Role** | Fullstack Developer (Mid-Level) |
+| **Project Type** | Technical Recruitment Assignment |
 
 ---
 
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
+# 🎯 Project Overview
+
+Aplikasi ini merupakan pengembangan dari sistem **Book Tracker** yang digunakan untuk mengelola daftar bacaan pengguna. Fokus pengerjaan berada pada peningkatan fitur backend dan frontend untuk mendukung pengalaman pengguna yang lebih personal, aman, dan mudah digunakan.
+
+Selain fitur dasar pengelolaan buku, sistem kini mendukung:
+
+- Autentikasi pengguna
+- Library terpisah untuk setiap akun
+- Progress membaca buku
+- Statistik membaca secara real-time
+- Validasi data backend
+- Pagination dan filtering
+- Automated unit testing
 
 ---
 
-## ✅ What to Do
+# ✅ Completed Features
 
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
+## 1. Search & Genre Filtering
 
----
+Implementasi pencarian dan filter genre dilakukan langsung di sisi backend melalui endpoint:
 
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
-
----
-
-# Book Tracker App
-
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
-
-<img src="./assets/home.png" height="200" alt="Home">
-<img src="./assets/library.png" height="200" alt="Library">
-
-## Features
-
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
-
-## Tech Stack
-
-### Backend
-- Python 3.x
-- Flask
-- Flask-CORS
-- SQLAlchemy
-- python-dotenv
-
-### Frontend
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Axios
-- shadcn/ui components
-
-## Prerequisites
-
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
-
-### Backend Setup
-
-1. Create and activate a virtual environment:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+```http
+GET /api/books?q=<keyword>&genre=<genre>
 ```
 
-2. Install backend dependencies:
-```bash
-pip install -r requirements.txt
+Keuntungan pendekatan ini:
+
+- Mengurangi beban frontend
+- Lebih efisien untuk dataset besar
+- Mudah dikembangkan ke database production
+
+---
+
+## 2. Book Detail Page
+
+Halaman detail buku (`/books/:id`) telah dilengkapi dengan:
+
+- Informasi lengkap buku
+- Status membaca
+- Progress membaca
+- Kontrol perubahan status
+
+Alur status:
+
+```text
+Want To Read
+      ↓
+   Reading
+      ↓
+     Read
 ```
 
-3. Start the Flask server:
+---
+
+## 3. User-Based Library System
+
+Library pengguna tidak lagi menggunakan data global.
+
+Arsitektur baru:
+
+```text
+books.json
+    ↓
+Master Catalog
+
+user_libraries.json
+    ↓
+User Reading Progress
+User Reading Status
+User Collections
+```
+
+Setiap akun memiliki koleksi buku yang independen sehingga aktivitas satu pengguna tidak mempengaruhi pengguna lainnya.
+
+---
+
+## 4. Remove Book From Library
+
+Pengguna dapat menghapus buku dari koleksi pribadi tanpa menghapus data dari katalog utama.
+
+Proses yang dilakukan:
+
+```text
+My Library
+    ↓
+Remove Book
+    ↓
+Status → unread
+    ↓
+Kembali ke katalog utama
+```
+
+---
+
+## 5. Reading Progress Tracking
+
+Fitur progress membaca memungkinkan pengguna memperbarui halaman terakhir yang dibaca.
+
+Contoh:
+
+```text
+Total Halaman : 500
+Halaman Saat Ini : 250
+
+Progress : 50%
+```
+
+Visualisasi progress ditampilkan menggunakan progress bar pada antarmuka pengguna.
+
+---
+
+## 6. Backend Validation
+
+Seluruh endpoint mutasi data telah dilengkapi validasi input.
+
+Contoh validasi:
+
+- Nilai negatif tidak diperbolehkan
+- Format data tidak valid ditolak
+- Data kosong tidak diproses
+
+Response:
+
+```http
+400 Bad Request
+```
+
+---
+
+## 7. Pagination Support (Optional)
+
+Endpoint katalog mendukung pagination:
+
+```http
+GET /api/books?page=1&limit=10
+```
+
+Manfaat:
+
+- Performa lebih baik
+- Penggunaan bandwidth lebih kecil
+- Skalabilitas meningkat
+
+---
+
+## 8. Authentication System (Optional)
+
+Sistem autentikasi ditambahkan untuk mengamankan endpoint yang melakukan perubahan data.
+
+Fitur:
+
+- Register
+- Login
+- Token Authentication
+- Protected Routes
+
+Endpoint yang membutuhkan autentikasi:
+
+```http
+POST
+PUT
+DELETE
+```
+
+Frontend secara otomatis:
+
+- Menyisipkan token melalui Axios Interceptor
+- Redirect ke halaman login jika token tidak valid
+
+---
+
+## 9. Reading Statistics Dashboard (Optional)
+
+Halaman profil menampilkan statistik yang dihitung langsung dari backend.
+
+Endpoint:
+
+```http
+GET /api/stats
+```
+
+Data yang ditampilkan:
+
+- Total buku selesai dibaca
+- Total halaman yang telah dibaca
+- Genre favorit pengguna
+
+---
+
+## 10. Unit Testing (Bonus)
+
+Pengujian backend dilakukan menggunakan:
+
+```python
+unittest
+```
+
+Tujuan:
+
+- Memastikan endpoint bekerja sesuai spesifikasi
+- Mengurangi risiko bug saat pengembangan
+- Menjaga kualitas kode
+
+---
+
+Pendekatan ini memastikan data katalog tetap konsisten dan tidak bergantung pada aktivitas pengguna tertentu.
+
+---
+
+# 📂 Modified & Added Files
+
+| File | Description |
+|--------|-------------|
+| `backend/app.py` | Search, filtering, pagination, authentication middleware, statistics endpoint |
+| `backend/users.json` | Penyimpanan data akun pengguna |
+| `backend/test_app.py` | Automated backend testing |
+| `frontend/src/services/api.ts` | Axios interceptors untuk authentication |
+| `frontend/src/pages/Index.tsx` | Integrasi statistik dan fitur remove library |
+| `frontend/src/pages/Login.tsx` | Halaman login |
+| `frontend/src/pages/Register.tsx` | Halaman registrasi |
+| `frontend/src/components/BookCard.tsx` | Tombol remove dari library |
+| `frontend/src/App.tsx` | Routing login & register |
+
+---
+
+# 🚀 Installation Guide
+
+## Backend Setup
+
 ```bash
 cd backend
+
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# Linux / Mac
+source venv/bin/activate
+
+pip install -r requirements.txt
+
 python app.py
 ```
 
-The backend server will start on http://localhost:5000
+Backend akan berjalan di:
 
-### Frontend Setup
-
-1. Install frontend dependencies:
-```bash
-cd frontend
-npm install
+```text
+http://localhost:8080
 ```
 
-2. Start the development server:
+---
+
+## Run Backend Tests
+
 ```bash
+cd backend
+
+python test_app.py
+```
+
+---
+
+## Frontend Setup
+
+```bash
+cd frontend
+
+npm install
+
 npm run dev
 ```
 
-The frontend will be available at http://localhost:5173
+Frontend akan berjalan di:
 
-## API Documentation
-
-### Endpoints
-
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
-
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
+```text
+http://localhost:5173
 ```
 
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
+---
 
-#### DELETE /api/books/<id>
-- Deletes a book by ID
+# 🔍 Technical Decisions
 
-## Project Structure
+## Mengapa User Library Dipisah?
 
-```
-book-app/
-├── backend/
-│   └── app.py              # Flask backend API
-├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
-```
+Agar setiap pengguna memiliki riwayat membaca yang independen dan tidak mengubah data katalog utama.
 
-## Development
+## Mengapa Menggunakan Server-Side Filtering?
 
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
+Lebih efisien dibandingkan memfilter seluruh data di frontend ketika jumlah buku bertambah besar.
 
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
+## Mengapa Menambahkan Validation?
 
-## Contributing
+Untuk menjaga integritas data dan mencegah input tidak valid masuk ke sistem.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Mengapa Menggunakan Axios Interceptor?
 
-## Future Enhancements
+Supaya proses autentikasi dapat dikelola secara global tanpa perlu menambahkan token secara manual di setiap request.
 
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
+---
 
-## License
+# 🧪 Quality Assurance
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Checklist pengujian:
+
+- ✅ Authentication Flow
+- ✅ Search Function
+- ✅ Genre Filter
+- ✅ Pagination
+- ✅ Reading Progress Update
+- ✅ Remove From Library
+- ✅ Statistics Endpoint
+- ✅ Input Validation
+- ✅ Protected Routes
+- ✅ Unit Testing
+
+---
+
+# 📌 Notes
+
+Proyek ini dikembangkan sebagai bagian dari proses seleksi **Fullstack Developer (Mid-Level)** dengan fokus pada:
+
+- Code Maintainability
+- Scalability
+- Data Isolation
+- Security
+- User Experience
+
+---
+
+## 🙏 Thank You
+
+Terima kasih telah meluangkan waktu untuk melakukan review terhadap hasil pengerjaan saya.
+
+**Muhammad 'Abdhu Syukra**  
+*Fullstack Developer (Mid-Level Candidate)*
