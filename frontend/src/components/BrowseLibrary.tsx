@@ -16,8 +16,8 @@ interface Book {
 }
 
 const BrowseLibrary = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('all');
+  const [searchTerm, setSearchTerm] = useState(() => sessionStorage.getItem('browseSearch') || '');
+  const [selectedGenre, setSelectedGenre] = useState(() => sessionStorage.getItem('browseGenre') || 'all');
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +43,15 @@ const BrowseLibrary = () => {
 
   // Get unique genres from books
   const genres = ['all', ...new Set(books.map(book => book.genre))];
+
+  // Preserve search and filter state for back navigation
+  useEffect(() => {
+    sessionStorage.setItem('browseSearch', searchTerm);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    sessionStorage.setItem('browseGenre', selectedGenre);
+  }, [selectedGenre]);
   
   // Filter books based on search term and selected genre
   const filteredBooks = books.filter(book => {

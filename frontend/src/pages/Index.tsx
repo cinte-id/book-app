@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
@@ -8,8 +8,16 @@ import BrowseLibrary from '../components/BrowseLibrary';
 import { books, currentlyReading, readingStats } from '../data/dummyData';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('home');
-  const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const [activeTab, setActiveTab] = useState(() => sessionStorage.getItem('activeTab') || 'home');
+  const [libraryView, setLibraryView] = useState(() => sessionStorage.getItem('libraryView') || 'my-books');
+
+  useEffect(() => {
+    sessionStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
+
+  useEffect(() => {
+    sessionStorage.setItem('libraryView', libraryView);
+  }, [libraryView]);
 
   const renderContent = () => {
     switch (activeTab) {
