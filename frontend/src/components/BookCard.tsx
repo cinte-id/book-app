@@ -1,5 +1,5 @@
-
 import { Star, BookOpen, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Book {
   id: number;
@@ -18,9 +18,14 @@ interface BookCardProps {
 }
 
 const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
+  const navigate = useNavigate();
+
   if (variant === 'compact') {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105">
+      <div 
+        onClick={() => navigate(`/books/${book.id}`)}
+        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105 cursor-pointer"
+      >
         <div className="aspect-[3/4] bg-gradient-to-br from-blue-100 to-purple-100 relative">
           <div className="absolute inset-0 flex items-center justify-center">
             <BookOpen className="text-blue-500" size={32} />
@@ -39,7 +44,10 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
 
   if (variant === 'library') {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div 
+        onClick={() => navigate(`/books/${book.id}`)}
+        className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer"
+      >
         <div className="aspect-[3/4] bg-gradient-to-br from-green-100 to-blue-100 relative">
           <div className="absolute inset-0 flex items-center justify-center">
             <BookOpen className="text-green-500" size={28} />
@@ -69,7 +77,10 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
 
   if (variant === 'discover') {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200">
+      <div 
+        onClick={() => navigate(`/books/${book.id}`)}
+        className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
+      >
         <div className="flex space-x-3">
           <div className="w-16 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center flex-shrink-0">
             <BookOpen className="text-purple-500" size={24} />
@@ -93,7 +104,10 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div 
+      onClick={() => navigate(`/books/${book.id}`)}
+      className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
+    >
       <div className="flex space-x-4">
         <div className="w-20 h-28 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
           <BookOpen className="text-blue-500" size={28} />

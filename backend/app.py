@@ -62,6 +62,13 @@ def get_books():
     
     return jsonify(books)
 
+@app.route('/api/books/<int:book_id>', methods=['GET'])
+def get_book(book_id):
+    for book in books:
+        if book['id'] == book_id:
+            return jsonify(book)
+    return jsonify({'error': 'Book not found'}), 404
+
 @app.route('/api/books', methods=['POST'])
 def add_book():
     data = request.json
