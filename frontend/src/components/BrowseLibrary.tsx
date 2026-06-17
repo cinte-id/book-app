@@ -1,5 +1,6 @@
 import { Search, Filter, Star, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../services/api';
 import BookCard from './BookCard';
 
@@ -16,8 +17,10 @@ interface Book {
 }
 
 const BrowseLibrary = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('all');
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q') || '';
+  const selectedGenre = searchParams.get('genre') || 'all';
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,7 +105,14 @@ const BrowseLibrary = () => {
           type="text"
           placeholder="Search books or authors..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchParams(prev => {
+            if (e.target.value) {
+              prev.set('q', e.target.value);
+            } else {
+              prev.delete('q');
+            }
+            return prev;
+          }, { replace: true })}
           className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -112,7 +122,14 @@ const BrowseLibrary = () => {
         {genres.map((genre) => (
           <button
             key={genre}
-            onClick={() => setSelectedGenre(genre)}
+            onClick={() => setSearchParams(prev => {
+              if (genre === 'all') {
+                prev.delete('genre');
+              } else {
+                prev.set('genre', genre);
+              }
+              return prev;
+            }, { replace: true })}
             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               selectedGenre === genre
                 ? 'bg-blue-500 text-white'
@@ -130,14 +147,14 @@ const BrowseLibrary = () => {
       </p>
 
       {/* Books Grid */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {filteredBooks.map((book) => (
-          <div key={book.id} className="relative">
+          <div key={book.id} className="relative cursor-pointer h-full" onClick={() => navigate(`/books/${book.id}`)}>
             <BookCard book={book} variant="discover" />
             {book.status === 'want-to-read' ? (
               <button 
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
-                onClick={() => handleAddBook(book.id)}
+                onClick={(e) => { e.stopPropagation(); handleAddBook(book.id); }}
               >
                 <Plus size={16} />
               </button>

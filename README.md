@@ -1,258 +1,75 @@
-# Test Instruction
-
-Hi there! 👋  
-Thanks for applying to our company.
-
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
-
----
-
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
-
----
-
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
-
----
-
-## ✅ What to Do
-
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
-
----
-
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
-
----
-
 # Book Tracker App
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
+A full-stack web application for managing your reading list, built with Flask and React. 
+This repository contains my submission for the **Fullstack Developer** technical test.
 
-<img src="./assets/home.png" height="200" alt="Home">
-<img src="./assets/library.png" height="200" alt="Library">
+---
 
-## Features
+## 📝 Candidate Submission Details
 
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
+### My Chosen Role
+**Junior Fullstack Developer**
 
-## Tech Stack
+### How to Run/Test My Part
+
+**1. Backend Configuration**
+```bash
+cd backend
+
+# Create and activate virtual environment
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+# source venv/bin/activate
+
+# Install dependencies and run
+pip install -r requirements.txt
+python app.py
+```
+*(The backend API will run on `http://127.0.0.1:5000`)*
+
+**2. Frontend Configuration**
+```bash
+cd frontend
+
+# Install packages and run
+npm install
+npm run dev
+```
+*(The frontend app will run on `http://localhost:5173`)*
+
+**3. Testing the Implementations**
+- Open `http://localhost:5173` in your browser.
+- Navigate to the **Library > Browse** tab to test the real-time search and category filtering.
+- Click on any book to test the **Book Detail** page (`/books/:id`) and the "Add to Library" interaction.
+- Press the browser's "Back" button from the detail page to verify that your search query and filters are **preserved**.
+- Resize the browser window to see the new **Responsive Desktop Layout**.
+
+---
+
+### Notes & Decisions Made
+
+- **Over-Delivered on Requirements**: Successfully completed all 4 *Required Tasks* (Search, Category Filter, Detail Page, Backend Route) and all 3 *Optional Tasks* (Loading/Empty States, Error Handling, and State Preservation).
+- **State Preservation Approach**: Decided to use `useSearchParams` (URL Parameters) to preserve the search keyword and genre filter state. This ensures robust compatibility with the native browser "Back" button without needing heavy global state libraries.
+- **Bonus Responsiveness**: The original app was locked to a mobile viewport (`max-w-md`). I introduced Tailwind breakpoints (`md:`, `lg:`) to transform the app into a fully responsive desktop experience. This includes shifting the Bottom Navigation to the Header on large screens, expanding the book grid, and creating a split-pane layout for the Detail page.
+- **Global Navigation**: Modified the app so that every book card (in Home, Trending, Currently Reading) is clickable and routes to its respective detail page.
+- **Search Optimization**: Activated the header search icon to navigate cleanly, and made the 'Discover' input field functional.
+- **Code Consistency**: Ensured that the newly added code strictly adheres to the existing project formatting (2-space indents for TSX, 4-space for Python, consistent string quotes, and unified `CRLF` line endings).
+
+---
+
+## 🛠️ Tech Stack
 
 ### Backend
 - Python 3.x
-- Flask
-- Flask-CORS
+- Flask & Flask-CORS
 - SQLAlchemy
 - python-dotenv
 
 ### Frontend
-- React 18
+- React 18 & Vite
 - TypeScript
-- Vite
 - Tailwind CSS
 - Axios
 - shadcn/ui components
-
-## Prerequisites
-
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
-
-### Backend Setup
-
-1. Create and activate a virtual environment:
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-2. Install backend dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-3. Start the Flask server:
-```bash
-cd backend
-python app.py
-```
-
-The backend server will start on http://localhost:5000
-
-### Frontend Setup
-
-1. Install frontend dependencies:
-```bash
-cd frontend
-npm install
-```
-
-2. Start the development server:
-```bash
-npm run dev
-```
-
-The frontend will be available at http://localhost:5173
-
-## API Documentation
-
-### Endpoints
-
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
-
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
-```
-
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
-
-#### DELETE /api/books/<id>
-- Deletes a book by ID
-
-## Project Structure
-
-```
-book-app/
-├── backend/
-│   └── app.py              # Flask backend API
-├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
-```
-
-## Development
-
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
-
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Future Enhancements
-
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
