@@ -1,4 +1,4 @@
-name: CI/CD - Lint, Build, Test, Scan, Push
+name: CI/CD - BACKEND
 
 on:
   push:
