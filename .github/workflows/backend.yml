@@ -2,7 +2,7 @@ name: CI/CD - Lint, Build, Test, Scan, Push
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, takehometest-cnt]
   pull_request:
     branches: [main, develop]
 
