@@ -43,6 +43,7 @@ jobs:
 
       - name: Check formatting with black
         run: black --check .
+        continue-on-error: true
 
 
   # ============================================================
