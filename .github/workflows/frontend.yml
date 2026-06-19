@@ -2,12 +2,15 @@ name: CI/CD - FRONTEND
 
 on:
   push:
-    branches: [develop, takehometest-cnt]
+    branches:
+      - '**'
+      - '!dev'
+      - '!main'
     paths:
       - 'frontend/**'
       - '.github/workflows/frontend.yml'
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
 
 env:
   DOCKERHUB_NAMESPACE: ${{ secrets.DOCKERHUB_USERNAME }}

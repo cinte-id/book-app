@@ -2,12 +2,15 @@ name: CI/CD - BACKEND
 
 on:
   push:
-    branches: [develop, takehometest-cnt]
+    branches: 
+      - '**'
+      - '!dev'
+      - '!main'
     paths:
       - 'backend/**'
       - '.github/workflows/backend.yml'
   pull_request:
-    branches: [main, develop]
+    branches: [main, dev]
 
 env:
   DOCKERHUB_NAMESPACE: ${{ secrets.DOCKERHUB_USERNAME }}
