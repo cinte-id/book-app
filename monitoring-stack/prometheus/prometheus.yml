@@ -1,0 +1,81 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+
+  # Prometheus monitor dirinya sendiri
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Metrik host (CPU, RAM, disk, network)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # Metrik per-container (frontend, backend, db, dll otomatis ke-detect)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # ====================================================================
+  # PROBE FRONTEND REACT - ganti target dengan URL/hostname kamu
+  # Jika frontend ada di network yang sama, bisa pakai nama service,
+  # misal: http://frontend-react:3000 / http://frontend-react:80
+  # ====================================================================
+  - job_name: 'blackbox-frontend-react'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://app.digitalteknodata.com        # ganti dengan URL produksi
+        labels:
+          app: 'frontend-react'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # ====================================================================
+  # PROBE BACKEND FLASK - idealnya target endpoint /health kalau sudah ada,
+  # kalau belum, probe endpoint mana saja yang return 200 tanpa side-effect
+  # ====================================================================
+  - job_name: 'blackbox-backend-flask'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://api.digitalteknodata.com/api/test      # ganti dengan URL produksi
+        labels:
+          app: 'backend-flask'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Cek SSL certificate expiry untuk kedua domain (pakai module ssl_expiry)
+  - job_name: 'blackbox-ssl-expiry'
+    metrics_path: /probe
+    params:
+      module: [ssl_expiry]
+    static_configs:
+      - targets:
+          - http://app.digitalteknodata.com
+          - http://api.digitalteknodata.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
