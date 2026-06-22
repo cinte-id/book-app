@@ -83,3 +83,18 @@ resource "google_compute_firewall" "allow_internal" {
   target_tags   = ["k3s-node"]
 }
 
+# ============================================
+# Firewall - allow (Monitoring Port)
+# ============================================
+resource "google_compute_firewall" "allow_monitoring_port" {
+  name    = "${var.project_name}-allow-monitoring-port"
+  network = google_compute_network.this.id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9115", "8080", "3000", "9100", "9090"]
+  }
+
+  source_ranges = [var.allowed_ssh_cidr]
+  target_tags   = ["k3s-node"]
+}
