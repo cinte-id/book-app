@@ -1,0 +1,44 @@
+services:
+
+  # ─── Frontend
+  frontend:
+    image: brdcookies6969/frontend-book:latest
+    container_name: frontend
+    env_file:
+      - .env.fe
+    networks:
+      - app-net
+    restart: unless-stopped
+
+  # ─── Backend
+  backend:
+    image: brdcookies6969/backend-book:latest
+    container_name: backend
+    env_file:
+      - .env.be
+    networks:
+      - app-net
+    restart: unless-stopped
+  
+
+  # ─── Nginx Reverse Proxy ─────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d/frontend.conf:/etc/nginx/conf.d/frontend.conf:ro
+      - ./nginx/conf.d/backend.conf:/etc/nginx/conf.d/backend.conf:ro
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-net
+    restart: unless-stopped
+
+networks:
+  app-net:
+    driver: bridge
