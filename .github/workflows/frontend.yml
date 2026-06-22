@@ -184,8 +184,8 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           build-args: |
-            VITE_API_URL=http://api.digitalteknodata.com
-            VITE_API_BASE_URL=http://api.digitalteknodata.com
+            VITE_API_URL=http://api.brd.my.id
+            VITE_API_BASE_URL=http://api.brd.my.id
             VITE_APP_TITLE=Book Tracker App (Dev)
             VITE_APP_DESCRIPTION=A full-stack web application for managing your reading list - Development Mode
             VITE_NODE_ENV=development
