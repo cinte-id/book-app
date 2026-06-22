@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: K3s Master Server
+
+Resources:
+
+  K8sMasterSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: K8s Master Security Group
+      VpcId: !ImportValue Book-VpcId
+
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+
+        - IpProtocol: tcp
+          FromPort: 6443
+          ToPort: 6443
+          CidrIp: 0.0.0.0/0
+
+      Tags:
+        - Key: Name
+          Value: K8sMaster-SG
+
+  K8sMasterEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: c7i-flex.large
+      ImageId: !Sub '{{resolve:ssm:/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id}}'
+      KeyName: serversshd
+      SubnetId: !ImportValue Book-PublicSubnetId
+      SecurityGroupIds:
+        - !Ref K8sMasterSG
+      Tags:
+        - Key: Name
+          Value: K8sMaster
+
+Outputs:
+
+  InstanceId:
+    Description: K8s Master Instance ID
+    Value: !Ref K8sMasterEC2
+    Export:
+      Name: K8sMaster-InstanceId
+
+  PublicIP:
+    Description: K8s Master Public IP
+    Value: !GetAtt K8sMasterEC2.PublicIp
+    Export:
+      Name: K8sMaster-PublicIp

@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Book Network
+
+Resources:
+  VPCBook:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: VPC-Book
+
+  IGWBook:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: IGW-Book
+
+  AttachIGW:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPCBook
+      InternetGatewayId: !Ref IGWBook
+
+  SubnetPublicBook:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCBook
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: SubnetPublicBook
+
+  SubnetPrivateBook:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCBook
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: SubnetPrivateBook
+
+  PublicRouteTableBook:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPCBook
+      Tags:
+        - Key: Name
+          Value: PublicRouteTableBook
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachIGW
+    Properties:
+      RouteTableId: !Ref PublicRouteTableBook
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGWBook
+
+  PublicSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPublicBook
+      RouteTableId: !Ref PublicRouteTableBook
+
+  PrivateRouteTableBook:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPCBook
+      Tags:
+        - Key: Name
+          Value: PrivateRouteTableBook
+
+  PrivateSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetPrivateBook
+      RouteTableId: !Ref PrivateRouteTableBook
+
+Outputs:
+  VpcId:
+    Description: Book VPC ID
+    Value: !Ref VPCBook
+    Export:
+      Name: Book-VpcId
+
+  PublicSubnetId:
+    Description: Book Public Subnet ID
+    Value: !Ref SubnetPublicBook
+    Export:
+      Name: Book-PublicSubnetId
+
+  PrivateSubnetId:
+    Description: Book Private Subnet ID
+    Value: !Ref SubnetPrivateBook
+    Export:
+      Name: Book-PrivateSubnetId
