@@ -1,0 +1,11 @@
+# Copy file ini jadi terraform.tfvars lalu sesuaikan isinya
+
+project_id           = "nama-project-id-gcp-kamu" # >> CHANGE_ME
+region               = "asia-southeast2" # >> CHANGE_ME
+zone                 = "asia-southeast2-a" # >> CHANGE_ME
+project_name         = "k3s-single-node" # >> CHANGE_ME
+machine_type         = "e2-medium" # >> CHANGE_ME
+ssh_public_key_path  = "~/.ssh/id_rsa.pub" # >> CHANGE_ME
+ssh_user             = "devops" # >> CHANGE_ME
+allowed_ssh_cidr     = "0.0.0.0/0" # >> CHANGE_ME
+k3s_version          = ""
