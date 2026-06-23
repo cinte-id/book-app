@@ -1,34 +1,48 @@
-# Gunakan image dasar Python
-FROM python:3.11-slim
+# ============================================================
+# Stage 1: Builder — install build deps & compile packages
+# ============================================================
+FROM python:3.11-slim AS builder
 
-# Instal dependensi sistem yang diperlukan (build dependencies)
+# Install build dependencies (hanya di stage ini, tidak dibawa ke final)
 RUN apt-get update && apt-get install -y \
-  libpq-dev \
-  python3-dev \
-  default-libmysqlclient-dev \
-  build-essential \
-  pkg-config \
-  cron \
-  && apt-get clean && rm -rf /var/lib/apt/lists/*
+    libpq-dev \
+    python3-dev \
+    default-libmysqlclient-dev \
+    build-essential \
+    pkg-config \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables
-ENV TZ=Asia/Jakarta
-
-# create workdir
 WORKDIR /app
 
-# Copy all to workdir
-COPY ./requirements.txt ./
+COPY requirements.txt .
 
-# Perbarui pip dan install dependencies
+# Install ke folder khusus agar mudah di-copy ke stage berikutnya
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt --verbose
+    pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Copy all files
+# ============================================================
+# Stage 2: Final — image ringan tanpa build tools
+# ============================================================
+FROM python:3.11-slim AS final
+
+# Install hanya runtime dependencies (bukan build tools)
+RUN apt-get update && apt-get install -y \
+    libpq5 \
+    libmariadb3 \
+    cron \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV TZ=Asia/Jakarta
+ENV PYTHONPATH=/install/lib/python3.11/site-packages
+
+WORKDIR /app
+
+# Copy hasil install pip dari stage builder
+COPY --from=builder /install /usr/local
+
+# Copy source code aplikasi
 COPY . .
 
-# Expose Port
 EXPOSE 5001
 
-# Start app.py
 CMD ["python", "app.py"]

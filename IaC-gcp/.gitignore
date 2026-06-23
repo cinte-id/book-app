@@ -1,0 +1,25 @@
+# Terraform cache
+.terraform/
+
+# State files
+*.tfstate
+*.tfstate.*
+
+# Variable files yang berisi secret
+*.tfvars
+*.auto.tfvars
+
+# Terraform plan
+*.tfplan
+plan.out
+
+# Crash log
+crash.log
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
