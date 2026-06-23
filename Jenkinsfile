@@ -30,13 +30,8 @@ pipeline {
 
                 echo "=== Linting Backend (Python) ==="
                 cd ../backend
-                
-                # Memaksa instalasi lokal tingkat user + bypass PEP 668
                 python3 -m pip install --user flake8 --break-system-packages || pip install flake8 --break-system-packages
-                
-                # Memasukkan path binary lokal ke PATH Jenkins jika belum terdaftar
                 export PATH="$HOME/.local/bin:$PATH"
-                
                 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
                 '''
             }
@@ -45,14 +40,12 @@ pipeline {
         stage('Test') {
             steps {
                 sh """
-                echo "=== Testing Frontend (Node.js) ==="
-                cd frontend
-                npm run test
+                echo "=== Skipping Frontend Test (No test script found) ==="
+                # Ditutup sementara karena package.json tidak punya script "test"
+                # cd frontend && npm run test 
                 
                 echo "=== Testing Backend (Python) ==="
-                cd ../backend
-                
-                # Memaksa instalasi dependencies ke user space
+                cd backend
                 python3 -m pip install --user --break-system-packages -r requirements.txt || pip install -r requirements.txt --break-system-packages
                 python3 -m pip install --user --break-system-packages pytest || pip install pytest --break-system-packages
                 
