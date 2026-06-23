@@ -30,6 +30,7 @@ pipeline {
 
                 echo "=== Linting Backend (Python) ==="
                 cd ../backend
+                # Memaksa install flake8 secara global dengan flag bypass
                 pip install flake8 --break-system-packages
                 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
                 '''
@@ -45,6 +46,7 @@ pipeline {
                 
                 echo "=== Testing Backend (Python) ==="
                 cd ../backend
+                # Memaksa install seluruh requirements & pytest secara global
                 pip install -r requirements.txt --break-system-packages
                 pip install pytest --break-system-packages
                 pytest
@@ -139,15 +141,12 @@ pipeline {
     }
 
     post {
-
         success {
             echo 'Pipeline Success'
         }
-
         failure {
             echo 'Pipeline Failed'
         }
-
         always {
             sh 'docker image prune -af || true'
         }
