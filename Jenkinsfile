@@ -20,23 +20,22 @@ pipeline {
             }
         }
 
-stage('Lint') {
-            steps {
-                // Jalankan Lint sesuai dengan bahasa pemrograman masing-masing
-                sh """
-                echo "=== Linting Frontend (Node.js) ==="
-                cd frontend
-                npm install
-                npm run lint
-                
-                echo "=== Linting Backend (Python) ==="
-                cd ../backend
-                # Membuat virtual environment opsional, atau langsung install linter jika diizinkan di runner
-                pip install flake8
-                flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-                """
-            }
-        }
+    stage('Lint') {
+        steps {
+            sh '''
+            echo "=== Linting Frontend (Node.js) ==="
+            cd frontend
+            npm install
+            npm run lint
+
+            echo "=== Linting Backend (Python) ==="
+            cd ../backend
+
+            pip install flake8
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+            '''
+    }
+}
 
         stage('Test') {
             steps {
