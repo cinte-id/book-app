@@ -1,15 +1,13 @@
 pipeline {
-
     agent any
 
     environment {
-        DOCKER_USER = "jodyys"
-        IMAGE_BACKEND = "bookapp-backend"
+        DOCKER_USER    = "jodyys"
+        IMAGE_BACKEND  = "bookapp-backend"
         IMAGE_FRONTEND = "bookapp-frontend"
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 git(
@@ -20,66 +18,65 @@ pipeline {
             }
         }
 
-    stage('Lint') {
-        steps {
-            sh '''
-            echo "=== Linting Frontend (Node.js) ==="
-            cd frontend
-            npm install
-            npm run lint
-
-            echo "=== Linting Backend (Python) ==="
-            cd ../backend
-            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-            '''
-        }
-    }
-
-        stage('Test') {
-            steps {
-                sh """
-                echo "=== Testing Frontend (Node.js) ==="
-                cd frontend
-                npm run test
-                
-                echo "=== Testing Backend (Python) ==="
-                cd ../backend
-                pip install -r requirements.txt
-                # Menggunakan pytest (atau ganti dengan 'python -m unittest' jika pakai bawaan Python)
-                pip install pytest
-                pytest
-                """
-            }
-        }
-        stage('Build Image') {
-            steps {
-                sh """
-                # Build Docker Image Backend
-                docker build \
-                -t ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER} \
-                -t ${DOCKER_USER}/${IMAGE_BACKEND}:latest \
-                backend
-
-                # Build Docker Image Frontend
-                docker build \
-                -t ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER} \
-                -t ${DOCKER_USER}/${IMAGE_FRONTEND}:latest \
-                frontend
-                """
+        stage('Lint & Test') {
+            parallel {
+                stage('Frontend: Lint & Test') {
+                    steps {
+                        dir('frontend') {
+                            sh '''
+                            echo "=== Linting & Testing Frontend ==="
+                            npm install
+                            npm run lint
+                            npm run test
+                            '''
+                        }
+                    }
+                }
+                stage('Backend: Lint & Test') {
+                    steps {
+                        dir('backend') {
+                            sh '''
+                            echo "=== Linting & Testing Backend ==="
+                            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                            pip install -r requirements.txt pytest
+                            pytest
+                            '''
+                        }
+                    }
+                }
             }
         }
 
+        stage('Build & Scan Images') {
+            parallel {
+                stage('Build & Scan Backend') {
+                    steps {
+                        sh """
+                        docker build \
+                          -t ${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER} \
+                          -t ${DOCKER_USER}/${IMAGE_BACKEND}:latest \
+                          backend
 
-        stage('Security Scan Trivy') {
-            steps {
-                sh """
-                trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER}
-                trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER}
-                """
+                        trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER}
+                        """
+                    }
+                }
+                stage('Build & Scan Frontend') {
+                    steps {
+                        sh """
+                        docker build \
+                          -t ${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER} \
+                          -t ${DOCKER_USER}/${IMAGE_FRONTEND}:latest \
+                          frontend
+
+                        trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER}
+                        """
+                    }
+                }
             }
         }
 
-        stage('Push Images To DockerHub') {
+        stage('Push Images to DockerHub') {
             steps {
                 withCredentials([
                     usernamePassword(
@@ -92,11 +89,11 @@ pipeline {
                     echo \$DOCKERHUB_PASS | docker login -u \$DOCKERHUB_USER --password-stdin
 
                     # Push Backend
-                    docker push ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER}
+                    docker push ${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER}
                     docker push ${DOCKER_USER}/${IMAGE_BACKEND}:latest
                     
                     # Push Frontend
-                    docker push ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER}
+                    docker push ${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER}
                     docker push ${DOCKER_USER}/${IMAGE_FRONTEND}:latest
 
                     docker logout
@@ -105,50 +102,40 @@ pipeline {
             }
         }
 
-        stage('Test K3s Connection') {
-            steps {
-                withCredentials([
-                    file(credentialsId: 'k3s-kubeconfig', variable: 'KUBECONFIG')
-                ]) {
-                    sh 'kubectl get nodes'
-                }
-            }
-        }
-
-        stage('Deploy K3s') {
+        stage('K3s Deployment') {
             steps {
                 withCredentials([
                     file(credentialsId: 'k3s-kubeconfig', variable: 'KUBECONFIG')
                 ]) {
                     sh """
-                    # 1. Terapkan manifes dasar dari folder k8s/
+                    echo "=== Testing K3s Connection ==="
+                    kubectl get nodes
+
+                    echo "=== Deploying to K3s ==="
                     kubectl apply -f k8s/
 
-                    # 2. Update image secara dinamis menggunakan variabel Jenkins (ditambahkan prefix 'v')
-                    kubectl set image deployment/backend backend=jodyys/bookapp-backend:v${BUILD_NUMBER}
-                    kubectl set image deployment/frontend frontend=jodyys/bookapp-frontend:v${BUILD_NUMBER}
+                    # Update image secara dinamis menggunakan variabel Jenkins
+                    kubectl set image deployment/backend backend=${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER}
+                    kubectl set image deployment/frontend frontend=${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER}
 
-                    # 3. Verifikasi status deployment sesuai target nama di atas
+                    # Verifikasi status rollout
                     kubectl rollout status deployment/backend
                     kubectl rollout status deployment/frontend
                     """
                 }
             }
         }
-
     }
 
     post {
-
         success {
-            echo 'Pipeline Success'
+            echo 'Pipeline Successfully Completed!'
         }
-
         failure {
-            echo 'Pipeline Failed'
+            echo 'Pipeline Failed. Please check the logs.'
         }
-
         always {
+            echo 'Cleaning up Docker images...'
             sh 'docker image prune -af || true'
         }
     }
