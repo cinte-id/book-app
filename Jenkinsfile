@@ -32,20 +32,16 @@ pipeline {
             }
         }
 
-        stage('Build Backend Image') {
+        stage('Build Image') {
             steps {
                 sh """
+                # Build Docker Image Backend
                 docker build \
                 -t ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER} \
                 -t ${DOCKER_USER}/${IMAGE_BACKEND}:latest \
                 backend
-                """
-            }
-        }
 
-        stage('Build Frontend Image') {
-            steps {
-                sh """
+                # Build Docker Image Frontend
                 docker build \
                 -t ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER} \
                 -t ${DOCKER_USER}/${IMAGE_FRONTEND}:latest \
@@ -53,6 +49,7 @@ pipeline {
                 """
             }
         }
+
 
         stage('Security Scan Trivy') {
             steps {
