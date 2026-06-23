@@ -1,13 +1,15 @@
 pipeline {
+
     agent any
 
     environment {
-        DOCKER_USER    = "jodyys"
-        IMAGE_BACKEND  = "bookapp-backend"
+        DOCKER_USER = "jodyys"
+        IMAGE_BACKEND = "bookapp-backend"
         IMAGE_FRONTEND = "bookapp-frontend"
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git(
@@ -18,77 +20,66 @@ pipeline {
             }
         }
 
-        stage('Lint & Test') {
-            parallel {
-                stage('Frontend: Lint & Test') {
-                    steps {
-                        dir('frontend') {
-                            sh '''
-                            echo "=== Linting & Testing Frontend ==="
-                            npm install
-                            npm run lint
-                            npm run test
-                            '''
-                        }
-                    }
-                }
-                stage('Backend: Lint & Test') {
-                    steps {
-                        dir('backend') {
-                            sh '''
-                            echo "=== Linting & Testing Backend ==="
-                            
-                            # Membuat dan mengaktifkan Python Virtual Environment
-                            python3 -m venv venv
-                            . venv/bin/activate
-                            
-                            # Install tools dan dependensi aman di dalam venv
-                            pip install --upgrade pip
-                            pip install flake8 pytest
-                            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-                            
-                            # Eksekusi Linting
-                            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-                            
-                            # Eksekusi Testing
-                            pytest
-                            '''
-                        }
-                    }
-                }
+        stage('Lint') {
+            steps {
+                sh '''
+                echo "=== Linting Frontend (Node.js) ==="
+                cd frontend
+                npm install
+                npm run lint
+
+                echo "=== Linting Backend (Python) ==="
+                cd ../backend
+                pip install flake8 --break-system-packages
+                flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                '''
             }
         }
 
-        stage('Build & Scan Images') {
-            parallel {
-                stage('Build & Scan Backend') {
-                    steps {
-                        sh """
-                        docker build \
-                          -t ${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER} \
-                          -t ${DOCKER_USER}/${IMAGE_BACKEND}:latest \
-                          backend
-
-                        trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER}
-                        """
-                    }
-                }
-                stage('Build & Scan Frontend') {
-                    steps {
-                        sh """
-                        docker build \
-                          -t ${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER} \
-                          -t ${DOCKER_USER}/${IMAGE_FRONTEND}:latest \
-                          frontend
-
-                        trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER}
-                        """
-                    }
-                }
+        stage('Test') {
+            steps {
+                sh """
+                echo "=== Testing Frontend (Node.js) ==="
+                cd frontend
+                npm run test
+                
+                echo "=== Testing Backend (Python) ==="
+                cd ../backend
+                pip install -r requirements.txt --break-system-packages
+                pip install pytest --break-system-packages
+                pytest
+                """
             }
         }
 
-        stage('Push Images to DockerHub') {
+        stage('Build Image') {
+            steps {
+                sh """
+                # Build Docker Image Backend
+                docker build \
+                -t ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER} \
+                -t ${DOCKER_USER}/${IMAGE_BACKEND}:latest \
+                backend
+
+                # Build Docker Image Frontend
+                docker build \
+                -t ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER} \
+                -t ${DOCKER_USER}/${IMAGE_FRONTEND}:latest \
+                frontend
+                """
+            }
+        }
+
+        stage('Security Scan Trivy') {
+            steps {
+                sh """
+                trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER}
+                trivy image --severity HIGH,CRITICAL ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER}
+                """
+            }
+        }
+
+        stage('Push Images To DockerHub') {
             steps {
                 withCredentials([
                     usernamePassword(
@@ -101,11 +92,11 @@ pipeline {
                     echo \$DOCKERHUB_PASS | docker login -u \$DOCKERHUB_USER --password-stdin
 
                     # Push Backend
-                    docker push ${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER}
+                    docker push ${DOCKER_USER}/${IMAGE_BACKEND}:v${BUILD_NUMBER}
                     docker push ${DOCKER_USER}/${IMAGE_BACKEND}:latest
                     
                     # Push Frontend
-                    docker push ${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER}
+                    docker push ${DOCKER_USER}/${IMAGE_FRONTEND}:v${BUILD_NUMBER}
                     docker push ${DOCKER_USER}/${IMAGE_FRONTEND}:latest
 
                     docker logout
@@ -114,40 +105,50 @@ pipeline {
             }
         }
 
-        stage('K3s Deployment') {
+        stage('Test K3s Connection') {
+            steps {
+                withCredentials([
+                    file(credentialsId: 'k3s-kubeconfig', variable: 'KUBECONFIG')
+                ]) {
+                    sh 'kubectl get nodes'
+                }
+            }
+        }
+
+        stage('Deploy K3s') {
             steps {
                 withCredentials([
                     file(credentialsId: 'k3s-kubeconfig', variable: 'KUBECONFIG')
                 ]) {
                     sh """
-                    echo "=== Testing K3s Connection ==="
-                    kubectl get nodes
-
-                    echo "=== Deploying to K3s ==="
+                    # 1. Terapkan manifes dasar dari folder k8s/
                     kubectl apply -f k8s/
 
-                    # Update image secara dinamis menggunakan variabel Jenkins
-                    kubectl set image deployment/backend backend=${DOCKER_USER}/${IMAGE_BACKEND}:v${env.BUILD_NUMBER}
-                    kubectl set image deployment/frontend frontend=${DOCKER_USER}/${IMAGE_FRONTEND}:v${env.BUILD_NUMBER}
+                    # 2. Update image secara dinamis menggunakan variabel Jenkins (ditambahkan prefix 'v')
+                    kubectl set image deployment/backend backend=jodyys/bookapp-backend:v${BUILD_NUMBER}
+                    kubectl set image deployment/frontend frontend=jodyys/bookapp-frontend:v${BUILD_NUMBER}
 
-                    # Verifikasi status rollout
+                    # 3. Verifikasi status deployment sesuai target nama di atas
                     kubectl rollout status deployment/backend
                     kubectl rollout status deployment/frontend
                     """
                 }
             }
         }
+
     }
 
     post {
+
         success {
-            echo 'Pipeline Successfully Completed!'
+            echo 'Pipeline Success'
         }
+
         failure {
-            echo 'Pipeline Failed. Please check the logs.'
+            echo 'Pipeline Failed'
         }
+
         always {
-            echo 'Cleaning up Docker images...'
             sh 'docker image prune -af || true'
         }
     }
