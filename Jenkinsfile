@@ -30,8 +30,13 @@ pipeline {
 
                 echo "=== Linting Backend (Python) ==="
                 cd ../backend
-                # Memaksa install flake8 secara global dengan flag bypass
-                pip install flake8 --break-system-packages
+                
+                # Memaksa instalasi lokal tingkat user + bypass PEP 668
+                python3 -m pip install --user flake8 --break-system-packages || pip install flake8 --break-system-packages
+                
+                # Memasukkan path binary lokal ke PATH Jenkins jika belum terdaftar
+                export PATH="$HOME/.local/bin:$PATH"
+                
                 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
                 '''
             }
@@ -46,9 +51,12 @@ pipeline {
                 
                 echo "=== Testing Backend (Python) ==="
                 cd ../backend
-                # Memaksa install seluruh requirements & pytest secara global
-                pip install -r requirements.txt --break-system-packages
-                pip install pytest --break-system-packages
+                
+                # Memaksa instalasi dependencies ke user space
+                python3 -m pip install --user --break-system-packages -r requirements.txt || pip install -r requirements.txt --break-system-packages
+                python3 -m pip install --user --break-system-packages pytest || pip install pytest --break-system-packages
+                
+                export PATH="\$HOME/.local/bin:\$PATH"
                 pytest
                 """
             }
