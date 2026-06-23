@@ -30,12 +30,10 @@ pipeline {
 
             echo "=== Linting Backend (Python) ==="
             cd ../backend
-
-            pip install flake8
             flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
             '''
+        }
     }
-}
 
         stage('Test') {
             steps {
