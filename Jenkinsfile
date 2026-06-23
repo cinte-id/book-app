@@ -39,21 +39,25 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh """
+                sh '''
                 echo "=== Skipping Frontend Test (No test script found) ==="
-                # Ditutup sementara karena package.json tidak punya script "test"
-                # cd frontend && npm run test 
-                
+
                 echo "=== Testing Backend (Python) ==="
                 cd backend
-                python3 -m pip install --user --break-system-packages -r requirements.txt || pip install -r requirements.txt --break-system-packages
-                python3 -m pip install --user --break-system-packages pytest || pip install pytest --break-system-packages
-                
-                export PATH="\$HOME/.local/bin:\$PATH"
+
+                python3 -m pip install --user --break-system-packages -r requirements.txt
+                python3 -m pip install --user --break-system-packages pytest
+
+                export PATH="$HOME/.local/bin:$PATH"
+
+                if find . -name "test_*.py" -o -name "*_test.py" | grep -q .; then
                 pytest
-                """
-            }
-        }
+                else
+                echo "No Python tests found. Skipping pytest."
+                fi
+            '''
+    }
+}
 
         stage('Build Image') {
             steps {
