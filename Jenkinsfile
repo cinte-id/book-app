@@ -37,8 +37,20 @@ pipeline {
                         dir('backend') {
                             sh '''
                             echo "=== Linting & Testing Backend ==="
+                            
+                            # Membuat dan mengaktifkan Python Virtual Environment
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            
+                            # Install tools dan dependensi aman di dalam venv
+                            pip install --upgrade pip
+                            pip install flake8 pytest
+                            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                            
+                            # Eksekusi Linting
                             flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-                            pip install -r requirements.txt pytest
+                            
+                            # Eksekusi Testing
                             pytest
                             '''
                         }
