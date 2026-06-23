@@ -20,18 +20,40 @@ pipeline {
             }
         }
 
-        stage('Lint') {
+stage('Lint') {
             steps {
-                sh 'echo "Lint Success"'
+                // Jalankan Lint sesuai dengan bahasa pemrograman masing-masing
+                sh """
+                echo "=== Linting Frontend (Node.js) ==="
+                cd frontend
+                npm install
+                npm run lint
+                
+                echo "=== Linting Backend (Python) ==="
+                cd ../backend
+                # Membuat virtual environment opsional, atau langsung install linter jika diizinkan di runner
+                pip install flake8
+                flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                """
             }
         }
 
         stage('Test') {
             steps {
-                sh 'echo "Test Success"'
+                sh """
+                echo "=== Testing Frontend (Node.js) ==="
+                cd frontend
+                npm run test
+                
+                echo "=== Testing Backend (Python) ==="
+                cd ../backend
+                pip install -r requirements.txt
+                # Menggunakan pytest (atau ganti dengan 'python -m unittest' jika pakai bawaan Python)
+                pip install pytest
+                pytest
+                """
             }
         }
-
         stage('Build Image') {
             steps {
                 sh """
