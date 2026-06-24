@@ -6,10 +6,12 @@ import BottomNav from '../components/BottomNav';
 import HeaderNav from '../components/HeaderNav';
 import BrowseLibrary from '../components/BrowseLibrary';
 import { books, currentlyReading, readingStats } from '../data/dummyData';
+import BookDetail from '@/components/BookDetail';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const [test, setTest] = useState(false)
 
   const renderContent = () => {
     switch (activeTab) {
@@ -61,7 +63,7 @@ const Index = () => {
                 </div>
               </div>
             ) : (
-              <BrowseLibrary />
+              <BrowseLibrary/>
             )}
           </div>
         );

@@ -112,6 +112,43 @@ def delete_book(book_id):
             return jsonify(deleted_book)
     return jsonify({'error': 'Book not found'}), 404
 
+@app.route('/api/books/<int:book_id>', methods=['GET', 'OPTIONS'])
+def get_books_by_id(book_id):
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        response = jsonify({})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
+    
+    for book in books:
+        if book['id'] == book_id:
+            return jsonify(book)
+    return jsonify({'error': 'Book not found'}), 400
+
+@app.route('/api/books/search', methods=['GET'])
+def search_book():
+    query = request.args.get('query', '')
+    if not query:
+        return jsonify({
+            'error': 'Query parameter is required'
+        }), 400
+    search_result = [
+        book for book in books
+        if query.lower() in book['title'].lower() or query.lower() in book['author'].lower()
+    ]
+    return jsonify(search_result)
+
+@app.route('/api/books/category', methods=['GET'])
+def filter_by_category():
+    category = request.args.get('category', '')
+    if category == 'all':
+        return jsonify(books)
+    
+    filtered_books = [book for book in books if book['genre'] == category]
+    return jsonify(filtered_books)
+
 if __name__ == '__main__':
     print(f"Starting Flask server on http://{FLASK_HOST}:{FLASK_PORT}")
     print("CORS enabled for development")

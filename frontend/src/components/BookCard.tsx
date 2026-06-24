@@ -72,10 +72,12 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-all duration-200">
         <div className="flex space-x-3">
           <div className="w-16 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center flex-shrink-0">
-            <BookOpen className="text-purple-500" size={24} />
+                    {book.cover && (
+                        <img src={book.cover} alt={book.title} className="w-24 h-24 object-cover"/>
+                    )}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-800 mb-1 line-clamp-2">{book.title}</h3>
+            <h3 className="font-semibold text-gray-800 mb-1 line-clamp-2">{book.title.length > 20 ? book.title.slice(0, 20) + ' ...' : book.title}</h3>
             <p className="text-sm text-gray-600 mb-2">{book.author}</p>
             <div className="flex items-center justify-between">
               <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
