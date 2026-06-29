@@ -2,6 +2,22 @@
 
 A modern React application for managing your reading list, built with Vite, TypeScript, and shadcn/ui.
 
+## ## DevOps Submission Notes
+
+**Chosen Role:** DevOps (Junior)
+
+This contribution containerizes the **frontend** (React + Vite) application using Docker, including a multi-stage Dockerfile, Docker Compose setup, environment variable handling, and a CI workflow with GitHub Actions.
+
+**How to run/test:** See the [Running with Docker](#running-with-docker) section below.
+
+**Notes & technical decisions:**
+- Chose to containerize the **frontend** (over backend).
+- Used a **multi-stage Dockerfile**: Stage 1 (`node:20-alpine`) installs dependencies and runs `vite build`; Stage 2 (`nginx:alpine`) only serves the built static      files. This keeps the final image small, since Node.js, `node_modules`, and source code are discarded after the build stage.
+- Added a custom `nginx.conf` to handle SPA routing. Without it, refreshing the page on any route other than `/` (e.g. `/library`) would return a 404, since Nginx would look for a physical file that doesn't exist. The config falls back to `index.html` so React Router can handle routing on the client side.
+- Vite environment variables (`VITE_*`) are baked in at **build time**, not runtime. To avoid hardcoding values in the image, `ARG` is used to receive values via `--build-arg`, then passed into `ENV` so they're available during the `RUN npm run build` step. `docker-compose.yml` reads these values from a local `.env` file (not committed; already covered by `.gitignore`).
+- Chose **npm** over **Bun** (the repo includes both `package-lock.json` and `bun.lockb`) since npm is more universally available in any Node base image without extra setup.
+
+
 ## Features
 
 - 📚 Add, view, update, and delete books
@@ -20,6 +36,17 @@ A modern React application for managing your reading list, built with Vite, Type
 - shadcn/ui
 - ESLint
 - PostCSS
+
+## GitHub Actions CI
+
+This project includes a GitHub Actions workflow that automatically runs whenever code is pushed to the `main` branch. The workflow helps ensure that the Docker configuration remains valid and that the application can always be built successfully.
+
+| CI Step | Description |
+|---------|-------------|
+| **Checkout repository** | Downloads the latest version of the project into the GitHub Actions runner. |
+| **Lint Dockerfile** | Uses Hadolint to validate the Dockerfile and check for Docker best practices. |
+| **Set up Docker Buildx** | Configures Docker Buildx to support modern Docker image builds. |
+| **Build Docker image** | Builds the frontend Docker image to verify that the application can be containerized successfully. |
 
 ## Project Structure
 
@@ -62,6 +89,41 @@ npm run dev
 ```
 
 The application will be available at http://localhost:5173
+
+## Running with Docker
+
+The app is containerized with a multi-stage `Dockerfile`: the first stage builds the static assets with Vite, and the second stage serves them with a lightweight Nginx image (configured for SPA client-side routing).
+
+### Build the image
+
+Vite environment variables (`VITE_*`) are baked in at build time, so they are passed in as `--build-arg`, sourced from a `.env` file — never hardcoded in the Dockerfile or image layers.
+
+```bash
+docker build \
+  --build-arg VITE_API_URL=http://localhost:5001 \
+  --build-arg VITE_API_BASE_URL=http://localhost:5001/api \
+  --build-arg VITE_APP_TITLE="Book Tracker App" \
+  -t book-app-frontend .
+```
+
+### Run the container
+
+```bash
+docker run -d -p 8080:80 book-app-frontend
+```
+
+The app will be available at http://localhost:8080
+
+### Run with Docker Compose (recommended)
+
+1. Create a `.env` file in this folder (see `env.example` for the required variables).
+2. Start the stack:
+
+```bash
+docker compose up -d --build
+```
+
+Compose automatically reads `.env` and passes the values as build args, so no environment-specific values are hardcoded in the image.
 
 ## Development
 
