@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Jenkins Server App
+
+Resources:
+  JenkinsSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Jenkins Security Group
+      VpcId: !ImportValue Book-VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: Jenkins-SG
+
+  JenkinsEC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.small
+      ImageId: !Sub '{{resolve:ssm:/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id}}'
+      KeyName: serversshd
+      SubnetId: !ImportValue Book-PublicSubnetId
+      SecurityGroupIds:
+        - !Ref JenkinsSG
+      Tags:
+        - Key: Name
+          Value: Jenkins-Server
+
+Outputs:
+  InstanceId:
+    Value: !Ref JenkinsEC2
+    Export:
+      Name: Jenkins-InstanceId
+
+  PublicIP:
+    Value: !GetAtt JenkinsEC2.PublicIp
+    Export:
+      Name: Jenkins-PublicIp

@@ -1,258 +1,317 @@
-# Test Instruction
+# BookTracker DevOps Technical Assessment
 
-Hi there! 👋  
-Thanks for applying to our company.
+## Project Overview
 
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
+This project demonstrates the implementation of a complete CI/CD pipeline, Kubernetes deployment, and monitoring solution for a containerized BookTracker application.
 
----
+The goal of this project is to showcase practical DevOps skills including:
 
-## 🧭 Goal
-
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
-
----
-
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
+* Containerization with Docker
+* CI/CD automation using Jenkins
+* Kubernetes deployment using K3s
+* Infrastructure and application monitoring using Prometheus and Grafana
+* AWS EC2 infrastructure management
 
 ---
 
-## ✅ What to Do
+# Architecture
 
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
-
----
-
-## 🔧 Tasks by Role
-
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
+```text
+GitHub
+   │
+   ▼
+Jenkins
+   │
+   ├── Build Docker Images
+   ├── Push Images to Docker Hub
+   └── Deploy to Kubernetes
+   │
+   ▼
+Docker Hub
+   │
+   ▼
+K3s Cluster
+├── Master Node
+└── Worker Node
+   │
+   ├── Frontend Deployment
+   ├── Backend Deployment
+   └── ConfigMap
+   │
+   ▼
+Monitoring Stack
+├── Prometheus
+├── Grafana
+├── Node Exporter
+└── kube-state-metrics
+```
 
 ---
 
-## 🌟 Bonus Points (Optional)
+# Infrastructure
 
-We appreciate extra touches like:
+| Server         | Purpose                    |
+| -------------- | -------------------------- |
+| Jenkins Server | CI/CD, Prometheus, Grafana |
+| K3s Master     | Kubernetes Control Plane   |
+| K3s Worker     | Application Workloads      |
 
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
+Environment:
 
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
+* AWS EC2
+* Ubuntu Server
+* Docker
+* K3s Kubernetes
 
 ---
 
-## 📩 Submission
+# Technologies Used
 
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
+## CI/CD
 
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
+* GitHub
+* Jenkins
+* Docker
+* Docker Hub
 
-Good luck, and have fun! 🚀
+## Container Orchestration
+
+* Kubernetes (K3s)
+
+## Monitoring
+
+* Prometheus
+* Grafana
+* Node Exporter
+* kube-state-metrics
+
+## Cloud Infrastructure
+
+* AWS EC2
+* Security Groups
+* VPC Networking
 
 ---
 
-# Book Tracker App
+# CI/CD Pipeline
 
-A full-stack web application for managing your reading list, built with Flask and React. Build for People Recruitment Test. Integration with backend only works on page Library section Browse Library. Live preview on: https://book-app.cinte.id/
+The Jenkins pipeline performs the following stages:
 
-<img src="./assets/home.png" height="200" alt="Home">
-<img src="./assets/library.png" height="200" alt="Library">
+1. Source Code Checkout
+2. Application Build
+3. Docker Image Build
+4. Push Docker Images to Docker Hub
+5. Deploy to K3S
 
-## Features
+Docker Images:
 
-- 📚 Add, view, update, and delete books
-- 📖 Track reading status (unread/reading/completed)
-- 🎨 Modern and responsive UI with Tailwind CSS
-- 🔄 Real-time updates
-- ⚡ Fast and efficient with React + Vite
-- 🛡️ Type-safe with TypeScript
-
-## Tech Stack
-
-### Backend
-- Python 3.x
-- Flask
-- Flask-CORS
-- SQLAlchemy
-- python-dotenv
-
-### Frontend
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Axios
-- shadcn/ui components
-
-## Prerequisites
-
-- Python 3.x
-- Node.js 16.x or later
-- npm or yarn
-
-## Getting Started
-
-### Backend Setup
-
-1. Create and activate a virtual environment:
 ```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
+jodyys/bookapp-frontend:latest
+jodyys/bookapp-backend:latest
 ```
 
-2. Install backend dependencies:
+---
+
+# Kubernetes Deployment
+
+Application components deployed to K3s:
+
+## Frontend
+
+* Deployment
+* Service
+
+## Backend
+
+* Deployment
+* Service
+
+## Configuration
+
+* ConfigMap
+
+Verification Commands:
+
 ```bash
-pip install -r requirements.txt
+kubectl get nodes
+kubectl get pods -A
+kubectl get svc -A
 ```
 
-3. Start the Flask server:
-```bash
-cd backend
-python app.py
-```
+---
 
-The backend server will start on http://localhost:5000
+# Monitoring
 
-### Frontend Setup
+## Node Exporter
 
-1. Install frontend dependencies:
-```bash
-cd frontend
-npm install
-```
+Installed on:
 
-2. Start the development server:
-```bash
-npm run dev
-```
+* Jenkins Server
+* K3s Master Node
+* K3s Worker Node
 
-The frontend will be available at http://localhost:5173
+Collected Metrics:
 
-## API Documentation
+* CPU Usage
+* Memory Usage
+* Disk Usage
+* Network Usage
+* System Load
 
-### Endpoints
+## kube-state-metrics
 
-#### GET /api/books
-- Returns all books
-- Response: Array of book objects
+Provides Kubernetes metrics:
 
-#### POST /api/books
-- Creates a new book
-- Request Body:
-```json
-{
-  "title": "string",
-  "author": "string",
-  "status": "unread" | "reading" | "completed"
-}
-```
+* Nodes
+* Pods
+* Deployments
+* Services
+* Namespaces
+* Resource Usage
 
-#### PUT /api/books/<id>
-- Updates an existing book
-- Request Body: Same as POST
+## Prometheus
 
-#### DELETE /api/books/<id>
-- Deletes a book by ID
+Prometheus collects metrics from:
 
-## Project Structure
+* Node Exporter
+* kube-state-metrics
+* Prometheus self-monitoring
 
-```
+## Grafana
+
+Grafana dashboards used:
+
+* Node Exporter Full Dashboard
+* Kubernetes Monitoring Dashboard
+
+---
+
+# Screenshots
+
+## Cloudformation Success
+
+![Cloudformation success](images/cloudformation.png)
+
+![Cloudformation success](images/ec2-success.png)
+
+Successful create Infrastructure as code Cloudformation.
+
+---
+
+## Jenkins Pipeline Success
+
+![Jenkins Pipeline](images/jenkins-pipeline.png)
+
+Successful CI pipeline execution.
+
+---
+
+## Docker Hub Images
+
+![Docker Hub](images/dockerhub-frontend.png)
+
+Frontend images pushed successfully.
+
+![Docker Hub](images/dockerhub-backend.png)
+
+backend images pushed successfully.
+
+---
+
+## Applikasi Running On K3S
+
+![App Run](images/app-run.png)
+
+App Book Running on K3S.
+
+---
+
+## Kubernetes Nodes
+
+![Kubernetes Nodes](images/k8s-nodes.png)
+
+K3s cluster with master and worker nodes.
+
+---
+
+## Kubernetes Pods
+
+![Kubernetes Pods](images/k8s-pods.png)
+
+Application and monitoring workloads running successfully.
+
+---
+
+## Kubernetes SVC
+
+![Kubernetes SV](images/k8s-svc.png)
+
+List Kubernetes Service.
+
+---
+
+## Prometheus Targets
+
+![Prometheus Targets](images/prometheus-targets.png)
+
+All monitoring targets are healthy and reachable.
+
+---
+
+## Grafana Node Exporter Dashboard
+
+![Node Exporter Dashboard](images/grafana-node-exporter.png)
+
+Infrastructure monitoring across all servers.
+
+---
+
+## Grafana Kubernetes Dashboard
+
+![Kubernetes Dashboard](images/grafana-kubernetes.png)
+
+Cluster-level monitoring using kube-state-metrics.
+
+---
+
+# Project Structure
+
+```text
 book-app/
-├── backend/
-│   └── app.py              # Flask backend API
+│
 ├── frontend/
-│   ├── src/
-│   │   ├── types/
-│   │   │   └── book.ts     # TypeScript interfaces
-│   │   ├── services/
-│   │   │   └── api.ts      # API service functions
-│   │   ├── App.tsx         # Main React component
-│   │   ├── main.tsx        # React entry point
-│   │   └── index.css       # Global styles
-│   ├── tailwind.config.js  # Tailwind configuration
-│   └── package.json        # Frontend dependencies
-└── requirements.txt        # Backend dependencies
+├── backend/
+│
+├── k8s/
+│   ├── frontend-deployment.yaml
+│   ├── frontend-service.yaml
+│   ├── backend-deployment.yaml
+│   ├── backend-service.yaml
+│   └── configmap.yaml
+│
+├── monitoring/
+│   ├── prometheus.yml
+│   └── docker-compose.yml
+│
+├── Jenkinsfile
+├── Dockerfile.frontend
+├── Dockerfile.backend
+├── docker-compose.yml
+└── README.md
 ```
 
-## Development
+---
 
-### Backend Development
-- The backend uses Flask for the API
-- CORS is enabled for frontend communication
-- Currently using in-memory storage (can be extended to use a database)
+# Results
 
-### Frontend Development
-- Built with React + Vite for fast development
-- TypeScript for type safety
-- Tailwind CSS for styling
-- shadcn/ui components for consistent UI
+Successfully implemented:
 
-## Contributing
+* Dockerized frontend and backend applications
+* Jenkins CI pipeline
+* Docker Hub image repository integration
+* Kubernetes deployment using K3s
+* Infrastructure monitoring with Prometheus and Grafana
+* Kubernetes monitoring using kube-state-metrics
+* Multi-node cluster monitoring using Node Exporter
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Future Enhancements
-
-- [ ] Authentication system
-- [ ] Search and filtering
-- [ ] Sorting options
-- [ ] Book categories/tags
-- [ ] Reading progress tracking
-- [ ] Book ratings and reviews
-- [ ] Database integration
-- [ ] User profiles and personal libraries
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project demonstrates practical experience with modern DevOps practices including CI/CD, containerization, orchestration, observability, and cloud infrastructure management.

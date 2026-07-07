@@ -1,13 +1,19 @@
-#Base Image Node.js 20
-FROM node:20
+FROM node:20-alpine AS builder
 
-# install dependencies
 WORKDIR /app
-COPY package*.json bun.lockb ./
 
-# Copy to Workdir
-COPY . .
+COPY package*.json ./
+
 RUN npm install
 
-EXPOSE 8080
-CMD ["npm", "run", "dev" ]
+COPY . .
+
+RUN npm run build
+
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
