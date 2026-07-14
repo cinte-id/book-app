@@ -1,3 +1,4 @@
-docker-compose.*
 evaluate.md
 results
+terraform/.terraform/
+terraform/.terraform.lock.hcl
