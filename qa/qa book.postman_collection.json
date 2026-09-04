@@ -1,0 +1,254 @@
+{
+  "info": {
+    "_postman_id": "8718f998-a4aa-490d-a575-065001c7c232",
+    "name": "qa book",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "36827487"
+  },
+  "item": [
+    {
+      "name": "listbook",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json, text/plain, */*"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en-US,en;q=0.9,id-ID;q=0.8,id;q=0.7"
+          },
+          {
+            "key": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "Origin",
+            "value": "http://localhost:8080"
+          },
+          {
+            "key": "Referer",
+            "value": "http://localhost:8080/"
+          },
+          {
+            "key": "Sec-Fetch-Dest",
+            "value": "empty"
+          },
+          {
+            "key": "Sec-Fetch-Mode",
+            "value": "cors"
+          },
+          {
+            "key": "Sec-Fetch-Site",
+            "value": "cross-site"
+          },
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?1"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"iOS\""
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:5001/api/books",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5001",
+          "path": [
+            "api",
+            "books"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "editbook1param",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json, text/plain, */*"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en-US,en;q=0.9,id-ID;q=0.8,id;q=0.7"
+          },
+          {
+            "key": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Origin",
+            "value": "http://localhost:8080"
+          },
+          {
+            "key": "Referer",
+            "value": "http://localhost:8080/"
+          },
+          {
+            "key": "Sec-Fetch-Dest",
+            "value": "empty"
+          },
+          {
+            "key": "Sec-Fetch-Mode",
+            "value": "cors"
+          },
+          {
+            "key": "Sec-Fetch-Site",
+            "value": "cross-site"
+          },
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Windows\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\":\"READING\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5001/api/books/7",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5001",
+          "path": [
+            "api",
+            "books",
+            "7"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "editboodparam",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json, text/plain, */*"
+          },
+          {
+            "key": "Accept-Language",
+            "value": "en-US,en;q=0.9,id-ID;q=0.8,id;q=0.7"
+          },
+          {
+            "key": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Origin",
+            "value": "http://localhost:8080"
+          },
+          {
+            "key": "Referer",
+            "value": "http://localhost:8080/"
+          },
+          {
+            "key": "Sec-Fetch-Dest",
+            "value": "empty"
+          },
+          {
+            "key": "Sec-Fetch-Mode",
+            "value": "cors"
+          },
+          {
+            "key": "Sec-Fetch-Site",
+            "value": "cross-site"
+          },
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+          },
+          {
+            "key": "sec-ch-ua",
+            "value": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\""
+          },
+          {
+            "key": "sec-ch-ua-mobile",
+            "value": "?0"
+          },
+          {
+            "key": "sec-ch-ua-platform",
+            "value": "\"Windows\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"status\":\"want-to-read\",\r\n    \"genre\": \"Comedy\",\r\n    \"id\": 100000,\r\n    \"pages\": 7860\r\n    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5001/api/books/7",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5001",
+          "path": [
+            "api",
+            "books",
+            "7"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

@@ -37,8 +37,8 @@
       "cover": "https://covers.openlibrary.org/b/id/12749897-L.jpg",
       "rating": 4.4,
       "pages": 432,
-      "genre": "Romance",
-      "status": "want-to-read"
+      "genre": "Comedy",
+      "status": "READING"
     },
     {
       "id": 5,
@@ -66,8 +66,8 @@
       "author": "J.R.R. Tolkien",
       "cover": "https://covers.openlibrary.org/b/id/12749900-L.jpg",
       "rating": 4.9,
-      "pages": 1216,
-      "genre": "Fantasy",
+      "pages": 7860,
+      "genre": "Comedy",
       "status": "want-to-read"
     },
     {
