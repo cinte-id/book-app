@@ -134,3 +134,61 @@ The application will be available at http://localhost:5173
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Customer Service Implementation
+
+### Chosen Role
+
+Customer Service
+
+### Overview
+
+This implementation adds a customer support system for the Book Tracker application, including self-service help, support ticket submission, user guidance, feedback collection, live chat UI, and internal customer service ticket monitoring.
+
+### Features Implemented
+
+- Searchable Help & FAQ
+- Categorized FAQ content
+- Accordion-based support sections
+- Contact Support form
+- Form validation
+- Support ticket generation
+- Ticket persistence using browser localStorage
+- User Guide / Tutorial
+- Feedback & Suggestion form
+- User satisfaction rating
+- Live Chat widget interface
+- Customer Service Dashboard
+- Support ticket search and status filtering
+- Support ticket tracking interface
+
+### Customer Flow
+
+Customer support can be accessed through:
+
+`Home → Profile → Customer Support`
+
+The customer-facing support page contains:
+
+- Help & FAQ
+- Contact Support
+- User Guide
+- Feedback & Suggestion
+- Live Chat
+
+### Routes
+
+- `/support` — Customer-facing support center
+- `/support/dashboard` — Internal Customer Service Dashboard
+
+### How to Run
+
+1. Navigate to the frontend folder:
+```bash
+cd frontend
+npm install
+npm run dev
+http://localhost:8080/
+Profile → Customer Support
+http://localhost:8080/support
+http://localhost:8080/support/dashboard 
