@@ -1,5 +1,5 @@
 
-import { Book, Search, User, TrendingUp, Home } from 'lucide-react';
+import { Book, Search, User, TrendingUp, Home, Headphones } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
@@ -13,6 +13,7 @@ const BottomNav = ({ activeTab, setActiveTab }: BottomNavProps) => {
     { id: 'discover', icon: Search, label: 'Discover' },
     { id: 'reading', icon: TrendingUp, label: 'Reading' },
     { id: 'profile', icon: User, label: 'Profile' },
+    { id: 'support', icon: Headphones, label: 'Support' },
   ];
 
   return (

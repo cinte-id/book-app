@@ -99,6 +99,42 @@ A full-stack web application for managing your reading list, built with Flask an
 <img src="./assets/home.png" height="200" alt="Home">
 <img src="./assets/library.png" height="200" alt="Library">
 
+## Customer Service Feature Implementation by Sanjaya Raga
+
+For this take-home assignment I chose the **Customer Service** role and built a complete customer support UI inside the existing React/Vite frontend.
+
+### How to Access
+
+The support pages keep the app's mobile-first layout:
+
+1. Run the frontend (`npm run dev`) and open http://localhost:5173
+2. Tap the **Support** (headphones) button in the Bottom Nav
+3. From there you can open any of the new pages:
+   - **Help Center** (`/support/help`) — searchable FAQ accordion + step-by-step tutorial tabs
+   - **Contact Us** (`/support/contact`) — validated contact + feedback forms
+   - **Ticket Dashboard** (`/support/dashboard`) — filterable support ticket table
+
+A **Live Chat** floating widget is available on every page via the chat button in the bottom-right corner.
+
+You can also visit the routes directly: `/support/help`, `/support/contact`, `/support/dashboard`.
+
+### Bonus Features
+
+- **Knowledge Base** — searchable, category-filterable help articles (available on the Help Center page).
+- **User Satisfaction Survey** — emoji-based satisfaction rating with optional comment (on the Contact page).
+- **Support Ticket Tracking** — filterable ticket table by status (on the Dashboard page).
+- **Customer Service Analytics mockup** — stat cards, tickets-by-status/category, and weekly volume bars (top of the Dashboard page).
+- **Multi-language support structure** — `LanguageProvider` + `useLanguage` hook with EN/ID dictionaries (`src/data/translations.ts`), toggled via the global `LanguageToggle` on the Help Center page.
+
+### Tech Stack & Decisions
+
+- **React 18 + TypeScript + Vite**, styled with **Tailwind CSS** and **shadcn/ui** components (Card, Table, Accordion, Tabs, Input, Select, Badge, ScrollArea, Button, etc.)
+- **Mock data only** — static, strongly-typed JSON lives in `src/data/` (`faqs.ts`, `tutorials.ts`, `tickets.ts`, `support.ts`). No backend or real API calls for the CS features, per the role constraints.
+- **Functional components with hooks** (`useState`, `useMemo`, `useEffect`, `useRef`) and a clean modular structure (`src/components/cs/`, `src/pages/support/`).
+- **Responsive mobile-first UI** constrained to the app's `max-w-md` layout; wide content such as the ticket table scrolls horizontally on small screens without breaking the layout.
+- **Simple client-side validation** with inline error messages and toast feedback on form submission.
+- **Routing** wired in `src/App.tsx` under the `/support/*` namespace.
+
 ## Features
 
 - 📚 Add, view, update, and delete books
