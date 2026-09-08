@@ -1,0 +1,19 @@
+{
+  "name": "book-app-qa-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive QA Automation Suite for Book Tracker App",
+  "author": "Sandy Yoga Prakasa Holley (https://github.com/Sandy-YP-Holley)",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test tests/api.spec.ts",
+    "test:e2e": "playwright test tests/e2e.spec.ts",
+    "test:chromium": "playwright test --project=chromium",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^22.5.5",
+    "typescript": "^5.5.3"
+  }
+}
