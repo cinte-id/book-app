@@ -28,7 +28,7 @@ This report provides a formal Requirements Traceability Matrix (RTM) and quantit
 | **Numeric Range Boundary Checks** | TC-API-011, TC-API-012 | Boundary API | Manual / Scripted Audit | **FAIL (BUG-003: Unchecked ratings/pages)** |
 | **Status Domain Validation** | TC-API-013 | Negative API | Manual / Scripted Audit | **FAIL (BUG-004: Arbitrary strings accepted)** |
 | **Primary Key Sequence Safety** | TC-API-016 | Data Integrity | Manual / Scripted Audit | **FAIL (BUG-001: ID collision after deletion)** |
-| **HTML Tag Stripping & Input Sanitization** | TC-API-017 | Input Validation API | Manual / Scripted Audit | **FAIL (BUG-005: Raw markup stored in memory)** |
+| **HTML Tag Stripping & Input Sanitization** | TC-API-017 | Input Validation API | Manual / Scripted Audit | **FAIL (BUG-005: Raw markup stored without sanitization)** |
 | **Browse Library Initial View** | TC-E2E-001 | E2E Browser | `qa-tests/tests/e2e.spec.ts` | Pass (Heading, count, cards rendered) |
 | **Search Filter (Title/Author)** | TC-E2E-002, TC-E2E-003 | E2E Browser | `qa-tests/tests/e2e.spec.ts` | Pass (Dynamic client filtering) |
 | **Genre Filter Selection** | TC-E2E-004, TC-E2E-005 | E2E Browser | `qa-tests/tests/e2e.spec.ts` | Pass (Genre pill filtering active) |

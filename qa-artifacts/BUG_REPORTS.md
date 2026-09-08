@@ -18,10 +18,10 @@
 | **BUG-003** | Lack of Value and Range Validation on Numeric Fields (`rating`, `pages`) | High | High | Backend API (`app.py`) | Verified |
 | **BUG-004** | Unrestricted Domain String Acceptance on Book `status` Attribute | Medium | High | Backend API (`app.py`) | Verified |
 | **BUG-005** | Lack of Input Sanitization and HTML Tag Stripping on Book Metadata Fields | Medium | Medium | Backend API (`app.py`) | Verified |
-| **BUG-006** | Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route | Medium | Medium | Backend API (`app.py`) | Verified |
+| **BUG-006** | Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route (Declarative Route Inconsistency) | Medium | Medium | Backend API (`app.py`) | Verified |
 | **BUG-007** | Redundant Status Assignment and Incomplete Status Lifecycle in Browse Library UI | Medium | Medium | Frontend (`BrowseLibrary.tsx`) | Verified |
 | **BUG-008** | Inert Filter Button in Browse Library Interface with Missing Event Binding | Low | Low | Frontend (`BrowseLibrary.tsx`) | Verified |
-| **BUG-009** | Volatile In-Memory State Loss Across Application Restarts | Medium | Medium | Backend API (`app.py`) | Verified |
+| **BUG-009** | Absence of Atomic File Locking and Process Synchronization on JSON Store | Medium | Medium | Backend API (`app.py`) | Verified |
 
 ---
 
@@ -199,10 +199,10 @@
 
 ---
 
-### BUG-006: Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route
+### BUG-006: Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route (Declarative Route Inconsistency)
 
 - **Bug ID:** BUG-006
-- **Title:** Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route
+- **Title:** Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route (Declarative Route Inconsistency)
 - **Severity:** Medium (S3)
 - **Priority:** Medium (P2)
 - **Component:** Backend API (`backend/app.py`, line 106)
@@ -214,20 +214,25 @@
      @app.route('/api/books/<int:book_id>', methods=['DELETE'])
      def delete_book(book_id):
      ```
-  2. Compare with `PUT` route at line 82:
+  2. Compare with `PUT` route at line 82 and `GET` collection route at line 53:
      ```python
+     @app.route('/api/books', methods=['GET', 'OPTIONS'])
+     ...
      @app.route('/api/books/<int:book_id>', methods=['PUT', 'OPTIONS'])
      ```
-  3. Send an HTTP `OPTIONS` request to `/api/books/1`.
+  3. Send an HTTP `OPTIONS` preflight request to `/api/books/1`.
 - **Expected Result:**
-  - HTTP 200 OK with allowed CORS preflight headers (`Access-Control-Allow-Methods: DELETE,...`).
+  - Route declarations should be consistent across mutating endpoints. If route-level `OPTIONS` handling and custom preflight headers are declared on `PUT /api/books/<id>`, the same pattern should consistently be declared on `DELETE /api/books/<id>`.
 - **Actual Result:**
-  - In environments where standard preflight routing relies on endpoint method declarations, preflight `OPTIONS` requests fail with HTTP 405 Method Not Allowed.
+  - In `backend/app.py`, `PUT /api/books/<id>` explicitly declares `methods=['PUT', 'OPTIONS']` and provides a manual preflight response handler block, whereas `DELETE /api/books/<id>` omits `OPTIONS` entirely (`methods=['DELETE']`).
+  - While Flask-CORS (`CORS(app, ...)`) intercepts preflight requests globally, explicitly omitting `OPTIONS` on `DELETE /api/books/<id>` violates route-level declarative consistency compared to the `PUT` endpoint. If route-level method declarations are evaluated or if preflight handling relies on endpoint route decorators, preflight `OPTIONS` requests fail with HTTP 405 Method Not Allowed.
 - **Suggested Fix:**
-  - Add `'OPTIONS'` to route methods or rely uniformly on Flask-CORS middleware rather than manual ad-hoc method routing:
+  - Harmonize route-level method declarations across all endpoints. Either add `'OPTIONS'` to `DELETE /api/books/<id>` for declarative consistency:
     ```python
     @app.route('/api/books/<int:book_id>', methods=['DELETE', 'OPTIONS'])
     ```
+  - Or refactor all routes to uniformly rely on global Flask-CORS middleware by removing redundant manual `OPTIONS` check blocks from individual route handlers.
+
 
 ---
 
@@ -280,23 +285,42 @@
 
 ---
 
-### BUG-009: Volatile In-Memory State Loss Across Application Restarts
+### BUG-009: Absence of Atomic File Locking and Process Synchronization on JSON Store
 
 - **Bug ID:** BUG-009
-- **Title:** Volatile In-Memory State Loss Across Application Restarts
+- **Title:** Absence of Atomic File Locking and Process Synchronization on JSON Store
 - **Severity:** Medium (S3)
 - **Priority:** Medium (P2)
-- **Component:** Backend API (`backend/app.py`, line 51)
+- **Component:** Backend API (`backend/app.py`, lines 37-51, 79, 102, 111)
 - **Preconditions:**
-  - Application running with in-memory Python list storage (`books = [...]`).
+  - Backend running with an in-memory list synchronized to a local JSON flat file (`books.json`) via `load_books()` and `save_books()`.
 - **Steps to Reproduce:**
-  1. Add a new book via `POST /api/books`.
-  2. Modify reading status via `PUT /api/books/<id>`.
-  3. Terminate and restart the Flask application process.
-  4. Send `GET /api/books` to retrieve the catalog.
+  1. Inspect `load_books()` and `save_books()` in `backend/app.py`:
+     ```python
+     def load_books():
+         try:
+             with open(DATA_FILE, 'r') as f:
+                 data = json.load(f)
+                 return data.get('books', [])
+         except FileNotFoundError:
+             return []
+
+     def save_books(books_data):
+         with open(DATA_FILE, 'w') as f:
+             json.dump({'books': books_data}, f, indent=2)
+
+     books = load_books()
+     ```
+  2. Note that the backend implements JSON file persistence via `save_books()` and `load_books()` to `books.json`. However, `books` is loaded into an in-memory Python list only once at module import/startup (`books = load_books()`).
+  3. Deploy the application in a multi-worker WSGI server (e.g. Gunicorn or uWSGI with multiple worker processes) or issue concurrent parallel mutating requests (`POST /api/books`, `PUT /api/books/<id>`, or `DELETE /api/books/<id>`).
+  4. Worker Process A handles a mutation, updates its local `books` list, and calls `save_books(books)` (which executes `open('books.json', 'w')` followed by `json.dump`).
+  5. Concurrently, Worker Process B handles another request with its own in-memory `books` list (which was initialized at boot and never refreshed from disk), and writes back to `books.json` without file locking.
 - **Expected Result:**
-  - Created and modified entities persist across application restarts.
+  - Concurrent writes must be synchronized across processes using atomic file locking (e.g. `fcntl.flock` or a cross-platform lock file), atomic write-and-replace semantics (writing to a temporary file and atomically renaming via `os.replace`), or an ACID-compliant transactional relational database (SQLite / PostgreSQL) to prevent race conditions and lost updates.
 - **Actual Result:**
-  - State persistence in `backend/app.py` is held exclusively in an in-memory Python list. Any server restart, process recycling, or unhandled crash purges all runtime mutations and resets state to initial hardcoded values. In multi-worker production deployments (e.g. gunicorn with multiple worker processes), each worker maintains an independent memory space, resulting in desynchronized state between client requests.
+  - While state is written to `books.json` via `save_books()`, the application completely lacks atomic file locking or process synchronization.
+  - In a multi-worker production deployment, each worker maintains an isolated in-memory `books` list that never reloads from disk after startup, causing cross-process state desynchronization and lost updates (Worker B overwrites Worker A's saved state).
+  - Parallel concurrent writes executing `open(DATA_FILE, 'w')` and `json.dump` concurrently risk file descriptor race conditions, partial writes, file corruption, or dirty writes.
 - **Suggested Fix:**
-  - Implement a persistent database layer using SQLAlchemy with SQLite or PostgreSQL (SQLAlchemy is already included in `requirements.txt`).
+  - **Short-term:** Wrap `save_books()` and `load_books()` with atomic file locking (e.g. utilizing the `filelock` library) and implement atomic file replacement (write serialized JSON to a temporary file and atomically rename it via `os.replace`). Ensure each worker refreshes its in-memory view or reads from the locked file store on mutation.
+  - **Long-term (Recommended):** Migrate from flat JSON file storage to an ACID-compliant transactional database such as SQLite or PostgreSQL using SQLAlchemy (which is already declared in `requirements.txt`).

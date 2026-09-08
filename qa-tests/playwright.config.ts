@@ -22,6 +22,17 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
+  /**
+   * Browser Execution Matrix:
+   * By default, the automated test suite executes on Chromium-based browser engines:
+   * 1. 'chromium': Desktop Chrome profile, utilizing CHROME_BIN if specified or the system
+   *    Chromium-based Microsoft Edge engine (channel: 'msedge').
+   * 2. 'msedge': Native Microsoft Edge browser profile (channel: 'msedge').
+   *
+   * Multi-engine execution (Firefox / WebKit) is opt-in via ALL_BROWSERS=true and requires
+   * installing standalone Playwright engine binaries via `npx playwright install firefox webkit`.
+   * The primary automated test suite runs strictly on Chromium and Microsoft Edge engines.
+   */
   projects: [
     {
       name: 'chromium',

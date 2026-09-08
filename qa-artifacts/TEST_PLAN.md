@@ -57,13 +57,13 @@ This Test Plan defines the testing strategy, test scenarios, execution criteria,
 
 ### 4.1 Testing Levels
 1. **API Level (Component & Integration):** Direct HTTP request execution against endpoints via Playwright API test client (`@playwright/test`) and Python benchmark harnesses to validate payload contracts, status codes, headers, and persistence behavior.
-2. **End-to-End (E2E) Browser Testing:** User flow automation on Chromium, Microsoft Edge, Firefox, and WebKit to validate component rendering, reactive state management, asynchronous data retrieval, and user interactions.
+2. **End-to-End (E2E) Browser Testing:** User flow automation on Chromium-based engines (Chromium profile and Microsoft Edge channel, with optional opt-in support for Firefox and WebKit via extended configuration) to validate component rendering, reactive state management, asynchronous data retrieval, and user interactions.
 3. **Security Testing:** Robustness testing against unvalidated inputs, script injection strings, oversized strings, and malformed JSON bodies.
 4. **Performance Testing:** Quantitative profiling of single-request latency percentiles (p50, p90, p95, p99) and concurrent request throughput (RPS).
 5. **Accessibility Testing:** Manual and automated audits following WCAG 2.1 Level AA criteria.
 
 ### 4.2 State Management and Test Isolation
-The Flask backend relies entirely on an in-memory Python list (`books = [...]`). To prevent test cross-contamination:
+The Flask backend maintains an in-memory list synchronized to a local JSON flat file (`books.json`). To prevent test cross-contamination:
 - Test cases operating on mutable state must generate unique entities with timestamps.
 - Post-test teardown hooks (`afterEach` / `afterAll`) must issue `DELETE` requests for any created records.
 - Tests must operate independently of initial database sequence assumptions.

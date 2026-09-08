@@ -16,7 +16,7 @@
                           TEST EXECUTION OVERVIEW
 =============================================================================
 Total Test Scenarios Defined:               27
-Automated Test Executions Run:              22 (11 on Chromium + 11 on Edge)
+Automated Test Executions Run:              22 (11 on Chromium + 11 on Microsoft Edge)
 Automated Tests Passed:                     22
 Automated Tests Failed:                      0
 Automated Pass Rate:                       100.0%
@@ -30,7 +30,10 @@ Overall Release Recommendation:             CONDITIONAL REJECTION (Fix S1/S2)
 
 ## 2. Automated Test Suite Execution Details
 
-Automated tests were executed via Playwright (`@playwright/test`) with strict test isolation and teardown cleanup against the volatile in-memory/JSON store.
+Automated tests were executed via Playwright (`@playwright/test`) with strict test isolation and teardown cleanup against the backend in-memory list synchronized to a local JSON flat file (`books.json`).
+
+> [!NOTE]
+> **Browser Execution Matrix Note:** The automated suite executes 22 tests across Chromium-based browser engines: 11 tests under the Chromium project (Desktop Chrome profile utilizing the system Edge Chromium runtime) and 11 tests under the native Microsoft Edge project (`channel: 'msedge'`). Cross-engine execution for Firefox and WebKit is available via optional opt-in configuration (`ALL_BROWSERS=true`) with separate browser binaries; reported automated runs reflect verified execution on Chromium and Microsoft Edge engines without misleading multi-engine claims.
 
 ### 2.1 Backend API Test Results (`qa-tests/tests/api.spec.ts`)
 
@@ -79,7 +82,7 @@ Automated tests were executed via Playwright (`@playwright/test`) with strict te
 | **TC-API-014** | PUT Non-existent ID | `PUT /api/books/999999` | Returns HTTP 404 `{"error": "Book not found"}` | None | **PASS** |
 | **TC-API-015** | DELETE Non-existent ID | `DELETE /api/books/999999` | Returns HTTP 404 `{"error": "Book not found"}` | None | **PASS** |
 | **TC-API-016** | ID Monotonicity after Deletion | Delete ID 2, then `POST` | Assigns duplicate ID `8` (`len(books) + 1`) | **BUG-001** | **FAIL** |
-| **TC-API-017** | HTML Tag Stripping on Metadata | `<script>alert('test')</script>` | Stored raw in-memory without sanitization | **BUG-005** | **FAIL** |
+| **TC-API-017** | HTML Tag Stripping on Metadata | `<script>alert('test')</script>` | Stored raw without sanitization | **BUG-005** | **FAIL** |
 | **TC-API-018** | SQL Injection Syntax Test | `' OR '1'='1'; --` | Persisted as raw string (SQLite unattached) | None | **PASS** |
 | **TC-API-019** | Large Payload String Stress | 5,000 characters in `genre` | Accepted with HTTP 201 without length limits | None | **PASS** |
 | **TC-API-020** | Concurrent Load Stability | 50 requests with 5 workers | 100% HTTP 200 response rate, 394.75 RPS | None | **PASS** |
@@ -96,7 +99,7 @@ Automated tests were executed via Playwright (`@playwright/test`) with strict te
 2. **Missing Ingestion Boundaries (High):**
    Zero server-side validation is implemented on `POST /api/books`. The API happily persists entities with `null` titles, negative page numbers, out-of-range ratings, and unvalidated status strings.
 3. **Input Sanitization & Hygiene Gap (Medium):**
-   Raw HTML and script tags are accepted without stripping or validation and stored in memory. While standard JSX rendering escapes strings by default in React, serving unstripped markup presents an input hygiene risk for non-JSX consumers or future unescaped components.
+   Raw HTML and script tags are accepted without stripping or validation and stored in the backend in-memory list and synchronized JSON store (`books.json`). While standard JSX rendering escapes strings by default in React, serving unstripped markup presents an input hygiene risk for non-JSX consumers or future unescaped components.
 4. **Browse Library Functional Gap (Medium):**
    While the backend exposes complete CRUD capabilities, the frontend UI currently only consumes `GET /api/books` and an idempotent `PUT` (setting `status: 'want-to-read'`). Neither entity creation (`POST`) nor deletion (`DELETE`) is exposed in the user interface.
 

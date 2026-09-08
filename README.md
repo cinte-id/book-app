@@ -68,11 +68,11 @@ npx playwright show-report
 ## 3. Engineering Decisions & Architecture
 
 1. **Test Framework Selection (Playwright):**
-   Playwright (`@playwright/test`) was selected for its native unified execution model supporting both fast HTTP API testing and resilient cross-browser E2E browser automation (Chromium, Edge, Firefox, WebKit). Its built-in request fixture enables testing REST APIs with zero additional dependencies.
+   Playwright (`@playwright/test`) was selected for its native unified execution model supporting both fast HTTP API testing and resilient browser automation (Chromium and Microsoft Edge engines by default, with opt-in Firefox and WebKit support). Its built-in request fixture enables testing REST APIs with zero additional dependencies.
 2. **Port Configuration Defaults:**
    `playwright.config.ts` strictly defaults to `http://localhost:5000` for backend API operations and `http://localhost:5173` for frontend UI browser execution, with dynamic environment variable overrides supported (`API_URL`, `BASE_URL`).
 3. **State Isolation and Volatile Store Protection:**
-   Because the Flask backend utilizes a volatile in-memory Python list (`books = [...]`), each test creates distinct entities using timestamped titles and strictly cleans up created records in `test.afterEach` hooks to guarantee test idempotency and zero flaky test runs.
+   Because the Flask backend utilizes an in-memory list synchronized to a local JSON flat file (`books.json`), each test creates distinct entities using timestamped titles and strictly cleans up created records in `test.afterEach` hooks to guarantee test idempotency and zero flaky test runs.
 4. **Scope Restriction:**
    End-to-End browser test automation is restricted strictly to the "Browse Library" module as specified in the recruitment assessment guidelines.
 
