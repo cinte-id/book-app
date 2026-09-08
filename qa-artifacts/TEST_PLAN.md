@@ -63,7 +63,7 @@ This Test Plan defines the testing strategy, test scenarios, execution criteria,
 5. **Accessibility Testing:** Manual and automated audits following WCAG 2.1 Level AA criteria.
 
 ### 4.2 State Management and Test Isolation
-The Flask backend relies on an in-memory list synchronized with `books.json`. To prevent test cross-contamination:
+The Flask backend relies entirely on an in-memory Python list (`books = [...]`). To prevent test cross-contamination:
 - Test cases operating on mutable state must generate unique entities with timestamps.
 - Post-test teardown hooks (`afterEach` / `afterAll`) must issue `DELETE` requests for any created records.
 - Tests must operate independently of initial database sequence assumptions.

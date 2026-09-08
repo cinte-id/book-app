@@ -17,11 +17,11 @@
 | **BUG-002** | Absence of Server-Side Mandatory Field Validation on `POST /api/books` | High | High | Backend API (`app.py`) | Verified |
 | **BUG-003** | Lack of Value and Range Validation on Numeric Fields (`rating`, `pages`) | High | High | Backend API (`app.py`) | Verified |
 | **BUG-004** | Unrestricted Domain String Acceptance on Book `status` Attribute | Medium | High | Backend API (`app.py`) | Verified |
-| **BUG-005** | Stored Cross-Site Scripting (XSS) Exposure via Unsanitized Payload Persistence | High | High | Backend API (`app.py`) | Verified |
+| **BUG-005** | Lack of Input Sanitization and HTML Tag Stripping on Book Metadata Fields | Medium | Medium | Backend API (`app.py`) | Verified |
 | **BUG-006** | Missing `OPTIONS` HTTP Method on `DELETE /api/books/<id>` Route | Medium | Medium | Backend API (`app.py`) | Verified |
 | **BUG-007** | Redundant Status Assignment and Incomplete Status Lifecycle in Browse Library UI | Medium | Medium | Frontend (`BrowseLibrary.tsx`) | Verified |
 | **BUG-008** | Inert Filter Button in Browse Library Interface with Missing Event Binding | Low | Low | Frontend (`BrowseLibrary.tsx`) | Verified |
-| **BUG-009** | Relative Working Directory Dependency for `DATA_FILE` Persistence | Medium | Medium | Backend API (`app.py`) | Verified |
+| **BUG-009** | Volatile In-Memory State Loss Across Application Restarts | Medium | Medium | Backend API (`app.py`) | Verified |
 
 ---
 
@@ -90,7 +90,7 @@
       "title": null
     }
     ```
-  - An empty invalid entity is stored in `books.json`.
+  - An empty invalid entity is stored in memory (`books` list).
 - **Suggested Fix:**
   - Implement request schema validation verifying presence and non-empty string types for mandatory attributes:
     ```python
@@ -171,31 +171,31 @@
 
 ---
 
-### BUG-005: Stored Cross-Site Scripting (XSS) Exposure via Unsanitized Payload Persistence
+### BUG-005: Lack of Input Sanitization and HTML Tag Stripping on Book Metadata Fields
 
 - **Bug ID:** BUG-005
-- **Title:** Stored Cross-Site Scripting (XSS) Exposure via Unsanitized Payload Persistence
-- **Severity:** High (S2)
-- **Priority:** High (P1)
+- **Title:** Lack of Input Sanitization and HTML Tag Stripping on Book Metadata Fields
+- **Severity:** Medium (Input Validation / Hygiene defect)
+- **Priority:** Medium (P2)
 - **Component:** Backend API (`backend/app.py`, lines 70-71)
 - **Preconditions:**
   - Backend service operational.
 - **Steps to Reproduce:**
-  1. Send `POST /api/books` with script tag injection payload:
+  1. Send `POST /api/books` with markup tag strings:
      ```json
      {
-       "title": "<script>alert('xss')</script>",
-       "author": "Attacker",
-       "genre": "<img src=x onerror=alert(1)>"
+       "title": "<script>alert('test')</script> Clean Title",
+       "author": "<b>Author</b>",
+       "genre": "<i>Fiction</i>"
      }
      ```
-  2. Inspect response body and backend `books.json` content.
+  2. Send `GET /api/books` and inspect the returned entity in memory.
 - **Expected Result:**
-  - Raw HTML/JavaScript characters `<` and `>` are sanitized, encoded, or stripped on ingestion.
+  - Raw HTML tags are stripped or sanitized upon ingestion to maintain clean data hygiene across consumer clients.
 - **Actual Result:**
-  - Payloads are stored raw into `books.json` and served verbatim via `GET /api/books`. If rendered in clients without automatic context-aware escaping (e.g. `dangerouslySetInnerHTML`), arbitrary JavaScript executes in client browser contexts.
+  - The REST API accepts, stores in memory (`books` list), and serves raw markup/tags without stripping or validation. While standard JSX rendering in React (`{book.title}`) escapes strings by default in the UI, this unstripped ingestion presents an input hygiene risk for non-JSX consumers, external API integrations, or future unescaped components (e.g., raw HTML email notifications or unescaped templates).
 - **Suggested Fix:**
-  - Strip or escape markup tags on ingestion using libraries such as `bleach` or `html.escape()`.
+  - Implement server-side input sanitization by stripping HTML tags from string attributes on ingestion using regex or standard libraries (`bleach.clean(text, strip=True)` or `html.escape()`).
 
 ---
 
@@ -280,26 +280,23 @@
 
 ---
 
-### BUG-009: Relative Working Directory Dependency for `DATA_FILE` Persistence
+### BUG-009: Volatile In-Memory State Loss Across Application Restarts
 
 - **Bug ID:** BUG-009
-- **Title:** Relative Working Directory Dependency for `DATA_FILE` Persistence
+- **Title:** Volatile In-Memory State Loss Across Application Restarts
 - **Severity:** Medium (S3)
 - **Priority:** Medium (P2)
-- **Component:** Backend API (`backend/app.py`, line 18)
+- **Component:** Backend API (`backend/app.py`, line 51)
 - **Preconditions:**
-  - Python application started from workspace root (`book-app/`) rather than `book-app/backend/`.
+  - Application running with in-memory Python list storage (`books = [...]`).
 - **Steps to Reproduce:**
-  1. Execute `python backend/app.py` from repository root.
-  2. `DATA_FILE` defaults to `'books.json'`.
-  3. `open('books.json', 'r')` looks for `books.json` in the current working directory (`book-app/books.json`) instead of `backend/books.json`.
+  1. Add a new book via `POST /api/books`.
+  2. Modify reading status via `PUT /api/books/<id>`.
+  3. Terminate and restart the Flask application process.
+  4. Send `GET /api/books` to retrieve the catalog.
 - **Expected Result:**
-  - Data file path resolves relative to the backend module directory (`os.path.join(os.path.dirname(__file__), DATA_FILE)`).
+  - Created and modified entities persist across application restarts.
 - **Actual Result:**
-  - `FileNotFoundError` occurs if run from an arbitrary working directory, resetting database state to empty collection `[]`.
+  - State persistence in `backend/app.py` is held exclusively in an in-memory Python list. Any server restart, process recycling, or unhandled crash purges all runtime mutations and resets state to initial hardcoded values. In multi-worker production deployments (e.g. gunicorn with multiple worker processes), each worker maintains an independent memory space, resulting in desynchronized state between client requests.
 - **Suggested Fix:**
-  - Resolve absolute path based on script location:
-    ```python
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_FILE = os.path.join(BASE_DIR, os.getenv('DATA_FILE', 'books.json'))
-    ```
+  - Implement a persistent database layer using SQLAlchemy with SQLite or PostgreSQL (SQLAlchemy is already included in `requirements.txt`).

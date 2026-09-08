@@ -79,7 +79,7 @@ Automated tests were executed via Playwright (`@playwright/test`) with strict te
 | **TC-API-014** | PUT Non-existent ID | `PUT /api/books/999999` | Returns HTTP 404 `{"error": "Book not found"}` | None | **PASS** |
 | **TC-API-015** | DELETE Non-existent ID | `DELETE /api/books/999999` | Returns HTTP 404 `{"error": "Book not found"}` | None | **PASS** |
 | **TC-API-016** | ID Monotonicity after Deletion | Delete ID 2, then `POST` | Assigns duplicate ID `8` (`len(books) + 1`) | **BUG-001** | **FAIL** |
-| **TC-API-017** | Stored XSS Script Payload | `<script>alert('xss')</script>` | Stored verbatim into database without escaping | **BUG-005** | **FAIL** |
+| **TC-API-017** | HTML Tag Stripping on Metadata | `<script>alert('test')</script>` | Stored raw in-memory without sanitization | **BUG-005** | **FAIL** |
 | **TC-API-018** | SQL Injection Syntax Test | `' OR '1'='1'; --` | Persisted as raw string (SQLite unattached) | None | **PASS** |
 | **TC-API-019** | Large Payload String Stress | 5,000 characters in `genre` | Accepted with HTTP 201 without length limits | None | **PASS** |
 | **TC-API-020** | Concurrent Load Stability | 50 requests with 5 workers | 100% HTTP 200 response rate, 394.75 RPS | None | **PASS** |
@@ -95,8 +95,8 @@ Automated tests were executed via Playwright (`@playwright/test`) with strict te
    The primary key assignment mechanism (`'id': len(books) + 1`) in `backend/app.py` is unsafe for production. Once any intermediate book is deleted, adding a subsequent record causes duplicated primary keys, breaking relational consistency and record retrieval.
 2. **Missing Ingestion Boundaries (High):**
    Zero server-side validation is implemented on `POST /api/books`. The API happily persists entities with `null` titles, negative page numbers, out-of-range ratings, and unvalidated status strings.
-3. **Security Ingestion Risk (High):**
-   Raw HTML and script tags are accepted without sanitization or HTML entity escaping. This introduces Stored XSS risks if downstream clients render entity properties without escaping.
+3. **Input Sanitization & Hygiene Gap (Medium):**
+   Raw HTML and script tags are accepted without stripping or validation and stored in memory. While standard JSX rendering escapes strings by default in React, serving unstripped markup presents an input hygiene risk for non-JSX consumers or future unescaped components.
 4. **Browse Library Functional Gap (Medium):**
    While the backend exposes complete CRUD capabilities, the frontend UI currently only consumes `GET /api/books` and an idempotent `PUT` (setting `status: 'want-to-read'`). Neither entity creation (`POST`) nor deletion (`DELETE`) is exposed in the user interface.
 
@@ -108,4 +108,4 @@ Automated tests were executed via Playwright (`@playwright/test`) with strict te
 - **Action Required Prior to Release:**
   1. Patch `BUG-001` (ID autoincrement mechanism) to guarantee unique IDs.
   2. Implement request schema validation (`BUG-002`, `BUG-003`, `BUG-004`) rejecting malformed payloads with HTTP 400 Bad Request.
-  3. Sanitize text ingestion to eliminate Stored XSS vectors (`BUG-005`).
+  3. Strip and sanitize HTML tags on metadata ingestion to ensure clean input hygiene (`BUG-005`).

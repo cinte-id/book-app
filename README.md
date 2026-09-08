@@ -23,7 +23,7 @@ This submission provides a complete, production-grade Quality Assurance test eng
 ### Key Findings Summary:
 1. **Critical Defect (BUG-001):** The backend primary key assignment (`'id': len(books) + 1`) causes primary key collisions whenever an intermediate entity is deleted and a new book is added.
 2. **Missing Validation (BUG-002, BUG-003, BUG-004):** `POST /api/books` accepts empty payloads (`{}`) creating null records, negative pages, astronomical ratings, and unvalidated status strings.
-3. **Security Ingestion Risk (BUG-005):** Unsanitized script tags (e.g. `<script>alert('xss')</script>`) are stored raw into `books.json`.
+3. **Input Hygiene Defect (BUG-005):** Lack of input sanitization and HTML tag stripping on book metadata fields stored in memory.
 4. **Browse Library UI Scope (BUG-007):** The frontend only integrates `GET /api/books` and a static `PUT` (setting `want-to-read`). `POST` and `DELETE` endpoints are not integrated into the UI.
 
 ---
@@ -72,7 +72,7 @@ npx playwright show-report
 2. **Port Configuration Defaults:**
    `playwright.config.ts` strictly defaults to `http://localhost:5000` for backend API operations and `http://localhost:5173` for frontend UI browser execution, with dynamic environment variable overrides supported (`API_URL`, `BASE_URL`).
 3. **State Isolation and Volatile Store Protection:**
-   Because the Flask backend utilizes a volatile in-memory structure synchronized with `books.json`, each test creates distinct entities using timestamped titles and strictly cleans up created records in `test.afterEach` hooks to guarantee test idempotency and zero flaky test runs.
+   Because the Flask backend utilizes a volatile in-memory Python list (`books = [...]`), each test creates distinct entities using timestamped titles and strictly cleans up created records in `test.afterEach` hooks to guarantee test idempotency and zero flaky test runs.
 4. **Scope Restriction:**
    End-to-End browser test automation is restricted strictly to the "Browse Library" module as specified in the recruitment assessment guidelines.
 
