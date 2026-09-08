@@ -1,3 +1,83 @@
+# QA Engineer Technical Assessment Submission
+
+**Candidate Name:** Sandy Yoga Prakasa Holley  
+**Role Applied:** QA Engineer  
+**GitHub Profile:** [https://github.com/Sandy-YP-Holley](https://github.com/Sandy-YP-Holley)  
+**Target Repository:** `cinte-id/book-app`  
+**Submission Date:** September 8, 2026  
+
+---
+
+## 1. QA Submission Summary
+
+This submission provides a complete, production-grade Quality Assurance test engineering suite and verification audit for the Book Tracker application.
+
+### Key Deliverables:
+- **`qa-artifacts/TEST_PLAN.md`**: Comprehensive Test Plan defining scope, environments, risk strategy, and a detailed 27-scenario matrix (positive CRUD, negative boundaries, security payloads, and E2E flows).
+- **`qa-artifacts/TEST_EXECUTION_REPORT.md`**: Full execution results detailing 22 passed automated tests across Chromium and Microsoft Edge, along with 13 exploratory defect investigations.
+- **`qa-artifacts/BUG_REPORTS.md`**: Defect audit documenting 9 verified defects discovered in `backend/app.py` and `frontend/src/` (including Critical Primary Key Collision and Stored XSS vectors).
+- **`qa-artifacts/TEST_COVERAGE_REPORT.md`**: Requirements Traceability Matrix (RTM) linking requirements to test scripts and defects, with 100% backend API coverage analysis.
+- **`qa-artifacts/ACCESSIBILITY_AND_PERFORMANCE.md`**: Performance benchmark analysis (sub-10ms single request latency, 394+ RPS concurrency profile) and WCAG 2.1 AA accessibility audit.
+- **`qa-tests/`**: Automated Playwright test automation harness (`@playwright/test`) supporting cross-browser execution, backend API testing, and isolated Browse Library E2E testing.
+
+### Key Findings Summary:
+1. **Critical Defect (BUG-001):** The backend primary key assignment (`'id': len(books) + 1`) causes primary key collisions whenever an intermediate entity is deleted and a new book is added.
+2. **Missing Validation (BUG-002, BUG-003, BUG-004):** `POST /api/books` accepts empty payloads (`{}`) creating null records, negative pages, astronomical ratings, and unvalidated status strings.
+3. **Input Hygiene Defect (BUG-005):** Lack of input sanitization and HTML tag stripping on book metadata fields stored in memory.
+4. **Browse Library UI Scope (BUG-007):** The frontend only integrates `GET /api/books` and a static `PUT` (setting `want-to-read`). `POST` and `DELETE` endpoints are not integrated into the UI.
+
+---
+
+## 2. How to Run the QA Automated Test Suite
+
+### Prerequisites:
+- Node.js (v18+) and npm installed
+- Flask backend running on `http://localhost:5000`
+- Vite frontend running on `http://localhost:5173`
+
+### Step-by-Step Execution:
+
+```bash
+# Navigate to the automated QA test suite directory
+cd qa-tests
+
+# Install QA automation dependencies
+npm install
+
+# Run the complete automated test suite (API + E2E on Chromium and Edge)
+npx playwright test
+
+# (Optional) Run API tests only
+npx playwright test tests/api.spec.ts
+
+# (Optional) Run Browse Library E2E tests only
+npx playwright test tests/e2e.spec.ts
+
+# (Optional) View generated interactive HTML test report
+npx playwright show-report
+```
+
+### Running Performance Benchmarks:
+```bash
+# From workspace root using the backend Python virtual environment:
+& "venv/Scripts/python.exe" qa-tests/scripts/benchmark.py
+```
+
+---
+
+## 3. Engineering Decisions & Architecture
+
+1. **Test Framework Selection (Playwright):**
+   Playwright (`@playwright/test`) was selected for its native unified execution model supporting both fast HTTP API testing and resilient browser automation (Chromium and Microsoft Edge engines by default, with opt-in Firefox and WebKit support). Its built-in request fixture enables testing REST APIs with zero additional dependencies.
+2. **Port Configuration Defaults:**
+   `playwright.config.ts` strictly defaults to `http://localhost:5000` for backend API operations and `http://localhost:5173` for frontend UI browser execution, with dynamic environment variable overrides supported (`API_URL`, `BASE_URL`).
+3. **State Isolation and Volatile Store Protection:**
+   Because the Flask backend utilizes an in-memory list synchronized to a local JSON flat file (`books.json`), each test creates distinct entities using timestamped titles and strictly cleans up created records in `test.afterEach` hooks to guarantee test idempotency and zero flaky test runs.
+4. **Scope Restriction:**
+   End-to-End browser test automation is restricted strictly to the "Browse Library" module as specified in the recruitment assessment guidelines.
+
+---
+
 # Test Instruction
 
 Hi there! 👋  
