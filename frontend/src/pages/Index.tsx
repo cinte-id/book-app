@@ -122,6 +122,35 @@ const Index = () => {
             </div>
           </div>
         );
+      case 'support':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-gray-800">Support</h2>
+            <div className="space-y-3">
+              <button
+                onClick={() => window.location.href = '/support/help'}
+                className="w-full text-left p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 transition-colors"
+              >
+                <p className="font-semibold text-gray-800">Help Center</p>
+                <p className="text-sm text-gray-500">Search FAQs and view tutorials</p>
+              </button>
+              <button
+                onClick={() => window.location.href = '/support/contact'}
+                className="w-full text-left p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 transition-colors"
+              >
+                <p className="font-semibold text-gray-800">Contact Us</p>
+                <p className="text-sm text-gray-500">Send feedback or get in touch</p>
+              </button>
+              <button
+                onClick={() => window.location.href = '/support/dashboard'}
+                className="w-full text-left p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 transition-colors"
+              >
+                <p className="font-semibold text-gray-800">Ticket Dashboard</p>
+                <p className="text-sm text-gray-500">Track and manage support tickets</p>
+              </button>
+            </div>
+          </div>
+        );
       default:
         return (
           <div className="space-y-6">
