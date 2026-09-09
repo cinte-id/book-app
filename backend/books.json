@@ -2,13 +2,13 @@
   "books": [
     {
       "id": 1,
-      "title": "The Great Gatsby",
-      "author": "F. Scott Fitzgerald",
+      "title": "",
+      "author": "James Clear",
       "cover": "https://covers.openlibrary.org/b/id/12749894-L.jpg",
       "rating": 4.2,
       "pages": 180,
       "genre": "Classic",
-      "status": "read"
+      "status": "want-to-read"
     },
     {
       "id": 2,
@@ -79,6 +79,196 @@
       "pages": 688,
       "genre": "Sci-Fi",
       "status": "reading"
+    },
+    {
+      "id": 9,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "onhold"
+    },
+    {
+      "id": 10,
+      "title": "Deep Work",
+      "author": "Cal Newport",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "reading"
+    },
+    {
+      "id": 11,
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "read"
+    },
+    {
+      "id": 14,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 15,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "finished"
+    },
+    {
+      "id": 16,
+      "title": "",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 17,
+      "title": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 21,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 22,
+      "title": "Deep Work",
+      "author": "Cal Newport",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "reading"
+    },
+    {
+      "id": 23,
+      "title": "Sapiens",
+      "author": "Yuval Noah Harari",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "read"
+    },
+    {
+      "id": 26,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 27,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "finished"
+    },
+    {
+      "id": 28,
+      "title": "",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 29,
+      "title": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 31,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 5,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 32,
+      "title": "Atomic Habits",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 5,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 33,
+      "title": "Test Unknown Field",
+      "author": "Test Author",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 34,
+      "title": "<script>alert(1)</script>",
+      "author": "James Clear",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
+    },
+    {
+      "id": 27,
+      "title": "'; DROP TABLE books;--",
+      "author": "Tester",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "want-to-read"
     }
   ]
 }
