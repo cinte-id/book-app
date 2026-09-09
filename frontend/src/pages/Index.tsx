@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
+import { Book, Search, User, TrendingUp, Plus, Library, HelpCircle, Mail, BookOpen, Star, LayoutDashboard, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
@@ -119,6 +120,93 @@ const Index = () => {
                 <div className="text-2xl font-bold text-purple-600">{readingStats.avgRating}</div>
                 <div className="text-sm text-gray-600">Avg Rating</div>
               </div>
+            </div>
+
+            {/* Menu Customer Support & Bantuan */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm space-y-1">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 px-3 py-2">
+                Pusat Bantuan & Layanan
+              </h3>
+
+              <Link
+                to="/help"
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition text-gray-700"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                    <HelpCircle size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Bantuan & FAQ</p>
+                    <p className="text-xs text-gray-400">Pertanyaan umum & pencarian solusi</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-gray-400" />
+              </Link>
+
+              <Link
+                to="/contact"
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition text-gray-700"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Hubungi Dukungan</p>
+                    <p className="text-xs text-gray-400">Kirim kendala & buat tiket bantuan</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-gray-400" />
+              </Link>
+
+              <Link
+                to="/guide"
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition text-gray-700"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
+                    <BookOpen size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Panduan Aplikasi</p>
+                    <p className="text-xs text-gray-400">Tutorial onboarding langkah demi langkah</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-gray-400" />
+              </Link>
+
+              <Link
+                to="/feedback"
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition text-gray-700"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-pink-50 text-pink-600 rounded-lg">
+                    <Star size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Kritik & Masukan</p>
+                    <p className="text-xs text-gray-400">Beri ulasan & usulkan fitur baru</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-gray-400" />
+              </Link>
+
+              <Link
+                to="/admin/cs-dashboard"
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-indigo-50 transition text-indigo-700 border-t border-gray-100 mt-2 pt-3"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-indigo-100 text-indigo-700 rounded-lg">
+                    <LayoutDashboard size={18} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">Dashboard Tim CS</p>
+                    <p className="text-xs text-indigo-500">Panel admin analitik & kelola tiket</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-indigo-400" />
+              </Link>
             </div>
           </div>
         );
