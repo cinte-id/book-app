@@ -1,96 +1,52 @@
-# Test Instruction
+## 👤 My Contribution — Customer Service Role
 
-Hi there! 👋  
-Thanks for applying to our company.
+### Role
 
-This is a small take-home assignment where you'll contribute to a simple **Book Tracker App**.  
-You can choose how to contribute based on your strongest area: **Frontend, Backend, DevOps, QA, or Data**.
+**Customer Service** — Added customer support features into the existing BookTracker frontend, including FAQ, support form, live chat simulation, feedback system, and customer service dashboard.
 
----
+### How to Run
 
-## 🧭 Goal
+> No backend integration is required. Customer service features are implemented using local React state and mock data.
 
-We want to see how you solve problems, write code, and structure your work — all in about **2–4 hours**.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
----
+Open [http://localhost:5173](http://localhost:5173) → go to **Profile** tab → tap **"Open Help Center"**.
 
-If you're applying for **DevOps**, **QA**, or **Data**, you can use the provided base code in the `backend/` or `frontend/` folders.
+### Features Implemented
 
----
+#### ✅ Core Deliverables
 
-## ✅ What to Do
+| Feature                                          | Location                                      |
+| ------------------------------------------------ | --------------------------------------------- |
+| Help & FAQ page with categorized Q&A + search    | `src/components/support/FAQSection.tsx`       |
+| Contact Support form with validation + ticket ID | `src/components/support/ContactForm.tsx`      |
+| User onboarding tutorial pages (5 topics)        | `src/components/support/UserGuide.tsx`        |
+| Feedback form (star rating + comment)            | `src/components/support/FeedbackForm.tsx`     |
+| Customer service dashboard layout                | `src/components/support/SupportDashboard.tsx` |
+| Live Chat widget (UI only)                       | `src/components/support/LiveChat.tsx`         |
 
-1. **Fork this repo** into your own GitHub account.
-2. **Pick ONE area** you're applying in:
-   - Frontend
-   - Backend
-   - DevOps
-   - QA
-   - Data
-   - Project/Product Manager
-   - UI/UX
-   - Customer Services
-3. **Work only in the part that fits your chosen role.**
-4. Push your code and include in your `README.md`:
-   - Your chosen role
-   - How to run/test your part
-   - Any notes or decisions you made
-5. Create a Pull Request (PR) to the main branch of this repository
-6. Share the PR link with us for review
+#### 🌟 Bonus Features
 
----
+| Feature                                                            | Location                                        |
+| ------------------------------------------------------------------ | ----------------------------------------------- |
+| Knowledge base with article categories (5 categories, 12 articles) | `src/components/support/KnowledgeBase.tsx`      |
+| User satisfaction survey (NPS + multiple choice)                   | `src/components/support/SatisfactionSurvey.tsx` |
+| ticket status tracking with status timeline                        | `src/components/support/SupportDashboard.tsx`   |
+| Analytics bar chart (weekly ticket volume using recharts)          | `src/components/support/SupportDashboard.tsx`   |
+| Multi-language support structure (EN + ID)                         | `src/locales/en.ts`, `src/locales/id.ts`        |
 
-## 🔧 Tasks by Role
+### Decisions Made
 
-Choose your role and follow the detailed task instructions:
-
-- [🔹 **Fullstack** (Junior)](TASKS_FULLSTACK.md) - Complete Library Browse page features
-- [🔹 **Fullstack** (Mid-Level)](TASKS_FULLSTACK_MID.md) - Complete Library Browse page features (mid-level)
-- [🔹 **Frontend**](TASKS_FRONTEND.md) - Build User Authentication, Settings, and Insight UIs
-- [🔹 **Backend**](TASKS_BACKEND.md) - Build REST API with search and filtering
-- [🔹 **DevOps** (Junior)](TASKS_DEVOPS.md) - Create Dockerfiles and CI/CD workflows
-- [🔹 **DevOps** (Mid-Level)](TASKS_DEVOPS_MID.md) - Create Dockerfiles and CI/CD workflows (mid-level)
-- [🔹 **QA**](TASKS_QA.md) - Create comprehensive test plans and execute testing
-- [🔹 **UI/UX**](TASKS_UIUX.md) - Design User Authentication and Settings pages
-- [🔹 **Project/Product Manager** (Junior)](TASKS_PM.md) - Create project timelines and task breakdowns
-- [🔹 **Project/Product Manager** (Mid-Level)](TASKS_PM_MID.md) - Create full project plan with risk register and stakeholder plan
-- [🔹 **Data Analytic Engineer**](TASKS_DATA.md) - Build data analytics solution and dashboard
-- [🔹 **Customer Service**](TASKS_CUSTOMER_SERVICE.md) - Create customer support system
-
----
-
-## 🌟 Bonus Points (Optional)
-
-We appreciate extra touches like:
-
-- ✅ Clean code structure / design pattern
-- ✅ Branching with meaningful commit history
-- ✅ README with clear instructions
-- ✅ Use of linters, formatters, or type checkers
-- ✅ Tests even if you're not applying for QA
-- ✅ CI workflow using GitHub Actions
-- ✅ UI polish, error handling, logging, etc.
-
----
-
-## 🕐 Timebox
-
-This should take around **2–4 hours**.  
-No need to overengineer — focus on clarity and your best work in a short time.
-
----
-
-## 📩 Submission
-
-Once you're done:
-1. Create a Pull Request (PR) to the main branch of this repository
-2. Share the PR link with us for review
-
-**Note**: We prefer PRs to the original repository rather than separate repo links, as this allows us to see your changes in context and review your contribution directly.
-
-Good luck, and have fun! 🚀
-
----
+- **No backend integration** — all data is local React state or hardcoded mock data, as stated in the task requirements.
+- **Recharts for analytics** — already present in `package.json`, so no new dependencies were installed.
+- **Multi-language as a structure** — locale files (`en.ts`, `id.ts`) define the full translation key shape with TypeScript typing. Plugging in a context/hook to consume them is a one-step extension.
+- **Ticket ID generation** — uses `Math.random()` to produce a `CS-XXX` format ID, simulating a real ticket system without backend.
+- **Live Chat auto-reply** — cycles through 4 generic responses with a 900ms delay to simulate a support agent, keeping UX realistic without any server.
+- **All components isolated** — every feature lives in `src/components/support/` and is wired through `SupportCenter.tsx`. Zero changes to unrelated files.
 
 # Book Tracker App
 
@@ -111,6 +67,7 @@ A full-stack web application for managing your reading list, built with Flask an
 ## Tech Stack
 
 ### Backend
+
 - Python 3.x
 - Flask
 - Flask-CORS
@@ -118,6 +75,7 @@ A full-stack web application for managing your reading list, built with Flask an
 - python-dotenv
 
 ### Frontend
+
 - React 18
 - TypeScript
 - Vite
@@ -136,6 +94,7 @@ A full-stack web application for managing your reading list, built with Flask an
 ### Backend Setup
 
 1. Create and activate a virtual environment:
+
 ```bash
 # Create virtual environment
 python -m venv venv
@@ -148,11 +107,13 @@ source venv/bin/activate
 ```
 
 2. Install backend dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 3. Start the Flask server:
+
 ```bash
 cd backend
 python app.py
@@ -163,12 +124,14 @@ The backend server will start on http://localhost:5000
 ### Frontend Setup
 
 1. Install frontend dependencies:
+
 ```bash
 cd frontend
 npm install
 ```
 
 2. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -180,12 +143,15 @@ The frontend will be available at http://localhost:5173
 ### Endpoints
 
 #### GET /api/books
+
 - Returns all books
 - Response: Array of book objects
 
 #### POST /api/books
+
 - Creates a new book
 - Request Body:
+
 ```json
 {
   "title": "string",
@@ -195,10 +161,12 @@ The frontend will be available at http://localhost:5173
 ```
 
 #### PUT /api/books/<id>
+
 - Updates an existing book
 - Request Body: Same as POST
 
 #### DELETE /api/books/<id>
+
 - Deletes a book by ID
 
 ## Project Structure
@@ -224,11 +192,13 @@ book-app/
 ## Development
 
 ### Backend Development
+
 - The backend uses Flask for the API
 - CORS is enabled for frontend communication
 - Currently using in-memory storage (can be extended to use a database)
 
 ### Frontend Development
+
 - Built with React + Vite for fast development
 - TypeScript for type safety
 - Tailwind CSS for styling
