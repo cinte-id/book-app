@@ -11,6 +11,7 @@ import UserGuide from "./pages/UserGuide";
 import FeedbackPage from "./pages/FeedbackPage";
 import CSDashboard from "./pages/CSDashboard";
 import LiveChatWidget from "./components/LiveChatWidget";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/contact" element={<ContactSupport />} />

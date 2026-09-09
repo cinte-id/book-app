@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Star, CheckCircle, Send } from "lucide-react";
+import { Star, CheckCircle, Send, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function FeedbackPage() {
+  const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [category, setCategory] = useState("UI/UX & Desain");
@@ -19,6 +21,15 @@ export default function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 max-w-md mx-auto px-4 py-6">
+      {/* Tombol Kembali */}
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition mb-6 p-2 -ml-2 rounded-lg hover:bg-gray-100"
+      >
+        <ArrowLeft size={18} />
+        <span>Kembali</span>
+      </button>
+
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
           Kritik & Saran
