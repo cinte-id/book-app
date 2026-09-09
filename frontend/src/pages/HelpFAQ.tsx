@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, MessageCircle, Mail, FileText, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, Mail, FileText, MessageSquare, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faqData, faqCategories, filterFAQs, getCategoryCounts, type FAQItem } from '@/data/faqData';
 
@@ -59,7 +59,7 @@ const HelpFAQ = () => {
           </div>
 
           {/* Quick Access Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-3 gap-3 mb-6">
             <Link
               to="/contact"
               className="flex flex-col items-center p-4 bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl hover:shadow-md transition-all duration-200 group border border-blue-200/50"
@@ -89,16 +89,6 @@ const HelpFAQ = () => {
               </div>
               <span className="text-xs font-semibold text-purple-900 text-center">Feedback</span>
             </Link>
-            
-            <button
-              onClick={() => {/* Live chat akan dibuka dari widget */}}
-              className="flex flex-col items-center p-4 bg-gradient-to-br from-green-50 to-green-100/50 rounded-xl hover:shadow-md transition-all duration-200 group border border-green-200/50"
-            >
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform shadow-sm">
-                <MessageCircle size={20} className="text-green-600" />
-              </div>
-              <span className="text-xs font-semibold text-green-900 text-center">Live Chat</span>
-            </button>
           </div>
 
           {/* Search Bar */}
