@@ -1,0 +1,753 @@
+{
+  "info": {
+    "name": "Book Tracker App - QA API Tests",
+    "description": "Koleksi request untuk eksekusi test case API (lihat QA_Test_Deliverables.xlsx untuk pencatatan hasil). Set variable base_url ke http://localhost:5000 atau https://book-app.cinte.id",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "A. Add Book (POST)",
+      "item": [
+        {
+          "name": "TC-001 - Add book - valid (unread)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 201 Created, response berisi objek buku baru dengan id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-002 - Add book - valid (reading)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 201 Created, status reading",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Deep Work\",\n  \"author\": \"Cal Newport\",\n  \"status\": \"reading\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-003 - Add book - valid (completed)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 201 Created, status completed",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sapiens\",\n  \"author\": \"Yuval Noah Harari\",\n  \"status\": \"read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-004 - Add book - missing title",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 400 Bad Request",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-005 - Add book - missing author",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 400 Bad Request",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-006 - Add book - missing status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 400 atau default ke unread - catat perilaku aktual",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-007 - Add book - invalid status value",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 400 Bad Request, status enum tidak valid",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"finished\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-008 - Add book - empty title",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 400 Bad Request",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-009 - Add book - very long title",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: server tidak crash, ditolak atau diterima sesuai batas wajar",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-010 - Add book - wrong data type (title number)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 400 atau dikonversi aman, bukan 500 error",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": 12345,\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-011 - Add book - unexpected extra field",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: field diabaikan atau ditolak, bukan 500 error",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\",\n  \"rating\": 5\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-015 - Add book - XSS attempt in title",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: data tersimpan sebagai string biasa, cek juga saat ditampilkan di UI",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"<script>alert(1)</script>\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "B. View Books (GET)",
+      "item": [
+        {
+          "name": "TC-016 - Get all books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 200 OK, array of book object"
+          },
+          "response": []
+        },
+        {
+          "name": "TC-017 - Get all books - when empty",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Jalankan setelah semua data dihapus. Expected: 200 OK, response []"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "C. Update Book (PUT)",
+      "item": [
+        {
+          "name": "TC-021 - Update book - valid title/author (ganti <id>)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "1"
+              ]
+            },
+            "description": "Ganti angka 1 di URL dengan id buku yang valid. Expected: 200 OK, data ter-update",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits (Updated)\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-022 - Update book - status unread to reading",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "1"
+              ]
+            },
+            "description": "Ganti id sesuai buku valid. Expected: 200 OK",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"reading\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-023 - Update book - status reading to completed",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "1"
+              ]
+            },
+            "description": "Ganti id sesuai buku valid. Expected: 200 OK",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-024 - Update book - non-existent ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "999999"
+              ]
+            },
+            "description": "Expected: 404 Not Found",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Ghost Book\",\n  \"author\": \"Nobody\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-025 - Update book - invalid status value",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "1"
+              ]
+            },
+            "description": "Ganti id sesuai buku valid. Expected: 400 Bad Request",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"onhold\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-026 - Update book - empty title",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "1"
+              ]
+            },
+            "description": "Ganti id sesuai buku valid. Expected: 400 Bad Request",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-027 - Update book - invalid ID format",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "abc"
+              ]
+            },
+            "description": "Expected: 400/404, bukan 500 error",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atomic Habits\",\n  \"author\": \"James Clear\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "D. Delete Book (DELETE)",
+      "item": [
+        {
+          "name": "TC-030 - Delete book - valid ID (ganti <id>)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "1"
+              ]
+            },
+            "description": "Ganti angka 1 di URL dengan id buku yang valid dan boleh dihapus. Expected: 200/204"
+          },
+          "response": []
+        },
+        {
+          "name": "TC-031 - Delete book - non-existent ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books/999999",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "999999"
+              ]
+            },
+            "description": "Expected: 404 Not Found"
+          },
+          "response": []
+        },
+        {
+          "name": "TC-032 - Delete book - same ID twice (jalankan 2x berturut-turut)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books",
+                "2"
+              ]
+            },
+            "description": "Ganti id sesuai buku valid, jalankan 2x. Expected: panggilan kedua 404"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "E. General / Edge Cases",
+      "item": [
+        {
+          "name": "TC-035 - Unsupported method (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: 405 Method Not Allowed",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TC-039 - Malformed JSON body",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "PENTING: sebelum Send, buka tab Body > raw > JSON lalu ketik manual JSON rusak, misal: {\"title\":\"A\", -- karena Postman tidak bisa kirim JSON invalid lewat generator otomatis. Expected: 400, bukan 500"
+          },
+          "response": []
+        },
+        {
+          "name": "TC-040 - SQL Injection attempt in title",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "books"
+              ]
+            },
+            "description": "Expected: data diperlakukan sebagai string biasa, tidak ada error/kerusakan data",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"'; DROP TABLE books;--\",\n  \"author\": \"Tester\",\n  \"status\": \"want-to-read\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
