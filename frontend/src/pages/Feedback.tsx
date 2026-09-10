@@ -118,6 +118,8 @@ const Feedback = () => {
     },
   });
 
+  const errors = form.formState.errors;
+
   const onSubmit = async (data: FeedbackFormValues) => {
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1200));
@@ -157,12 +159,13 @@ const Feedback = () => {
     const shown = hoverRating || value;
     return (
       <div
-        className="flex items-center gap-1.5"
+        className="flex flex-col items-center gap-2"
         role="radiogroup"
         aria-label="Rating pengalaman"
         onMouseLeave={() => setHoverRating(0)}
       >
-        {[1, 2, 3, 4, 5].map((star) => {
+        <div className="flex items-center justify-center gap-1.5">
+          {[1, 2, 3, 4, 5].map((star) => {
           const active = star <= shown;
           return (
             <button
@@ -186,9 +189,10 @@ const Feedback = () => {
             </button>
           );
         })}
+        </div>
         <span
           aria-live="polite"
-          className={`ml-2 min-w-24 text-sm font-medium transition-colors duration-150 ${
+          className={`text-center text-sm font-medium transition-colors duration-150 ${
             shown > 0 ? 'text-gray-900' : 'text-gray-400'
           }`}
         >
@@ -397,7 +401,7 @@ const Feedback = () => {
                         <Input
                           type="email"
                           placeholder="email@domain.com"
-                          className="h-11"
+                          className={`h-11 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                           {...field}
                         />
                       </FormControl>
@@ -418,7 +422,7 @@ const Feedback = () => {
                         Kategori saran <span className="text-gray-400">*</span>
                       </FormLabel>
                       <FormControl>
-                        <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Kategori saran">
+                        <div className={`flex flex-wrap gap-2 rounded-xl transition-shadow ${errors.category ? 'ring-2 ring-red-400 ring-offset-2' : ''}`} role="radiogroup" aria-label="Kategori saran">
                           {categoryOptions.map((opt) => {
                             const selected = field.value === opt.value;
                             return (
@@ -459,8 +463,8 @@ const Feedback = () => {
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Tulis saran Anda di sini — mis. Tambahkan mode gelap agar nyaman dibaca malam hari..."
-                          className="min-h-35 resize-none"
+                          placeholder="Masukan saran anda"
+                          className={`min-h-[140px] resize-none ${errors.message ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                           {...field}
                         />
                       </FormControl>
@@ -487,10 +491,9 @@ const Feedback = () => {
                   control={form.control}
                   name="rating"
                   render={({ field }) => (
-                    <FormItem className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <FormItem className={`rounded-xl border p-6 text-center transition-colors ${errors.rating ? 'border-red-400 bg-red-50/60' : 'border-gray-200 bg-gray-50'}`}>
                       <FormLabel className="text-sm font-semibold text-gray-700">
-                        Seberapa puas Anda dengan BookTracker?{' '}
-                        <span className="font-normal text-gray-400">(opsional)</span>
+                        Seberapa puas Anda dengan BookTracker?
                       </FormLabel>
                       <FormControl>{renderStars(field.value)}</FormControl>
                       <FormMessage className="text-xs" />
