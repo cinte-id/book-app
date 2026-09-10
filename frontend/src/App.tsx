@@ -9,6 +9,8 @@ import HelpFAQ from "./pages/HelpFAQ";
 import ContactSupport from "./pages/ContactSupport";
 import UserGuide from "./pages/UserGuide";
 import Feedback from "./pages/Feedback";
+import TrackTickets from "./pages/TrackTickets";
+import SupportDashboard from "./pages/SupportDashboard";
 import LiveChatWidget from "./components/support/LiveChatWidget";
 
 const queryClient = new QueryClient();
@@ -25,6 +27,8 @@ const App = () => (
           <Route path="/contact" element={<ContactSupport />} />
           <Route path="/guide" element={<UserGuide />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/track" element={<TrackTickets />} />
+          <Route path="/support" element={<SupportDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -19,6 +19,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import HelpfulSurvey from '../components/support/HelpfulSurvey';
 
 const UserGuide = () => {
   const navigate = useNavigate();
@@ -311,6 +312,9 @@ const UserGuide = () => {
                 <ArrowRight size={18} />
               </Button>
             )}
+          </div>
+          <div className="pt-2">
+            <HelpfulSurvey topic="user-guide" question="Apakah panduan ini mudah diikuti?" />
           </div>
         </div>
       </div>

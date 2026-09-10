@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/form';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
+import { saveTicket } from '@/data/support/tickets';
 
 // Validation schema
 const feedbackFormSchema = z.object({
@@ -140,6 +141,11 @@ const Feedback = () => {
     };
 
     setSubmittedFeedback(feedback);
+    saveTicket({
+      ...feedback,
+      type: 'feedback',
+      subject: feedback.message.slice(0, 60),
+    });
     setIsSubmitting(false);
     toast({
       title: 'Saran terkirim',
@@ -306,6 +312,12 @@ const Feedback = () => {
                   Kembali ke beranda
                 </Button>
               </div>
+              <Link
+                to="/track"
+                className="block pt-1 text-center text-sm font-medium text-blue-600 hover:underline"
+              >
+                Lacak status saran ini
+              </Link>
             </CardContent>
           </Card>
 

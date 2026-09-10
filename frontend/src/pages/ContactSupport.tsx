@@ -14,7 +14,7 @@ import {
   Flag,
   FileText,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -34,6 +34,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { saveTicket } from '@/data/support/tickets';
 
 // Zod validation schema
 const contactFormSchema = z.object({
@@ -98,6 +99,7 @@ const ContactSupport = () => {
     };
 
     setSubmittedTicket(ticket);
+    saveTicket({ ...ticket, type: 'support' });
 
     // Scroll to top to show success message
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -233,6 +235,12 @@ const ContactSupport = () => {
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Buat Tiket Baru
               </Button>
+              <Link
+                to="/track"
+                className="block pt-1 text-center text-sm font-medium text-blue-600 hover:underline"
+              >
+                Lacak status tiket ini
+              </Link>
             </div>
           </div>
         ) : (

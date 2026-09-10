@@ -253,6 +253,63 @@ book-app/
 - [ ] Database integration
 - [ ] User profiles and personal libraries
 
+---
+
+## Customer Service — Take-Home Submission
+
+**Chosen role:** Customer Service
+
+### What was built
+
+Comprehensive support system inside the existing Book Tracker App (no new project):
+
+| Page | Route | Contents |
+| --- | --- | --- |
+| Pusat Bantuan (Help & FAQ) | `/help` | Searchable FAQ, category tabs with counts, expandable answers, tags |
+| Hubungi Support | `/contact` | Ticket form (React Hook Form + Zod), category/priority, ticket ID generation |
+| Panduan Pengguna | `/guide` | 3-step onboarding stepper with progress indicator |
+| Berikan Saran (Feedback) | `/feedback` | Category pills, textarea with counter, optional star rating |
+| Lacak Tiket (bonus) | `/track` | Search by ticket ID + on-device ticket history (localStorage) |
+| Pusat Layanan (bonus) | `/support` | Dashboard hub: live stats, service links, category analytics chart |
+| Live Chat widget | global | Floating button on every page, keyword-based bot replies, quick replies |
+
+Bonus components: `HelpfulSurvey` (Ya/Tidak satisfaction micro-survey on Help & Guide),
+ticket persistence (`src/data/support/tickets.ts`), recharts analytics mockup.
+
+### How to run / test
+
+Backend runs on `http://localhost:5001`, frontend on `http://localhost:8080`
+(note: these differ from the `5000`/`5173` in the task template — the repo's
+`vite.config.ts`, `ENVIRONMENT_SETUP.md`, and `QUICK_SETUP.md` all use `5001`/`8080`,
+and the frontend API client defaults to `http://localhost:5001`, so the setup below
+is self-consistent).
+
+```bash
+# Backend
+cd backend
+pip install -r requirements.txt
+python app.py        # → http://localhost:5001 (override with FLASK_PORT)
+
+# Frontend (new terminal)
+cd frontend
+npm install
+npm run dev          # → http://localhost:8080
+```
+
+Manual test path: open `/support` → create a ticket via Contact Support (note the
+`TKT-xxxxxx` ID) → find it on `/track` → submit feedback → see dashboard stats
+and chart update. Type checks: `npx tsc --noEmit`. Production build: `npm run build`.
+
+### Notes & decisions
+
+- Same stack as the repo (React + TS + Tailwind + shadcn/ui + RHF + Zod); no new
+  runtime dependencies except what was already declared (`recharts` for the chart).
+- Tickets persist in `localStorage` (cap 50) — real tracking without backend changes,
+  which are outside the CS role scope.
+- Flat single-accent (blue-600) visual language, shared centered header pattern across
+  CS pages; all motion respects `prefers-reduced-motion`.
+- Branch: `feat/customer-service` (single branch, one commit per feature/fix).
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

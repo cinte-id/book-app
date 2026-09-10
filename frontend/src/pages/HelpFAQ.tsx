@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, Mail, FileText, MessageSquare, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faqData, faqCategories, filterFAQs, getCategoryCounts, type FAQItem } from '@/data/faqData';
+import HelpfulSurvey from '../components/support/HelpfulSurvey';
 
 const HelpFAQ = () => {
   const navigate = useNavigate();
@@ -238,21 +239,32 @@ const HelpFAQ = () => {
 
         {/* Footer CTA */}
         {filteredFaqs.length > 0 && (
-          <div className="mt-12 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl border border-blue-100">
-            <div className="text-center">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Masih butuh bantuan?
-              </h3>
-              <p className="text-gray-600 text-sm mb-4">
-                Tim support kami siap membantu Anda 24/7
-              </p>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium shadow-md hover:shadow-lg"
-              >
-                <Mail size={18} />
-                <span>Hubungi Support</span>
-              </Link>
+          <div className="mt-12 space-y-4">
+            <HelpfulSurvey topic="help-faq" question="Apakah jawaban di halaman ini membantu?" />
+            <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100">
+              <div className="text-center">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  Masih butuh bantuan?
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Tim support kami siap membantu Anda 24/7
+                </p>
+                <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium shadow-md hover:shadow-lg"
+                  >
+                    <Mail size={18} />
+                    <span>Hubungi Support</span>
+                  </Link>
+                  <Link
+                    to="/support"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-700 border border-blue-200 rounded-xl hover:bg-blue-50 transition-colors font-medium"
+                  >
+                    <span>Pusat Layanan</span>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         )}
