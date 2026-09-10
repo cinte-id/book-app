@@ -79,6 +79,26 @@
       "pages": 688,
       "genre": "Sci-Fi",
       "status": "reading"
+    },
+    {
+      "id": 9,
+      "title": "Test Book",
+      "author": "Test Author",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "reading"
+    },
+    {
+      "id": 11,
+      "title": "Test Invalid Status",
+      "author": "Test Author",
+      "cover": "",
+      "rating": 0,
+      "pages": 0,
+      "genre": "",
+      "status": "invalid-status"
     }
   ]
 }

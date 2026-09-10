@@ -256,3 +256,51 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## QA Submission - Astry Debora Sipayung
+**Role**: QA (Quality Assurance)
+
+**Cara Menjalankan Project**
+
+**Backend:**
+```bash 
+python -m venv venv
+venv\Scripts\activate         
+pip install -r backend/requirements.txt
+cd backend
+python app.py
+```
+
+Backend akan berjalan di http://127.0.0.1:5001
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend akan berjalan di http://localhost:8080
+
+**Cara Melihat Hasil Testing**
+
+Seluruh dokumen QA ada di folder qa/, dengan struktur:
+
+- 01-test-plan.md (scope, environment, dan strategi pengujian)
+- 02-test-cases.md (daftar skenario pengujian (40 test case))
+- 03-test-execution-results.md (hasil eksekusi tiap test case)
+- 04-bug-reports/ (7 laporan bug yang ditemukan, beserta severity masing-masing)
+- 05-test-coverage.md (ringkasan cakupan dan kesimpulan hasil pengujian
+evidence/ — screenshot pendukung bug report)
+
+**Ringkasan Temuan**
+
+Dari 40 test case, 30 Pass, 5 Fail, 3 Pass with Notes, dan 2 tidak dapat diuji (keterbatasan data/environment). Ditemukan 7 bug (1 High, 2 Medium, 4 Low), dengan temuan paling signifikan adalah kurangnya validasi input pada endpoint POST /api/books (menerima title kosong dan status di luar enum yang ditentukan), yang salah satunya menyebabkan halaman Browse Library crash di sisi frontend. Detail lengkap ada di qa/05-test-coverage.md.
+
+**Catatan & Keputusan**
+1. Port berbeda dari dokumentasi: README awal menyebutkan backend di port 5000 dan frontend di port 5173, namun pada praktiknya berjalan di port 5001 dan 8080. Sudah dikonfirmasi di qa/04-bug-reports/BUG-001.md.
+2. Firewall Windows: Backend sempat tidak dapat diakses karena Windows Firewall hanya mengizinkan Python untuk jaringan Public. Setelah opsi Private juga dicentang, backend dapat diakses normal.
+3. Fokus pengujian: Sesuai catatan resmi project ("Integration with backend only works on page Library section Browse Library"), pengujian mendalam difokuskan pada fitur Browse Library, sementara halaman lain hanya menjalani smoke test.
+4. Live environment tidak dapat diakses: https://book-app.cinte.id/ mengalami error (ERR_HTTP2_PROTOCOL_ERROR) saat proses testing dilakukan, sehingga cross-check dengan versi live tidak dapat dilakukan sepenuhnya.
