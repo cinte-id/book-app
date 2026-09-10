@@ -263,7 +263,7 @@ no new project.
 
 ### How to Access
 
-Run the frontend (`npm run dev`) and open `http://localhost:8080`, then:
+Run the frontend (`npm run dev`) and open `http://localhost:5173`, then:
 
 - Tap the **help (?) icon in the header** (visible on every tab), or
 - Open the **Profile tab → Bantuan menu**, or
@@ -309,9 +309,7 @@ directly:
   one page per route); flat single-accent (blue-600) visual language with a shared
   centered header pattern; all motion respects `prefers-reduced-motion`.
 - Routing wired in `src/App.tsx` as flat routes; chat widget mounted once globally.
-- Ports note: the repo's own `vite.config.ts` and setup docs use backend `:5001` and
-  frontend `:8080` (the task template says `5000`/`5173`), and the API client defaults
-  to `http://localhost:5001`, so run with the repo's ports.
+- Ports match the task's Test Environment exactly: backend `:5000`, frontend `:5173`.
 
 ### How to run / test my part
 
@@ -319,12 +317,12 @@ directly:
 # Backend
 cd backend
 pip install -r requirements.txt
-python app.py        # → http://localhost:5001 (override with FLASK_PORT)
+python app.py        # → http://localhost:5000 (override with FLASK_PORT)
 
 # Frontend (new terminal)
 cd frontend
 npm install
-npm run dev          # → http://localhost:8080
+npm run dev          # → http://localhost:5173
 ```
 
 Manual test path: open `/support` → create a ticket via Contact Support (note the

@@ -21,8 +21,8 @@ npm run dev
 ```
 
 ### Step 3: Test the Connection
-- Backend: http://127.0.0.1:5001/api/test
-- Frontend: http://localhost:8080
+- Backend: http://127.0.0.1:5000/api/test
+- Frontend: http://localhost:5173
 - API Integration: Browse Library section
 
 ## 🔧 Manual Setup (Alternative)
@@ -59,18 +59,18 @@ npm run dev
 
 ## 🌐 URLs After Setup
 
-- **Backend API**: http://127.0.0.1:5001
-- **Frontend**: http://localhost:8080
-- **API Test**: http://127.0.0.1:5001/api/test
-- **Books API**: http://127.0.0.1:5001/api/books
+- **Backend API**: http://127.0.0.1:5000
+- **Frontend**: http://localhost:5173
+- **API Test**: http://127.0.0.1:5000/api/test
+- **Books API**: http://127.0.0.1:5000/api/books
 
 ## ⚠️ Important Notes
 
 1. **Port Configuration**: 
-   - Backend: 5001 (Flask)
-   - Frontend: 8080 (Vite configured)
+   - Backend: 5000 (Flask)
+   - Frontend: 5173 (Vite configured)
 
-2. **CORS**: Configured for both localhost:8080 and localhost:5173
+2. **CORS**: Configured for localhost:5173 (plus legacy localhost:8080)
 
 3. **Environment Variables**: 
    - Backend uses `python-dotenv`

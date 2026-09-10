@@ -45,7 +45,7 @@ python setup.py
 | `FLASK_ENV` | Flask environment mode | `development` | No |
 | `FLASK_DEBUG` | Enable debug mode | `True` | No |
 | `FLASK_HOST` | Server host address | `0.0.0.0` | No |
-| `FLASK_PORT` | Server port number | `5001` | No |
+| `FLASK_PORT` | Server port number | `5000` | No |
 | `DATABASE_URL` | Database connection string | `sqlite:///books.db` | No |
 | `CORS_ORIGINS` | Allowed CORS origins (comma-separated) | `http://localhost:8080,http://localhost:5173` | No |
 | `SECRET_KEY` | Flask secret key | `dev-secret-key...` | **Yes** |
@@ -82,8 +82,8 @@ node setup.js
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
-| `VITE_API_URL` | Backend API base URL | `http://localhost:5001` | **Yes** |
-| `VITE_API_BASE_URL` | Full API base URL with prefix | `http://localhost:5001/api` | **Yes** |
+| `VITE_API_URL` | Backend API base URL | `http://localhost:5000` | **Yes** |
+| `VITE_API_BASE_URL` | Full API base URL with prefix | `http://localhost:5000/api` | **Yes** |
 | `VITE_APP_TITLE` | Application title | `Book Tracker App` | No |
 | `VITE_APP_DESCRIPTION` | Application description | `A full-stack web application...` | No |
 | `VITE_NODE_ENV` | Node environment | `development` | No |
@@ -119,13 +119,13 @@ The frontend automatically configures API integration based on environment varia
 
 ```typescript
 // API service automatically uses:
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 ```
 
 ### Development URLs
-- Backend: `http://127.0.0.1:5001`
-- Frontend: `http://localhost:8080` (configured in vite.config.ts)
-- API Endpoints: `http://127.0.0.1:5001/api/*`
+- Backend: `http://127.0.0.1:5000`
+- Frontend: `http://localhost:5173` (configured in vite.config.ts)
+- API Endpoints: `http://127.0.0.1:5000/api/*`
 
 ## 🌍 Production Deployment
 
