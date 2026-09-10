@@ -3,6 +3,7 @@ import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, Mail, FileText, 
 import { Link, useNavigate } from 'react-router-dom';
 import { faqData, faqCategories, filterFAQs, getCategoryCounts, type FAQItem } from '@/data/faqData';
 import HelpfulSurvey from '../components/support/HelpfulSurvey';
+import { goBack } from '@/data/support/navigation';
 
 const HelpFAQ = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const HelpFAQ = () => {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3 mb-4">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => goBack(navigate)}
               className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors p-2 -ml-2 rounded-lg hover:bg-gray-100"
             >
               <ArrowLeft size={18} />

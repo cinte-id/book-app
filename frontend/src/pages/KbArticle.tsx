@@ -2,6 +2,7 @@ import { ArrowLeft, Clock, Mail, ArrowRight, BookOpen } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { getArticle, relatedArticles } from '@/data/support/kbArticles';
+import { goBack } from '@/data/support/navigation';
 import HelpfulSurvey from '../components/support/HelpfulSurvey';
 
 const KbArticle = () => {
@@ -19,7 +20,7 @@ const KbArticle = () => {
           </p>
           <div className="flex justify-center gap-3">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => goBack(navigate, '/kb')}
               className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
             >
               Kembali
@@ -44,7 +45,7 @@ const KbArticle = () => {
         <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6">
           <nav aria-label="Breadcrumb" className="mb-3 flex items-center gap-1.5 text-sm">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => goBack(navigate, '/kb')}
               className="inline-flex items-center gap-1.5 rounded-lg p-1.5 -ml-1.5 font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
             >
               <ArrowLeft size={16} />

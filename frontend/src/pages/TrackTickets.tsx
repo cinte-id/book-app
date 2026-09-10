@@ -10,6 +10,7 @@ import {
   deleteTicket,
   type SupportTicket,
 } from '@/data/support/tickets';
+import { goBack } from '@/data/support/navigation';
 
 const statusStyle = (status: SupportTicket['status']) => {
   switch (status) {
@@ -53,7 +54,7 @@ const TrackTickets = () => {
       <header className="sticky top-0 z-20 border-b border-gray-200 bg-white shadow-sm">
         <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack(navigate)}
             className="mb-4 inline-flex items-center gap-2 rounded-lg p-2 -ml-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900"
           >
             <ArrowLeft size={18} />

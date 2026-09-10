@@ -20,6 +20,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import HelpfulSurvey from '../components/support/HelpfulSurvey';
+import { goBack } from '@/data/support/navigation';
 
 const UserGuide = () => {
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ const UserGuide = () => {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => goBack(navigate)}
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors p-2 -ml-2 rounded-lg hover:bg-gray-100 mb-4"
           >
             <ArrowLeft size={18} />
