@@ -256,3 +256,32 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+## Customer Service Contribution
+
+### Role
+
+Customer Service
+
+### Implemented Features
+
+- Searchable Help & FAQ
+- Categorized FAQ questions and answers
+- Contact Support form
+- Support ticket creation and validation
+- Support ticket tracking
+- User Guide / Tutorial
+- Feedback & Suggestion submission
+- Customer satisfaction survey
+- Live Chat UI
+- Customer Service Dashboard
+- Ticket status management
+- Customer service analytics overview
+
+### How to Run
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
