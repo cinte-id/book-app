@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { 
-  ArrowLeft, 
-  Mail, 
-  CheckCircle2, 
-  Send, 
-  Ticket, 
+import {
+  ArrowLeft,
+  Mail,
+  CheckCircle2,
+  Send,
+  Ticket,
   AlertCircle,
   User,
   MessageSquare,
   Flag,
-  FileText
+  FileText,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -34,6 +34,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import LiveChatWidget from '../components/support/LiveChatWidget';
 
 // Zod validation schema
 const contactFormSchema = z.object({
@@ -83,7 +84,7 @@ const ContactSupport = () => {
   const onSubmit = (data: ContactFormValues) => {
     // Generate ticket ID
     const ticketId = `TKT-${Math.floor(100000 + Math.random() * 900000)}`;
-    
+
     const ticket: SubmittedTicket = {
       ...data,
       id: ticketId,
@@ -98,7 +99,7 @@ const ContactSupport = () => {
     };
 
     setSubmittedTicket(ticket);
-    
+
     // Scroll to top to show success message
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -116,7 +117,7 @@ const ContactSupport = () => {
       case 'Normal':
         return 'bg-blue-100 text-blue-700 border-blue-200';
       case 'Rendah':
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-green-100 text-green-700 border-green-200';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }
@@ -176,288 +177,276 @@ const ContactSupport = () => {
                     <Ticket className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium text-gray-600">ID Tiket:</span>
-                      <code className="text-lg font-bold text-blue-600 bg-white px-3 py-1 rounded-lg border border-blue-200">
-                        {submittedTicket.id}
-                      </code>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      {submittedTicket.createdAt}
+                    <p className="text-sm text-gray-600">Nomor Tiket</p>
+                    <p className="text-xl font-bold font-mono text-gray-900">{submittedTicket.id}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-600">Status</p>
+                    <p className="font-semibold text-green-700 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-500 rounded-full" /> {submittedTicket.status}
                     </p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${
-                    submittedTicket.status === 'Open' 
-                      ? 'bg-amber-100 text-amber-700 border-amber-200' 
-                      : 'bg-gray-100 text-gray-700 border-gray-200'
-                  }`}>
-                    {submittedTicket.status}
-                  </span>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                    <User className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-500 mb-1">Pelapor</p>
-                      <p className="font-medium text-gray-900 truncate">{submittedTicket.name}</p>
-                      <p className="text-sm text-gray-600 truncate">{submittedTicket.email}</p>
-                    </div>
+                  <div>
+                    <p className="text-gray-600">Dibuat</p>
+                    <p className="font-semibold text-gray-900">{submittedTicket.createdAt}</p>
                   </div>
-
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                    <MessageSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-500 mb-1">Kategori</p>
-                      <p className="font-medium text-gray-900">{submittedTicket.category}</p>
-                    </div>
+                  <div>
+                    <p className="text-gray-600">Kategori</p>
+                    <p className="font-semibold text-gray-900">{submittedTicket.category}</p>
                   </div>
-
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                    <Flag className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-500 mb-1">Prioritas</p>
-                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${
-                        getPriorityColor(submittedTicket.priority)
-                      }`}>
+                  <div>
+                    <p className="text-gray-600">Urgensi</p>
+                    <p className="font-semibold">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs ${getPriorityColor(submittedTicket.priority)}`}>
                         {submittedTicket.priority}
                       </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-blue-100">
-                    <FileText className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-500 mb-1">Subjek</p>
-                      <p className="font-medium text-gray-900">{submittedTicket.subject}</p>
-                    </div>
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* What's Next */}
-              <div className="bg-blue-50 rounded-xl p-6 mb-6 border border-blue-100">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-blue-600" />
-                  Apa yang akan terjadi selanjutnya?
-                </h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 font-bold mt-0.5">1.</span>
-                    <span>Tim support kami akan meninjau tiket Anda dalam <strong>1x24 jam</strong></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 font-bold mt-0.5">2.</span>
-                    <span>Anda akan menerima <strong>email konfirmasi</strong> ke {submittedTicket.email}</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 font-bold mt-0.5">3.</span>
-                    <span>Update status tiket akan dikirimkan melalui email</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-600 font-bold mt-0.5">4.</span>
-                    <span>Gunakan nomor tiket <code className="bg-white px-2 py-0.5 rounded text-blue-600 font-mono text-xs">{submittedTicket.id}</code> untuk referensi</span>
-                  </li>
-                </ul>
+              {/* Ticket Details */}
+              <div className="space-y-4 mb-6">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Subjek</p>
+                  <p className="font-medium text-gray-900">{submittedTicket.subject}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Deskripsi</p>
+                  <p className="text-gray-700 whitespace-pre-wrap">{submittedTicket.message}</p>
+                </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <Button
-                  onClick={resetForm}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  Buat Tiket Baru
-                </Button>
-                <Button
-                  onClick={() => navigate('/help')}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Kembali ke Bantuan
-                </Button>
+              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-700">
+                  <strong>Langkah selanjutnya:</strong> Tim support kami akan meninjau tiket Anda dan membalas via email
+                  <strong>{submittedTicket.email}</strong> dalam 1x24 jam. Anda juga bisa cek status di halaman ini nanti.
+                </p>
               </div>
+
+              <Button
+                onClick={resetForm}
+                variant="outline"
+                className="w-full h-12 text-base font-medium"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Buat Tiket Baru
+              </Button>
             </div>
           </div>
         ) : (
           /* Form State */
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-lg">
-                <div className="p-6 sm:p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {/* Name Field */}
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-semibold text-gray-700">
-                            Nama Lengkap <span className="text-red-500">*</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="cth. Alfatih Akbar"
-                              className="h-11"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
+              {/* Form Card */}
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 sm:px-8 py-6 border-b border-blue-100">
+                  <h2 className="text-xl font-bold text-gray-900">Formulir Pengaduan</h2>
+                  <p className="text-gray-600 text-sm mt-1">Isi data berikut agar kami bisa membantu lebih cepat</p>
+                </div>
 
-                    {/* Email Field */}
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-semibold text-gray-700">
-                            Alamat Email <span className="text-red-500">*</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="nama@email.com"
-                              className="h-11"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    {/* Category Field */}
-                    <FormField
-                      control={form.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-semibold text-gray-700">
-                            Kategori Masalah <span className="text-red-500">*</span>
-                          </FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="h-11">
-                                <SelectValue placeholder="Pilih kategori" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="Peminjaman Buku">Peminjaman Buku</SelectItem>
-                              <SelectItem value="Akses Akun / Login">Akses Akun / Login</SelectItem>
-                              <SelectItem value="Katalog & Pencarian">Katalog & Pencarian</SelectItem>
-                              <SelectItem value="Kendala Bug / Error">Kendala Bug / Error</SelectItem>
-                              <SelectItem value="Fitur & Saran">Fitur & Saran</SelectItem>
-                              <SelectItem value="Lainnya">Lainnya</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Priority Field */}
-                    <FormField
-                    control={form.control}
-                    name="priority"
-                    render={({ field }) => (
-                    <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">
-                    Tingkat Urgensi <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                    <SelectTrigger className="h-11">
-                    <SelectValue placeholder="Pilih urgensi" />
-                    </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                    <SelectItem value="Rendah">
-                    <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
-                    <span>Rendah</span>
-                    </div>
-                    </SelectItem>
-                    <SelectItem value="Normal">
-                    <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-blue-500" />
-                    <span>Normal</span>
-                    </div>
-                    </SelectItem>
-                    <SelectItem value="Tinggi (Mendesak)">
-                    <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <span>Tinggi (Mendesak)</span>
-                    </div>
-                    </SelectItem>
-                    </SelectContent>
-                    </Select>
-                    <FormMessage className="text-xs" />
-                    </FormItem>
-                    )}
-                    />
-                    </div>
-
-                  {/* Subject Field */}
+                <div className="p-6 sm:p-8 space-y-6">
+                  {/* Name Field */}
                   <FormField
                     control={form.control}
-                    name="subject"
+                    name="name"
                     render={({ field }) => (
                       <FormItem className="mb-6">
                         <FormLabel className="text-sm font-semibold text-gray-700">
-                          Subjek Kendala <span className="text-red-500">*</span>
+                          Nama Lengkap <span className="text-red-500">*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="cth. Buku tidak bisa diklik untuk dipinjam"
+                            placeholder="Masukkan nama lengkap Anda"
                             className="h-11"
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription className="text-xs">
-                          Deskripsikan masalah Anda dalam satu kalimat
-                        </FormDescription>
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
 
-                  {/* Message Field */}
+                  {/* Email Field */}
                   <FormField
                     control={form.control}
-                    name="message"
+                    name="email"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="mb-6">
                         <FormLabel className="text-sm font-semibold text-gray-700">
-                          Deskripsi Masalah <span className="text-red-500">*</span>
+                          Email <span className="text-red-500">*</span>
                         </FormLabel>
                         <FormControl>
-                          <Textarea
-                            placeholder="Ceritakan kronologi kendala secara mendetail... Sertakan langkah-langkah yang Anda lakukan, pesan error yang muncul, dan kapan masalah terjadi."
-                            className="min-h-[140px] resize-none"
+                          <Input
+                            type="email"
+                            placeholder="email@contoh.com"
+                            className="h-11"
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription className="text-xs flex items-center justify-between">
-                          <span>Minimal 15 karakter untuk memudahkan tim support</span>
-                          <span className={`font-mono ${
-                            field.value.length < 15 ? 'text-gray-400' :
-                            field.value.length > 1000 ? 'text-red-500' :
-                            'text-green-600'
-                          }`}>
-                            {field.value.length}/1000
-                          </span>
-                        </FormDescription>
+                        <FormDescription className="text-xs">Kami akan balas ke email ini</FormDescription>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Category Field */}
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem className="mb-6">
+                        <FormLabel className="text-sm font-semibold text-gray-700">
+                          Kategori Masalah <span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Pilih kategori" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Peminjaman/Pengembalian">
+                                <div className="flex items-center gap-2">
+                                  <FileText className="w-4 h-4 text-blue-600" />
+                                  <span>Peminjaman / Pengembalian</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Akun & Profil">
+                                <div className="flex items-center gap-2">
+                                  <User className="w-4 h-4 text-purple-600" />
+                                  <span>Akun & Profil</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Pencarian & Katalog">
+                                <div className="flex items-center gap-2">
+                                  <MessageSquare className="w-4 h-4 text-green-600" />
+                                  <span>Pencarian & Katalog</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Teknis / Error">
+                                <div className="flex items-center gap-2">
+                                  <AlertCircle className="w-4 h-4 text-red-600" />
+                                  <span>Teknis / Error / Bug</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Lainnya">
+                                <div className="flex items-center gap-2">
+                                  <Flag className="w-4 h-4 text-gray-600" />
+                                  <span>Lainnya</span>
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Priority Field */}
+                  <FormField
+                    control={form.control}
+                    name="priority"
+                    render={({ field }) => (
+                      <FormItem className="mb-6">
+                        <FormLabel className="text-sm font-semibold text-gray-700">
+                          Tingkat Urgensi <span className="text-red-500">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <SelectTrigger className="h-11">
+                              <SelectValue placeholder="Pilih tingkat urgensi" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Rendah">
+                                <div className="flex items-center gap-3">
+                                  <span className="w-3 h-3 rounded-full bg-green-500" />
+                                  <span className="text-green-700 font-medium">Rendah</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="Normal">
+                                <div className="flex items-center gap-3">
+                                  <span className="w-3 h-3 rounded-full bg-blue-500" />
+                                  <span className="text-blue-700 font-medium">Normal</span>
+                                </div>
+                              </SelectItem>
+                                                         <SelectItem value="Tinggi (Mendesak)">
+                                                           <div className="flex items-center gap-3">
+                                                             <span className="w-3 h-3 rounded-full bg-red-500" />
+                                                             <span className="text-red-700 font-medium">Tinggi (Mendesak)</span>
+                                                           </div>
+                                                         </SelectItem>
+                                                       </SelectContent>
+                                                       </Select>
+                        </FormControl>
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
                 </div>
+
+                {/* Subject Field */}
+                <FormField
+                  control={form.control}
+                  name="subject"
+                  render={({ field }) => (
+                    <FormItem className="mb-6 px-6 sm:px-8">
+                      <FormLabel className="text-sm font-semibold text-gray-700">
+                        Subjek Kendala <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="cth. Buku tidak bisa diklik untuk dipinjam"
+                          className="h-11"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">Deskripsikan masalah Anda dalam satu kalimat</FormDescription>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Message Field */}
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem className="px-6 sm:px-8">
+                      <FormLabel className="text-sm font-semibold text-gray-700">
+                        Deskripsi Masalah <span className="text-red-500">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Ceritakan kronologi kendala secara mendetail... Sertakan langkah-langkah yang Anda lakukan, pesan error yang muncul, dan kapan masalah terjadi."
+                          className="min-h-[140px] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs flex items-center justify-between">
+                        <span>Minimal 15 karakter untuk memudahkan tim support</span>
+                        <span className={`
+                          font-mono ${
+                            field.value.length < 15 ? 'text-gray-400' :
+                            field.value.length > 1000 ? 'text-red-500' :
+                            'text-green-600'
+                          }
+                        `}>
+                          {field.value.length}/1000
+                        </span>
+                      </FormDescription>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
 
                 {/* Form Footer */}
                 <div className="bg-gray-50 px-6 sm:px-8 py-6 border-t border-gray-200">
@@ -494,6 +483,7 @@ const ContactSupport = () => {
           </Form>
         )}
       </div>
+      <LiveChatWidget />
     </div>
   );
 };

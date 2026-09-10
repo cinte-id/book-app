@@ -9,7 +9,7 @@ const HelpFAQ = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [openId, setOpenId] = useState<number | null>(null);
-  
+
   const categoryCounts = getCategoryCounts();
   const filteredFaqs = filterFAQs(searchTerm, selectedCategory);
 
@@ -17,11 +17,11 @@ const HelpFAQ = () => {
     switch (category) {
       case 'Peminjaman':
         return <BookOpen size={16} className="text-blue-600" />;
-      case 'Akun & Profil':
+      case 'Akun Profil':
         return <User size={16} className="text-purple-600" />;
-      case 'Pencarian & Katalog':
+      case 'Pencarian Katalog':
         return <Search size={16} className="text-green-600" />;
-      case 'Teknis & Bantuan':
+      case 'Teknis Bantuan':
         return <Wrench size={16} className="text-amber-600" />;
       default:
         return <HelpCircle size={16} className="text-gray-600" />;
@@ -46,7 +46,7 @@ const HelpFAQ = () => {
               <span>Kembali</span>
             </button>
           </div>
-          
+
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-3">
               <HelpCircle size={32} className="text-blue-600" />
@@ -70,7 +70,7 @@ const HelpFAQ = () => {
               </div>
               <span className="text-xs font-semibold text-blue-900 text-center">Contact Support</span>
             </Link>
-            
+
             <Link
               to="/guide"
               className="flex flex-col items-center p-4 bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl hover:shadow-md transition-all duration-200 group border border-amber-200/50"
@@ -80,7 +80,7 @@ const HelpFAQ = () => {
               </div>
               <span className="text-xs font-semibold text-amber-900 text-center">User Guide</span>
             </Link>
-            
+
             <Link
               to="/feedback"
               className="flex flex-col items-center p-4 bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-xl hover:shadow-md transition-all duration-200 group border border-purple-200/50"
@@ -120,25 +120,19 @@ const HelpFAQ = () => {
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           {faqCategories.map((cat) => {
             const isActive = selectedCategory === cat;
-            const count = categoryCounts[cat] || 0;
-            
+            const count = categoryCounts[cat] ?? 0;
+
             return (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   isActive
                     ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                 }`}
               >
-                {cat !== 'Semua' && getCategoryIcon(cat)}
-                <span>{cat}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  isActive 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
+                {cat} <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${isActive ? 'bg-blue-500/20 text-blue-300' : 'bg-gray-100 text-gray-600'}`}>
                   {count}
                 </span>
               </button>
@@ -146,25 +140,19 @@ const HelpFAQ = () => {
           })}
         </div>
 
-        {/* Results Count */}
-        {(searchTerm || selectedCategory !== 'Semua') && (
-          <div className="mb-4 text-sm text-gray-600 flex items-center gap-2">
-            <span className="font-medium">{filteredFaqs.length}</span> 
-            <span>pertanyaan ditemukan</span>
-            {searchTerm && (
-              <span className="text-blue-600">
-                untuk "{searchTerm}"
-              </span>
-            )}
+        {/* Search Results Info */}
+        {searchTerm && (
+          <div className="mb-4 text-sm text-gray-500">
+            Menampilkan {filteredFaqs.length} hasil untuk "{searchTerm}"
           </div>
         )}
 
-        {/* FAQ List - Accordion */}
+        {/* FAQ List Accordion */}
         <div className="space-y-3">
           {filteredFaqs.length > 0 ? (
             filteredFaqs.map((faq) => {
               const isOpen = openId === faq.id;
-              
+
               return (
                 <div
                   key={faq.id}
@@ -191,7 +179,7 @@ const HelpFAQ = () => {
                       <ChevronDown size={20} className="text-gray-400" />
                     </div>
                   </button>
-                  
+
                   {isOpen && (
                     <div className="px-5 pb-5 pt-0">
                       <div className="pl-9 border-l-2 border-blue-200 ml-2">
@@ -225,7 +213,7 @@ const HelpFAQ = () => {
                 Tidak ada pertanyaan ditemukan
               </h3>
               <p className="text-gray-600 text-sm mb-6 max-w-md mx-auto">
-                Tidak ada pertanyaan yang sesuai dengan pencarian Anda. 
+                Tidak ada pertanyaan yang sesuai dengan pencarian Anda.
                 Coba kata kunci lain atau hubungi support untuk bantuan lebih lanjut.
               </p>
               <div className="flex gap-3 justify-center">
@@ -270,6 +258,7 @@ const HelpFAQ = () => {
           </div>
         )}
       </div>
+      <LiveChatWidget />
     </div>
   );
 };

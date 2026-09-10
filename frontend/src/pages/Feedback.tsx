@@ -18,13 +18,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Form,
   FormControl,
   FormDescription,
@@ -38,11 +31,9 @@ import { useToast } from '@/components/ui/use-toast';
 
 // Validation schema
 const feedbackFormSchema = z.object({
-  name: z.string().min(2, 'Minimal 2 karakter').max(50, 'Maksimal 50 karakter'),
   email: z.string().email('Format email tidak valid'),
   category: z.string().min(1, 'Pilih kategori'),
-  rating: z.number().min(1, 'Berikan rating minimal 1 bintang'),
-  subject: z.string().min(5, 'Minimal 5 karakter').max(100, 'Maksimal 100 karakter'),
+  rating: z.number(),
   message: z
     .string()
     .min(20, 'Minimal 20 karakter untuk membantu kami memahami')
@@ -120,11 +111,9 @@ const Feedback = () => {
   const form = useForm<FeedbackFormValues>({
     resolver: zodResolver(feedbackFormSchema),
     defaultValues: {
-      name: '',
       email: '',
       category: '',
       rating: 0,
-      subject: '',
       message: '',
     },
   });
@@ -261,19 +250,25 @@ const Feedback = () => {
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
                   <dt className="text-gray-500">Rating</dt>
                   <dd className="font-medium text-gray-900">
-                    <span className="text-amber-400">{'★'.repeat(submittedFeedback.rating)}</span>
-                    <span className="text-gray-300">
-                      {'★'.repeat(5 - submittedFeedback.rating)}
-                    </span>
-                    <span className="ml-2 text-gray-500">
-                      {ratingLabels[submittedFeedback.rating]}
-                    </span>
+                    {submittedFeedback.rating > 0 ? (
+                      <>
+                        <span className="text-amber-400">{'★'.repeat(submittedFeedback.rating)}</span>
+                        <span className="text-gray-300">
+                          {'★'.repeat(5 - submittedFeedback.rating)}
+                        </span>
+                        <span className="ml-2 text-gray-500">
+                          {ratingLabels[submittedFeedback.rating]}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-gray-400">Tidak diberi rating</span>
+                    )}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
-                  <dt className="text-gray-500">Subjek</dt>
+                  <dt className="text-gray-500">Email</dt>
                   <dd className="max-w-60 truncate font-medium text-gray-900">
-                    {submittedFeedback.subject}
+                    {submittedFeedback.email}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-4 px-4 py-3">
@@ -390,47 +385,29 @@ const Feedback = () => {
           >
             <Card className="border-gray-200 bg-white shadow-sm">
               <CardContent className="space-y-6 p-6 sm:p-8">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-semibold text-gray-700">
-                          Nama lengkap <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="Nama Anda" className="h-11" {...field} />
-                        </FormControl>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-semibold text-gray-700">
-                          Email <span className="text-red-500">*</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="email@domain.com"
-                            className="h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Hanya untuk kabar status saran Anda
-                        </FormDescription>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-semibold text-gray-700">
+                        Email <span className="text-gray-400">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="email@domain.com"
+                          className="h-11"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        Hanya untuk kabar status saran Anda
+                      </FormDescription>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
@@ -438,73 +415,35 @@ const Feedback = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-semibold text-gray-700">
-                        Kategori saran <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Pilih kategori saran" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categoryOptions.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              <span className="flex items-center gap-3">
-                                <span
-                                  className={`flex h-8 w-8 items-center justify-center rounded-lg ${opt.iconBg}`}
-                                >
-                                  <opt.icon size={16} className={opt.iconText} />
-                                </span>
-                                <span>
-                                  <span className="block text-sm font-medium text-gray-900">
-                                    {opt.label}
-                                  </span>
-                                  <span className="block text-xs text-gray-500">
-                                    {opt.description}
-                                  </span>
-                                </span>
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="rating"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold text-gray-700">
-                        Rating pengalaman <span className="text-red-500">*</span>
-                      </FormLabel>
-                      <FormControl>{renderStars(field.value)}</FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="subject"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-semibold text-gray-700">
-                        Subjek saran <span className="text-red-500">*</span>
+                        Kategori saran <span className="text-gray-400">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="cth. Tambahkan mode gelap"
-                          className="h-11"
-                          {...field}
-                        />
+                        <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Kategori saran">
+                          {categoryOptions.map((opt) => {
+                            const selected = field.value === opt.value;
+                            return (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                role="radio"
+                                aria-checked={selected}
+                                onClick={() => field.onChange(opt.value)}
+                                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-150 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${
+                                  selected
+                                    ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-sm'
+                                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                                }`}
+                              >
+                                <opt.icon
+                                  size={16}
+                                  className={selected ? 'text-blue-600' : 'text-gray-400'}
+                                />
+                                {opt.label}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </FormControl>
-                      <FormDescription className="text-xs">
-                        Ringkas saran Anda dalam satu kalimat
-                      </FormDescription>
                       <FormMessage className="text-xs" />
                     </FormItem>
                   )}
@@ -516,11 +455,11 @@ const Feedback = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-semibold text-gray-700">
-                        Detail saran <span className="text-red-500">*</span>
+                        Saran Anda <span className="text-gray-400">*</span>
                       </FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Jelaskan saran Anda: apa yang diinginkan, mengapa penting, dan bagaimana ideally cara kerjanya..."
+                          placeholder="Tulis saran Anda di sini — mis. Tambahkan mode gelap agar nyaman dibaca malam hari..."
                           className="min-h-35 resize-none"
                           {...field}
                         />
@@ -543,16 +482,23 @@ const Feedback = () => {
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="rating"
+                  render={({ field }) => (
+                    <FormItem className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                      <FormLabel className="text-sm font-semibold text-gray-700">
+                        Seberapa puas Anda dengan BookTracker?{' '}
+                        <span className="font-normal text-gray-400">(opsional)</span>
+                      </FormLabel>
+                      <FormControl>{renderStars(field.value)}</FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
-
-            <div className="mt-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-              <p className="text-sm font-medium text-gray-900">Privasi</p>
-              <p className="mt-0.5 text-xs leading-relaxed text-gray-600">
-                Data hanya dipakai untuk menindaklanjuti saran ini. Tidak dibagikan ke
-                pihak ketiga, dan bisa diminta untuk dihapus kapan saja.
-              </p>
-            </div>
 
             <Button
               type="submit"
@@ -571,6 +517,10 @@ const Feedback = () => {
                 </>
               )}
             </Button>
+            <p className="mt-3 text-center text-xs leading-relaxed text-gray-500">
+              Data hanya dipakai untuk menindaklanjuti saran ini dan tidak dibagikan
+              ke pihak ketiga.
+            </p>
           </form>
         </Form>
       </div>
