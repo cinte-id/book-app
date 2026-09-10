@@ -363,30 +363,45 @@ const ContactSupport = () => {
 
                     {/* Priority Field */}
                     <FormField
-                      control={form.control}
-                      name="priority"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-semibold text-gray-700">
-                            Tingkat Urgensi <span className="text-red-500">*</span>
-                          </FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="h-11">
-                                <SelectValue placeholder="Pilih urgensi" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="Rendah">Rendah</SelectItem>
-                              <SelectItem value="Normal">Normal</SelectItem>
-                              <SelectItem value="Tinggi (Mendesak)">Tinggi (Mendesak)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
+                    control={form.control}
+                    name="priority"
+                    render={({ field }) => (
+                    <FormItem>
+                    <FormLabel className="text-sm font-semibold text-gray-700">
+                    Tingkat Urgensi <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                    <SelectTrigger className="h-11">
+                    <SelectValue placeholder="Pilih urgensi" />
+                    </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                    <SelectItem value="Rendah">
+                    <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                    <span>Rendah</span>
+                    </div>
+                    </SelectItem>
+                    <SelectItem value="Normal">
+                    <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-blue-500" />
+                    <span>Normal</span>
+                    </div>
+                    </SelectItem>
+                    <SelectItem value="Tinggi (Mendesak)">
+                    <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <span>Tinggi (Mendesak)</span>
+                    </div>
+                    </SelectItem>
+                    </SelectContent>
+                    </Select>
+                    <FormMessage className="text-xs" />
+                    </FormItem>
+                    )}
                     />
-                  </div>
+                    </div>
 
                   {/* Subject Field */}
                   <FormField
