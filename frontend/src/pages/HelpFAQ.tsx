@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, Mail, FileText, MessageSquare, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faqData, faqCategories, filterFAQs, getCategoryCounts, type FAQItem } from '@/data/faqData';
-import LiveChatWidget from '../components/support/LiveChatWidget';
 
 const HelpFAQ = () => {
   const navigate = useNavigate();
@@ -258,7 +257,6 @@ const HelpFAQ = () => {
           </div>
         )}
       </div>
-      <LiveChatWidget />
     </div>
   );
 };

@@ -5,7 +5,6 @@ import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
 import HeaderNav from '../components/HeaderNav';
 import BrowseLibrary from '../components/BrowseLibrary';
-import LiveChatWidget from '../components/support/LiveChatWidget';
 import { books, currentlyReading, readingStats } from '../data/dummyData';
 
 const Index = () => {
@@ -165,7 +164,6 @@ const Index = () => {
       </main>
 
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
-      <LiveChatWidget />
     </div>
   );
 };

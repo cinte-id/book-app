@@ -34,7 +34,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import LiveChatWidget from '../components/support/LiveChatWidget';
 
 // Zod validation schema
 const contactFormSchema = z.object({
@@ -483,7 +482,6 @@ const ContactSupport = () => {
           </Form>
         )}
       </div>
-      <LiveChatWidget />
     </div>
   );
 };
