@@ -102,10 +102,9 @@ export function LiveChatWidget() {
     }, typingDelay);
   };
 
-  const handleSend = () => {
-    if (!inputValue.trim() || isTyping) return;
-
-    const userMessage = inputValue.trim();
+  const handleSend = (text?: string) => {
+    const userMessage = (text ?? inputValue).trim();
+    if (!userMessage || isTyping) return;
     setInputValue('');
 
     // Add user message
@@ -138,8 +137,7 @@ export function LiveChatWidget() {
   };
 
   const handleQuickReply = (text: string) => {
-    setInputValue(text);
-    handleSend();
+    handleSend(text);
   };
 
   const formatTime = (date: Date) => {
@@ -155,8 +153,8 @@ export function LiveChatWidget() {
         size="icon"
         className={cn(
           'fixed bottom-6 right-6 z-50 rounded-full shadow-lg',
-          'bg-gradient-to-br from-blue-500 to-blue-600',
-          'hover:from-blue-600 hover:to-blue-700',
+          'bg-blue-600',
+          'hover:bg-blue-700',
           'text-white transition-all duration-300',
           'hover:scale-105 active:scale-95',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
@@ -184,7 +182,7 @@ export function LiveChatWidget() {
         <SheetContent side="right" className="w-full sm:max-w-sm h-full max-h-[90vh] flex flex-col">
           <SheetHeader className="flex-shrink-0 pb-4 border-b border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow-lg">
                 <Bot className="w-5 h-5 text-white" aria-hidden="true" />
               </div>
               <div>
@@ -213,8 +211,8 @@ export function LiveChatWidget() {
                     className={cn(
                       'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center',
                       msg.role === 'user'
-                        ? 'bg-gradient-to-br from-blue-500 to-blue-600'
-                        : 'bg-gradient-to-br from-purple-500 to-pink-500'
+                        ? 'bg-blue-600'
+                        : 'bg-gray-800'
                     )}
                     aria-hidden="true"
                   >
@@ -294,7 +292,7 @@ export function LiveChatWidget() {
                 aria-label="Tulis pesan"
               />
               <Button
-                onClick={handleSend}
+                onClick={() => handleSend()}
                 disabled={!inputValue.trim() || isTyping}
                 size="icon"
                 className="h-11 w-11 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

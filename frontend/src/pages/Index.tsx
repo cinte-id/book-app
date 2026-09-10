@@ -159,12 +159,13 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 max-w-md mx-auto">
       <HeaderNav activeTab={activeTab} />
-      
+
       <main className="px-4 py-6 pb-20">
         {renderContent()}
       </main>
 
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+      <LiveChatWidget />
     </div>
   );
 };
