@@ -17,11 +17,11 @@ const HelpFAQ = () => {
     switch (category) {
       case 'Peminjaman':
         return <BookOpen size={16} className="text-blue-600" />;
-      case 'Akun Profil':
+      case 'Akun & Profil':
         return <User size={16} className="text-purple-600" />;
-      case 'Pencarian Katalog':
+      case 'Pencarian & Katalog':
         return <Search size={16} className="text-green-600" />;
-      case 'Teknis Bantuan':
+      case 'Teknis & Bantuan':
         return <Wrench size={16} className="text-amber-600" />;
       default:
         return <HelpCircle size={16} className="text-gray-600" />;
@@ -132,7 +132,7 @@ const HelpFAQ = () => {
                     : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
                 }`}
               >
-                {cat} <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${isActive ? 'bg-blue-500/20 text-blue-300' : 'bg-gray-100 text-gray-600'}`}>
+                {cat} <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${isActive ? 'bg-white/25 text-white' : 'bg-gray-100 text-gray-600'}`}>
                   {count}
                 </span>
               </button>
