@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
@@ -8,8 +9,15 @@ import BrowseLibrary from '../components/BrowseLibrary';
 import { books, currentlyReading, readingStats } from '../data/dummyData';
 
 const Index = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('home');
   const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+
+  useEffect(() => {
+    if (location.state && (location.state as { activeTab?: string }).activeTab) {
+      setActiveTab((location.state as { activeTab: string }).activeTab);
+    }
+  }, [location.state]);
 
   const renderContent = () => {
     switch (activeTab) {

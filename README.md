@@ -108,6 +108,39 @@ A full-stack web application for managing your reading list, built with Flask an
 - ⚡ Fast and efficient with React + Vite
 - 🛡️ Type-safe with TypeScript
 
+## 👤 Submission: Customer Service Role By Rafly Maulana Zulyzar
+
+### Chosen Role
+**Customer Service**
+
+### How to Run/Test
+1. Clone this repository
+2. Navigate to frontend: `cd frontend`
+3. Install dependencies: `npm install`
+4. Start dev server: `npm run dev`
+5. Open browser at the URL shown in terminal
+6. Access CS features via Support tab in bottom navigation or help icon in header
+
+### Features Implemented
+
+| Feature | Route | Description |
+|---------|-------|-------------|
+| Help & FAQ | `/help` | Searchable FAQ with categorized Q&A |
+| Contact Support | `/contact` | Support form with ticket system & validation |
+| User Guide | `/guide` | Step-by-step onboarding tutorial |
+| Feedback | `/feedback` | Feedback form with star rating |
+| CS Dashboard | `/cs-dashboard` | Dashboard layout with stats & quick links |
+| Live Chat | (widget) | Floating chat widget with auto-reply (UI only) |
+
+### Design Decisions & Bonus Features
+- **Dynamic Ticket Feed & Ticket Tracking Interface (Bonus)**: "Recent Tickets" on the Dashboard and "My Tickets" are directly synchronized with `localStorage`. They update automatically when a user submits a new ticket and are interactive—clicking any ticket opens a detailed tracking modal with real-time status progression (Timeline: Submitted → Under Review → Resolved). The dashboard feed displays a clean viewport of up to 5 tickets, with an independent smooth scroll area when more tickets are present to preserve dashboard compactness.
+- **Multi-Language Support (Bonus)**: Full bilingual support (🇮🇩 Indonesian / 🇬🇧 English) with synchronized instant language toggle switches across all CS pages (**Dashboard**, **Help & FAQ**, **Contact Support**, **User Guide**, and **Feedback**), while faithfully preserving original user-submitted content (tickets & feedback comments).
+- **Knowledge Base Categories (Bonus)**: Quick-access knowledge base articles covering Quickstart Onboarding, Reading Progress Synchronization, and Data Privacy & Security.
+- **Customer Service Analytics & CSAT Metrics (Bonus)**: Realistic metrics mockup (Total Tickets, Open Tickets, 98.6% Response SLA, 2.4h Avg Response Time, and 4.2/5 CSAT score).
+- **LocalStorage Data Persistence**: Client-side storage simulation for tickets and feedback history without backend dependencies.
+- **Design Consistency**: Built using Tailwind CSS and shadcn/ui within a responsive mobile frame wrapper (`max-w-md mx-auto`).
+- **Interactive Floating Live Chat Widget**: Bottom-docked floating chat action button featuring automated prompt responses, typing indicators, and message timestamps.
+
 ## Tech Stack
 
 ### Backend
@@ -256,3 +289,9 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+
+
+
