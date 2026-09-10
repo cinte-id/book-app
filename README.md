@@ -274,7 +274,9 @@ Comprehensive support system inside the existing Book Tracker App (no new projec
 | Live Chat widget | global | Floating button on every page, keyword-based bot replies, quick replies |
 
 Bonus components: `HelpfulSurvey` (Ya/Tidak satisfaction micro-survey on Help & Guide),
-ticket persistence (`src/data/support/tickets.ts`), recharts analytics mockup.
+ticket persistence (`src/data/support/tickets.ts`, 9 unit tests), i18n structure
+(`src/data/support/i18n.ts` — `id` active, `en` fallback, adopted by the survey),
+recharts analytics mockup.
 
 ### How to run / test
 
@@ -298,7 +300,8 @@ npm run dev          # → http://localhost:8080
 
 Manual test path: open `/support` → create a ticket via Contact Support (note the
 `TKT-xxxxxx` ID) → find it on `/track` → submit feedback → see dashboard stats
-and chart update. Type checks: `npx tsc --noEmit`. Production build: `npm run build`.
+and chart update. Type checks: `npx tsc --noEmit`. Unit tests: `npm test`
+(12 tests: ticket store + i18n). Lint: `npm run lint`. Production build: `npm run build`.
 
 ### Notes & decisions
 

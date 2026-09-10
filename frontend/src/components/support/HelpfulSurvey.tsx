@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, CheckCircle2 } from 'lucide-react';
+import { t } from '@/data/support/i18n';
 
 interface HelpfulSurveyProps {
   topic: string;
@@ -32,7 +33,7 @@ const HelpfulSurvey = ({ topic, question }: HelpfulSurveyProps) => {
       {answer ? (
         <p className="flex items-center justify-center gap-2 text-center text-sm font-medium text-green-700">
           <CheckCircle2 size={18} />
-          Terima kasih atas penilaian Anda!
+          {t('surveyThanks')}
         </p>
       ) : (
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
@@ -46,7 +47,7 @@ const HelpfulSurvey = ({ topic, question }: HelpfulSurveyProps) => {
               className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-600 transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 active:scale-95"
             >
               <ThumbsUp size={15} />
-              Ya
+              {t('surveyYes')}
             </button>
             <button
               onClick={() => vote('no')}
@@ -54,7 +55,7 @@ const HelpfulSurvey = ({ topic, question }: HelpfulSurveyProps) => {
               className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-600 transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 active:scale-95"
             >
               <ThumbsDown size={15} />
-              Tidak
+              {t('surveyNo')}
             </button>
           </div>
         </div>
