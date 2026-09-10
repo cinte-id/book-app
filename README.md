@@ -253,6 +253,84 @@ book-app/
 - [ ] Database integration
 - [ ] User profiles and personal libraries
 
+---
+
+## Customer Service Feature Implementation by Badharalfath
+
+For this assignment I chose the Customer Service role and built a complete
+customer support system inside the existing React/Vite frontend. No backend changes,
+no new project.
+
+### How to Access
+
+Run the frontend (`npm run dev`) and open `http://localhost:5173`, then:
+
+- Tap the **help (?) icon in the header** (visible on every tab), or
+- Open the **Profile tab → Bantuan menu**, or
+- Tap the **Live Chat floating button** (bottom-right, on every page).
+
+All support pages share the app's mobile-first layout. You can also visit the routes
+directly:
+
+- Help Center (`/help`): searchable FAQ accordion with category tabs + counts
+- Contact Support (`/contact`): validated ticket form with generated ticket ID
+- User Guide (`/guide`): 3-step onboarding stepper with progress indicator
+- Feedback (`/feedback`): category pills, live char counter, optional star rating
+- Ticket Tracking (`/track`): search tickets by ID + on-device ticket history
+- Service Dashboard (`/support`): hub with live stats, service links, analytics chart
+- Knowledge Base (`/kb`, `/kb/:slug`): long-form guides with categories + related articles
+
+### Bonus Features
+
+- **Knowledge Base:** 6 searchable, category-filterable articles with read time,
+  numbered steps, related links, and per-article satisfaction survey.
+- **User Satisfaction Survey:** Ya/Tidak micro-survey (`HelpfulSurvey`) on the Help,
+  Guide, and every KB article page; answers persist per topic.
+- **Support Ticket Tracking:** tickets created via Contact/Feedback persist in
+  `localStorage` (cap 50) and can be searched, inspected, and deleted on `/track`.
+- **Customer Service Analytics mockup:** stat cards (total/open/feedback/avg rating)
+  plus a tickets-by-category bar chart (recharts) that updates live from stored tickets,
+  with an honest empty state before any data exists.
+- **Multi-language support structure:** `id` dictionary active with full `en` fallback
+  (`src/data/support/i18n.ts`, typed keys), adopted by the survey component; language
+  persists in `localStorage`.
+- **Tests:** 12 vitest unit tests covering the ticket store and i18n (`npm test`).
+
+### Tech Stack & Decisions
+
+- React 18 + TypeScript + Vite, styled with Tailwind CSS and shadcn/ui (Card, Input,
+  Textarea, Select, Button, Sheet replacements, etc.).
+- Forms use React Hook Form + Zod with inline errors; invalid fields turn red on
+  submit, and toast confirms successful submissions.
+- Mock/persistent client data only: strongly-typed modules live in
+  `src/data/support/` (`tickets.ts`, `kbArticles.ts`, `faqData.ts`, `i18n.ts`,
+  `navigation.ts`). No backend or real API calls for CS features, per role constraints.
+- Functional components with hooks and a modular structure (`src/components/support/`,
+  one page per route); flat single-accent (blue-600) visual language with a shared
+  centered header pattern; all motion respects `prefers-reduced-motion`.
+- Routing wired in `src/App.tsx` as flat routes; chat widget mounted once globally.
+- Ports match the task's Test Environment exactly: backend `:5000`, frontend `:5173`.
+
+### How to run / test my part
+
+```bash
+# Backend
+cd backend
+pip install -r requirements.txt
+python app.py        # → http://localhost:5000 (override with FLASK_PORT)
+
+# Frontend (new terminal)
+cd frontend
+npm install
+npm run dev          # → http://localhost:5173
+```
+
+Manual test path: open `/support` → create a ticket via Contact Support (note the
+`TKT-xxxxxx` ID) → find it on `/track` → submit feedback → see dashboard stats
+and chart update. Checks: `npx tsc --noEmit`, `npm test`, `npm run lint`,
+`npm run build` (all green). Branch: `feat/customer-service` (single branch,
+one commit per feature/fix).
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

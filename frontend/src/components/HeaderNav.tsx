@@ -1,5 +1,6 @@
 
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, HelpCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface HeaderNavProps {
   activeTab: string;
@@ -26,6 +27,13 @@ const HeaderNav = ({ activeTab }: HeaderNavProps) => {
               <Search size={20} />
             </button>
           )}
+          <Link
+            to="/support"
+            aria-label="Pusat layanan bantuan"
+            className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            <HelpCircle size={20} />
+          </Link>
           <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors relative">
             <Bell size={20} />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>

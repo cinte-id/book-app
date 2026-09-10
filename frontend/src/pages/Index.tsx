@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
+import { Book, Search, User, TrendingUp, Plus, Library, HelpCircle, Ticket, MessageSquare, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
 import BottomNav from '../components/BottomNav';
@@ -120,6 +121,27 @@ const Index = () => {
                 <div className="text-sm text-gray-600">Avg Rating</div>
               </div>
             </div>
+
+            <div>
+              <h3 className="text-base font-semibold text-gray-800 mb-2">Bantuan</h3>
+              <div className="divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white overflow-hidden">
+                <Link to="/support" className="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-gray-50">
+                  <HelpCircle size={20} className="text-blue-600 shrink-0" />
+                  <span className="flex-1 text-sm font-medium text-gray-800">Pusat Layanan</span>
+                  <ChevronRight size={18} className="text-gray-300 shrink-0" />
+                </Link>
+                <Link to="/track" className="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-gray-50">
+                  <Ticket size={20} className="text-blue-600 shrink-0" />
+                  <span className="flex-1 text-sm font-medium text-gray-800">Lacak Tiket</span>
+                  <ChevronRight size={18} className="text-gray-300 shrink-0" />
+                </Link>
+                <Link to="/feedback" className="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-gray-50">
+                  <MessageSquare size={20} className="text-blue-600 shrink-0" />
+                  <span className="flex-1 text-sm font-medium text-gray-800">Berikan Saran</span>
+                  <ChevronRight size={18} className="text-gray-300 shrink-0" />
+                </Link>
+              </div>
+            </div>
           </div>
         );
       default:
@@ -158,7 +180,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 max-w-md mx-auto">
       <HeaderNav activeTab={activeTab} />
-      
+
       <main className="px-4 py-6 pb-20">
         {renderContent()}
       </main>
