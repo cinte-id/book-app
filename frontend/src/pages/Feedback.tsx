@@ -214,12 +214,17 @@ const Feedback = () => {
       <div className="min-h-screen bg-gray-50 pb-24">
         <header className="sticky top-0 z-20 border-b border-gray-200 bg-white shadow-sm">
           <div className="mx-auto max-w-3xl px-4 py-4 sm:px-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Masukan pengguna
-            </p>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-gray-900">
-              Saran terkirim
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500 rounded-full mb-3 shadow-lg">
+              <CheckCircle2 size={32} className="text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Saran Terkirim
             </h1>
+            <p className="text-gray-600 text-sm max-w-2xl mx-auto">
+              Terima kasih! Saran Anda telah kami terima dan akan ditinjau tim kami.
+            </p>
+          </div>
           </div>
         </header>
 
@@ -362,22 +367,17 @@ const Feedback = () => {
             <ArrowLeft size={18} />
             <span>Kembali</span>
           </button>
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-600">
-              <MessageSquare size={24} className="text-white" />
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-3 shadow-lg shadow-blue-200">
+              <MessageSquare size={32} className="text-white" />
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-                Masukan pengguna
-              </p>
-              <h1 className="mt-0.5 text-2xl font-bold tracking-tight text-gray-900">
-                Berikan saran
-              </h1>
-              <p className="mt-1 max-w-xl text-sm leading-relaxed text-gray-600">
-                Ceritakan apa yang bisa kami perbaiki di BookTracker. Setiap saran dibaca
-                oleh tim kami.
-              </p>
-            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Berikan Saran
+            </h1>
+            <p className="text-gray-600 text-sm max-w-2xl mx-auto">
+              Ceritakan apa yang bisa kami perbaiki di BookTracker. Setiap saran dibaca
+              oleh tim kami.
+            </p>
           </div>
         </div>
       </header>
