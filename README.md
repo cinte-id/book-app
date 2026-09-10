@@ -255,37 +255,65 @@ book-app/
 
 ---
 
-## Customer Service — Take-Home Submission
+## Customer Service Feature Implementation by Badharalfath
 
-**Chosen role:** Customer Service
+For this take-home assignment I chose the Customer Service role and built a complete
+customer support system inside the existing React/Vite frontend. No backend changes,
+no new project.
 
-### What was built
+### How to Access
 
-Comprehensive support system inside the existing Book Tracker App (no new project):
+Run the frontend (`npm run dev`) and open `http://localhost:8080`, then:
 
-| Page | Route | Contents |
-| --- | --- | --- |
-| Pusat Bantuan (Help & FAQ) | `/help` | Searchable FAQ, category tabs with counts, expandable answers, tags |
-| Hubungi Support | `/contact` | Ticket form (React Hook Form + Zod), category/priority, ticket ID generation |
-| Panduan Pengguna | `/guide` | 3-step onboarding stepper with progress indicator |
-| Berikan Saran (Feedback) | `/feedback` | Category pills, textarea with counter, optional star rating |
-| Lacak Tiket (bonus) | `/track` | Search by ticket ID + on-device ticket history (localStorage) |
-| Pusat Layanan (bonus) | `/support` | Dashboard hub: live stats, service links, category analytics chart |
-| Pusat Pengetahuan (bonus) | `/kb`, `/kb/:slug` | 6 long-form articles, category filter, related links |
-| Live Chat widget | global | Floating button on every page, keyword-based bot replies, quick replies |
+- Tap the **help (?) icon in the header** (visible on every tab), or
+- Open the **Profile tab → Bantuan menu**, or
+- Tap the **Live Chat floating button** (bottom-right, on every page).
 
-Bonus components: `HelpfulSurvey` (Ya/Tidak satisfaction micro-survey on Help & Guide),
-ticket persistence (`src/data/support/tickets.ts`, 9 unit tests), i18n structure
-(`src/data/support/i18n.ts` — `id` active, `en` fallback, adopted by the survey),
-recharts analytics mockup.
+All support pages share the app's mobile-first layout. You can also visit the routes
+directly:
 
-### How to run / test
+- Help Center (`/help`) — searchable FAQ accordion with category tabs + counts
+- Contact Support (`/contact`) — validated ticket form with generated ticket ID
+- User Guide (`/guide`) — 3-step onboarding stepper with progress indicator
+- Feedback (`/feedback`) — category pills, live char counter, optional star rating
+- Ticket Tracking (`/track`) — search tickets by ID + on-device ticket history
+- Service Dashboard (`/support`) — hub with live stats, service links, analytics chart
+- Knowledge Base (`/kb`, `/kb/:slug`) — long-form guides with categories + related articles
 
-Backend runs on `http://localhost:5001`, frontend on `http://localhost:8080`
-(note: these differ from the `5000`/`5173` in the task template — the repo's
-`vite.config.ts`, `ENVIRONMENT_SETUP.md`, and `QUICK_SETUP.md` all use `5001`/`8080`,
-and the frontend API client defaults to `http://localhost:5001`, so the setup below
-is self-consistent).
+### Bonus Features
+
+- **Knowledge Base** — 6 searchable, category-filterable articles with read time,
+  numbered steps, related links, and per-article satisfaction survey.
+- **User Satisfaction Survey** — Ya/Tidak micro-survey (`HelpfulSurvey`) on the Help,
+  Guide, and every KB article page; answers persist per topic.
+- **Support Ticket Tracking** — tickets created via Contact/Feedback persist in
+  `localStorage` (cap 50) and can be searched, inspected, and deleted on `/track`.
+- **Customer Service Analytics mockup** — stat cards (total/open/feedback/avg rating)
+  plus a tickets-by-category bar chart (recharts) that updates live from stored tickets,
+  with an honest empty state before any data exists.
+- **Multi-language support structure** — `id` dictionary active with full `en` fallback
+  (`src/data/support/i18n.ts`, typed keys), adopted by the survey component; language
+  persists in `localStorage`.
+- **Tests** — 12 vitest unit tests covering the ticket store and i18n (`npm test`).
+
+### Tech Stack & Decisions
+
+- React 18 + TypeScript + Vite, styled with Tailwind CSS and shadcn/ui (Card, Input,
+  Textarea, Select, Button, Sheet replacements, etc.).
+- Forms use React Hook Form + Zod with inline errors; invalid fields turn red on
+  submit, and toast confirms successful submissions.
+- Mock/persistent client data only — strongly-typed modules live in
+  `src/data/support/` (`tickets.ts`, `kbArticles.ts`, `faqData.ts`, `i18n.ts`,
+  `navigation.ts`). No backend or real API calls for CS features, per role constraints.
+- Functional components with hooks and a modular structure (`src/components/support/`,
+  one page per route); flat single-accent (blue-600) visual language with a shared
+  centered header pattern; all motion respects `prefers-reduced-motion`.
+- Routing wired in `src/App.tsx` as flat routes; chat widget mounted once globally.
+- Ports note: the repo's own `vite.config.ts` and setup docs use backend `:5001` and
+  frontend `:8080` (the task template says `5000`/`5173`), and the API client defaults
+  to `http://localhost:5001` — so run with the repo's ports.
+
+### How to run / test my part
 
 ```bash
 # Backend
@@ -301,18 +329,9 @@ npm run dev          # → http://localhost:8080
 
 Manual test path: open `/support` → create a ticket via Contact Support (note the
 `TKT-xxxxxx` ID) → find it on `/track` → submit feedback → see dashboard stats
-and chart update. Type checks: `npx tsc --noEmit`. Unit tests: `npm test`
-(12 tests: ticket store + i18n). Lint: `npm run lint`. Production build: `npm run build`.
-
-### Notes & decisions
-
-- Same stack as the repo (React + TS + Tailwind + shadcn/ui + RHF + Zod); no new
-  runtime dependencies except what was already declared (`recharts` for the chart).
-- Tickets persist in `localStorage` (cap 50) — real tracking without backend changes,
-  which are outside the CS role scope.
-- Flat single-accent (blue-600) visual language, shared centered header pattern across
-  CS pages; all motion respects `prefers-reduced-motion`.
-- Branch: `feat/customer-service` (single branch, one commit per feature/fix).
+and chart update. Checks: `npx tsc --noEmit`, `npm test`, `npm run lint`,
+`npm run build` — all green. Branch: `feat/customer-service` (single branch,
+one commit per feature/fix).
 
 ## License
 
