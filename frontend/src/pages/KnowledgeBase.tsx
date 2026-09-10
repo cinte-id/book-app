@@ -34,7 +34,7 @@ const KnowledgeBase = () => {
             </div>
             <h1 className="mb-2 text-3xl font-bold text-gray-900">Pusat Pengetahuan</h1>
             <p className="mx-auto max-w-2xl text-sm text-gray-600">
-              Panduan mendalam per topik — dari langkah pertama sampai troubleshooting
+              Panduan mendalam per topik, dari langkah pertama sampai troubleshooting
             </p>
           </div>
           <div className="relative mx-auto mt-6 max-w-2xl">

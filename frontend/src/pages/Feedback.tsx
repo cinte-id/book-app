@@ -180,7 +180,7 @@ const Feedback = () => {
               type="button"
               role="radio"
               aria-checked={star === value}
-              aria-label={`${star} bintang — ${ratingLabels[star]}`}
+              aria-label={`${star} bintang: ${ratingLabels[star]}`}
               onClick={() => form.setValue('rating', star, { shouldValidate: true })}
               onMouseEnter={() => setHoverRating(star)}
               onFocus={() => setHoverRating(star)}

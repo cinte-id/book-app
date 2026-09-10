@@ -161,7 +161,7 @@ export function LiveChatWidget() {
 
   return (
     <>
-      {/* Floating Action Button — always on screen */}
+      {/* Floating Action Button, always on screen */}
       <Button
         onClick={() => (visible ? handleClose() : handleOpen())}
         size="icon"
@@ -213,7 +213,7 @@ export function LiveChatWidget() {
               <h2 className="text-sm font-semibold leading-tight text-white">Live Chat</h2>
               <p className="flex items-center gap-1.5 text-xs text-blue-100">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-300" aria-hidden="true" />
-                Online — balas ±2 mnt
+                Online, balas ±2 mnt
               </p>
             </div>
             <button

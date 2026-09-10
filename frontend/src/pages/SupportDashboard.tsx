@@ -93,7 +93,7 @@ const SupportDashboard = () => {
     { label: 'Saran masuk', value: String(stats.feedback) },
     {
       label: 'Rata-rata rating',
-      value: stats.avgRating > 0 ? stats.avgRating.toFixed(1) : '—',
+      value: stats.avgRating > 0 ? stats.avgRating.toFixed(1) : '-',
     },
   ];
 
@@ -114,7 +114,7 @@ const SupportDashboard = () => {
             </div>
             <h1 className="mb-2 text-3xl font-bold text-gray-900">Pusat Layanan</h1>
             <p className="mx-auto max-w-2xl text-sm text-gray-600">
-              Semua bantuan BookTracker di satu tempat — status tiket Anda di perangkat ini
+              Semua bantuan BookTracker di satu tempat: status tiket Anda di perangkat ini
             </p>
           </div>
         </div>

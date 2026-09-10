@@ -70,7 +70,7 @@ export function saveTicket(ticket: TicketInput): SupportTicket[] {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch {
-    // storage unavailable (private mode) — tracking just won't persist
+    // storage unavailable (private mode), tracking just won't persist
   }
   return next;
 }

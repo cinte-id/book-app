@@ -1,5 +1,5 @@
 // Knowledge base articles for BookTracker customer service.
-// Long-form guides grouped by category — complements the short Q&A in faqData.ts.
+// Long-form guides grouped by category, complements the short Q&A in faqData.ts.
 
 export interface KBSection {
   heading: string;
@@ -43,7 +43,7 @@ export const kbArticles: KBArticle[] = [
           'Buka halaman Library atau Discover.',
           'Cari buku lewat kolom pencarian atau filter kategori.',
           'Klik tombol "Read" atau "Add to Library" pada kartu buku.',
-          'Buku masuk ke Currently Reading — pantau progres di tab Reading.',
+          'Buku masuk ke Currently Reading. Pantau progres di tab Reading.',
         ],
       },
       {
@@ -156,7 +156,7 @@ export const kbArticles: KBArticle[] = [
       {
         heading: 'Perbaikan mandiri berurutan',
         paragraphs: [
-          'Ikuti langkah ini berurutan — sebagian besar masalah selesai di tiga langkah pertama.',
+          'Ikuti langkah ini berurutan. Sebagian besar masalah selesai di tiga langkah pertama.',
         ],
         steps: [
           'Pastikan koneksi internet stabil.',

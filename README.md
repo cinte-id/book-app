@@ -257,7 +257,7 @@ book-app/
 
 ## Customer Service Feature Implementation by Badharalfath
 
-For this take-home assignment I chose the Customer Service role and built a complete
+For this assignment I chose the Customer Service role and built a complete
 customer support system inside the existing React/Vite frontend. No backend changes,
 no new project.
 
@@ -272,29 +272,29 @@ Run the frontend (`npm run dev`) and open `http://localhost:8080`, then:
 All support pages share the app's mobile-first layout. You can also visit the routes
 directly:
 
-- Help Center (`/help`) — searchable FAQ accordion with category tabs + counts
-- Contact Support (`/contact`) — validated ticket form with generated ticket ID
-- User Guide (`/guide`) — 3-step onboarding stepper with progress indicator
-- Feedback (`/feedback`) — category pills, live char counter, optional star rating
-- Ticket Tracking (`/track`) — search tickets by ID + on-device ticket history
-- Service Dashboard (`/support`) — hub with live stats, service links, analytics chart
-- Knowledge Base (`/kb`, `/kb/:slug`) — long-form guides with categories + related articles
+- Help Center (`/help`): searchable FAQ accordion with category tabs + counts
+- Contact Support (`/contact`): validated ticket form with generated ticket ID
+- User Guide (`/guide`): 3-step onboarding stepper with progress indicator
+- Feedback (`/feedback`): category pills, live char counter, optional star rating
+- Ticket Tracking (`/track`): search tickets by ID + on-device ticket history
+- Service Dashboard (`/support`): hub with live stats, service links, analytics chart
+- Knowledge Base (`/kb`, `/kb/:slug`): long-form guides with categories + related articles
 
 ### Bonus Features
 
-- **Knowledge Base** — 6 searchable, category-filterable articles with read time,
+- **Knowledge Base:** 6 searchable, category-filterable articles with read time,
   numbered steps, related links, and per-article satisfaction survey.
-- **User Satisfaction Survey** — Ya/Tidak micro-survey (`HelpfulSurvey`) on the Help,
+- **User Satisfaction Survey:** Ya/Tidak micro-survey (`HelpfulSurvey`) on the Help,
   Guide, and every KB article page; answers persist per topic.
-- **Support Ticket Tracking** — tickets created via Contact/Feedback persist in
+- **Support Ticket Tracking:** tickets created via Contact/Feedback persist in
   `localStorage` (cap 50) and can be searched, inspected, and deleted on `/track`.
-- **Customer Service Analytics mockup** — stat cards (total/open/feedback/avg rating)
+- **Customer Service Analytics mockup:** stat cards (total/open/feedback/avg rating)
   plus a tickets-by-category bar chart (recharts) that updates live from stored tickets,
   with an honest empty state before any data exists.
-- **Multi-language support structure** — `id` dictionary active with full `en` fallback
+- **Multi-language support structure:** `id` dictionary active with full `en` fallback
   (`src/data/support/i18n.ts`, typed keys), adopted by the survey component; language
   persists in `localStorage`.
-- **Tests** — 12 vitest unit tests covering the ticket store and i18n (`npm test`).
+- **Tests:** 12 vitest unit tests covering the ticket store and i18n (`npm test`).
 
 ### Tech Stack & Decisions
 
@@ -302,7 +302,7 @@ directly:
   Textarea, Select, Button, Sheet replacements, etc.).
 - Forms use React Hook Form + Zod with inline errors; invalid fields turn red on
   submit, and toast confirms successful submissions.
-- Mock/persistent client data only — strongly-typed modules live in
+- Mock/persistent client data only: strongly-typed modules live in
   `src/data/support/` (`tickets.ts`, `kbArticles.ts`, `faqData.ts`, `i18n.ts`,
   `navigation.ts`). No backend or real API calls for CS features, per role constraints.
 - Functional components with hooks and a modular structure (`src/components/support/`,
@@ -311,7 +311,7 @@ directly:
 - Routing wired in `src/App.tsx` as flat routes; chat widget mounted once globally.
 - Ports note: the repo's own `vite.config.ts` and setup docs use backend `:5001` and
   frontend `:8080` (the task template says `5000`/`5173`), and the API client defaults
-  to `http://localhost:5001` — so run with the repo's ports.
+  to `http://localhost:5001`, so run with the repo's ports.
 
 ### How to run / test my part
 
@@ -330,7 +330,7 @@ npm run dev          # → http://localhost:8080
 Manual test path: open `/support` → create a ticket via Contact Support (note the
 `TKT-xxxxxx` ID) → find it on `/track` → submit feedback → see dashboard stats
 and chart update. Checks: `npx tsc --noEmit`, `npm test`, `npm run lint`,
-`npm run build` — all green. Branch: `feat/customer-service` (single branch,
+`npm run build` (all green). Branch: `feat/customer-service` (single branch,
 one commit per feature/fix).
 
 ## License
