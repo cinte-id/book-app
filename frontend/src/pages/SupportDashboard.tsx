@@ -64,6 +64,14 @@ const services = [
     title: 'Lacak Tiket',
     desc: 'Status tiket di perangkat ini',
   },
+  {
+    to: '/kb',
+    icon: BookOpen,
+    iconBg: 'bg-indigo-50',
+    iconText: 'text-indigo-600',
+    title: 'Pusat Pengetahuan',
+    desc: 'Artikel panduan per topik',
+  },
 ];
 
 const SupportDashboard = () => {

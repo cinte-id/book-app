@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, Mail, FileText, MessageSquare, ChevronDown } from 'lucide-react';
+import { Search, HelpCircle, BookOpen, User, Wrench, ArrowLeft, Mail, FileText, MessageSquare, ChevronDown, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { faqData, faqCategories, filterFAQs, getCategoryCounts, type FAQItem } from '@/data/faqData';
 import HelpfulSurvey from '../components/support/HelpfulSurvey';
@@ -91,6 +91,24 @@ const HelpFAQ = () => {
               <span className="text-xs font-semibold text-purple-900 text-center">Feedback</span>
             </Link>
           </div>
+
+          <Link
+            to="/kb"
+            className="group mt-3 flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-blue-300 hover:shadow-md"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-50">
+              <BookOpen size={20} className="text-indigo-600" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold text-gray-900">
+                Butuh penjelasan lebih dalam?
+              </span>
+              <span className="block truncate text-xs text-gray-500">
+                Jelajahi artikel panduan di Pusat Pengetahuan
+              </span>
+            </span>
+            <ArrowRight size={18} className="shrink-0 text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-blue-600" />
+          </Link>
 
           {/* Search Bar */}
           <div className="relative">

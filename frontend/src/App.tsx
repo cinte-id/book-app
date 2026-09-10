@@ -11,6 +11,8 @@ import UserGuide from "./pages/UserGuide";
 import Feedback from "./pages/Feedback";
 import TrackTickets from "./pages/TrackTickets";
 import SupportDashboard from "./pages/SupportDashboard";
+import KnowledgeBase from "./pages/KnowledgeBase";
+import KbArticle from "./pages/KbArticle";
 import LiveChatWidget from "./components/support/LiveChatWidget";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/track" element={<TrackTickets />} />
           <Route path="/support" element={<SupportDashboard />} />
+          <Route path="/kb" element={<KnowledgeBase />} />
+          <Route path="/kb/:slug" element={<KbArticle />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

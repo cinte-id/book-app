@@ -271,6 +271,7 @@ Comprehensive support system inside the existing Book Tracker App (no new projec
 | Berikan Saran (Feedback) | `/feedback` | Category pills, textarea with counter, optional star rating |
 | Lacak Tiket (bonus) | `/track` | Search by ticket ID + on-device ticket history (localStorage) |
 | Pusat Layanan (bonus) | `/support` | Dashboard hub: live stats, service links, category analytics chart |
+| Pusat Pengetahuan (bonus) | `/kb`, `/kb/:slug` | 6 long-form articles, category filter, related links |
 | Live Chat widget | global | Floating button on every page, keyword-based bot replies, quick replies |
 
 Bonus components: `HelpfulSurvey` (Ya/Tidak satisfaction micro-survey on Help & Guide),
