@@ -168,7 +168,7 @@ export function LiveChatWidget() {
         aria-label={visible ? 'Tutup live chat' : 'Buka live chat'}
         aria-expanded={visible}
         className={cn(
-          'fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-blue-600 text-white shadow-xl shadow-blue-600/25',
+          'fixed bottom-20 right-6 z-50 h-14 w-14 rounded-full bg-blue-600 text-white shadow-xl shadow-blue-600/25',
           'transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]',
           'hover:scale-105 hover:bg-blue-700 active:scale-90',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
@@ -198,7 +198,7 @@ export function LiveChatWidget() {
           aria-modal="false"
           aria-label="Live chat support"
           className={cn(
-            'fixed inset-x-4 bottom-24 z-50 flex h-[540px] max-h-[70vh] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl',
+            'fixed inset-x-4 bottom-36 z-50 flex h-[540px] max-h-[70vh] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl',
             'sm:inset-x-auto sm:right-6 sm:w-[380px]',
             'transition-all duration-200 ease-[cubic-bezier(0.32,1.2,0.64,1)]',
             open ? 'translate-y-0 scale-100 opacity-100' : 'pointer-events-none translate-y-3 scale-95 opacity-0',
