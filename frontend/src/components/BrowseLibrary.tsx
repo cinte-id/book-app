@@ -1,7 +1,8 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import api from '../services/api';
-import BookCard from './BookCard';
+import { Search, Filter, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import api from "../services/api";
+import BookCard from "./BookCard";
+import { useLanguage } from "../locales/LanguageContext";
 
 // Define the Book interface
 interface Book {
@@ -12,43 +13,100 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: "read" | "reading" | "want-to-read";
 }
 
 const BrowseLibrary = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("all");
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { language } = useLanguage();
+
+  const text = {
+    en: {
+      title: "Browse Library",
+      searchPlaceholder: "Search books or authors...",
+      allGenres: "All Genres",
+      book: "book",
+      books: "books",
+      found: "found",
+      noBooks: "No books found matching your criteria",
+      fetchError:
+        "Failed to fetch books. Please try again later.",
+      addError:
+        "Failed to add book. Please try again.",
+      status: {
+        read: "Read",
+        reading: "Reading",
+        "want-to-read": "Want to Read",
+      },
+    },
+
+    id: {
+      title: "Jelajahi Perpustakaan",
+      searchPlaceholder: "Cari buku atau penulis...",
+      allGenres: "Semua Genre",
+      book: "buku",
+      books: "buku",
+      found: "ditemukan",
+      noBooks:
+        "Tidak ada buku yang sesuai dengan kriteria pencarian",
+      fetchError:
+        "Gagal mengambil data buku. Silakan coba lagi nanti.",
+      addError:
+        "Gagal menambahkan buku. Silakan coba lagi.",
+      status: {
+        read: "Selesai Dibaca",
+        reading: "Sedang Dibaca",
+        "want-to-read": "Ingin Dibaca",
+      },
+    },
+  };
+
+  const currentText = text[language];
 
   // Fetch books from the backend
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
-        const response = await api.get<Book[]>('/api/books');
+
+        const response = await api.get<Book[]>("/api/books");
+
         setBooks(response.data);
         setError(null);
       } catch (err) {
-        setError('Failed to fetch books. Please try again later.');
-        console.error('Error fetching books:', err);
+        setError(currentText.fetchError);
+        console.error("Error fetching books:", err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchBooks();
-  }, []);
+  }, [language]);
 
   // Get unique genres from books
-  const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
+  const genres = [
+    "all",
+    ...new Set(books.map((book) => book.genre)),
+  ];
+
   // Filter books based on search term and selected genre
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
+  const filteredBooks = books.filter((book) => {
+    const search = searchTerm.toLowerCase();
+
+    const matchesSearch =
+      book.title.toLowerCase().includes(search) ||
+      book.author.toLowerCase().includes(search);
+
+    const matchesGenre =
+      selectedGenre === "all" ||
+      book.genre === selectedGenre;
+
     return matchesSearch && matchesGenre;
   });
 
@@ -56,17 +114,22 @@ const BrowseLibrary = () => {
   const handleAddBook = async (bookId: number) => {
     try {
       await api.put(`/api/books/${bookId}`, {
-        status: 'want-to-read'
+        status: "want-to-read",
       });
-      // Update local state
-      setBooks(books.map(book => 
-        book.id === bookId 
-          ? { ...book, status: 'want-to-read' }
-          : book
-      ));
+
+      setBooks((currentBooks) =>
+        currentBooks.map((book) =>
+          book.id === bookId
+            ? {
+                ...book,
+                status: "want-to-read",
+              }
+            : book
+        )
+      );
     } catch (err) {
-      console.error('Error adding book:', err);
-      setError('Failed to add book. Please try again.');
+      console.error("Error adding book:", err);
+      setError(currentText.addError);
     }
   };
 
@@ -88,19 +151,31 @@ const BrowseLibrary = () => {
 
   return (
     <div className="space-y-4">
+      {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-800">Browse Library</h2>
-        <button className="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+        <h2 className="text-xl font-bold text-gray-800">
+          {currentText.title}
+        </h2>
+
+        <button
+          className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+          aria-label="Filter"
+          title="Filter"
+        >
           <Filter size={20} />
         </button>
       </div>
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+        <Search
+          className="absolute left-3 top-3 text-gray-400"
+          size={20}
+        />
+
         <input
           type="text"
-          placeholder="Search books or authors..."
+          placeholder={currentText.searchPlaceholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -115,44 +190,59 @@ const BrowseLibrary = () => {
             onClick={() => setSelectedGenre(genre)}
             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               selectedGenre === genre
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            {genre === 'all' ? 'All Genres' : genre}
+            {genre === "all"
+              ? currentText.allGenres
+              : genre}
           </button>
         ))}
       </div>
 
       {/* Results Count */}
       <p className="text-sm text-gray-600">
-        {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
+        {filteredBooks.length}{" "}
+        {filteredBooks.length === 1
+          ? currentText.book
+          : currentText.books}{" "}
+        {currentText.found}
       </p>
 
       {/* Books Grid */}
       <div className="space-y-3">
         {filteredBooks.map((book) => (
           <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
-              <button 
+            <BookCard
+              book={book}
+              variant="discover"
+            />
+
+            {book.status === "want-to-read" ? (
+              <button
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
                 onClick={() => handleAddBook(book.id)}
+                aria-label={currentText.status["want-to-read"]}
+                title={currentText.status["want-to-read"]}
               >
                 <Plus size={16} />
               </button>
             ) : (
               <div className="absolute top-4 right-4 bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
-                {book.status}
+                {currentText.status[book.status]}
               </div>
             )}
           </div>
         ))}
       </div>
 
+      {/* Empty State */}
       {filteredBooks.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-gray-500">No books found matching your criteria</p>
+          <p className="text-gray-500">
+            {currentText.noBooks}
+          </p>
         </div>
       )}
     </div>
