@@ -125,7 +125,7 @@ const ContactSupport = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-24">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <button
             onClick={() => navigate(-1)}
