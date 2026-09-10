@@ -468,19 +468,20 @@ const Feedback = () => {
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription className="flex items-center justify-between text-xs">
-                        <span>Minimal 20 karakter agar mudah dipahami</span>
-                        <span
-                          className={`font-mono ${
-                            field.value.length < 20
-                              ? 'text-gray-400'
-                              : field.value.length > 1000
-                                ? 'text-red-500'
-                                : 'text-green-600'
-                          }`}
-                        >
-                          {field.value.length}/1000
-                        </span>
+                      <FormDescription className="text-right text-xs">
+                        {field.value.length > 0 && (
+                          <span
+                            className={`font-mono ${
+                              field.value.length < 20
+                                ? 'text-gray-400'
+                                : field.value.length > 1000
+                                  ? 'text-red-500'
+                                  : 'text-green-600'
+                            }`}
+                          >
+                            {field.value.length}/1000
+                          </span>
+                        )}
                       </FormDescription>
                       <FormMessage className="text-xs" />
                     </FormItem>
