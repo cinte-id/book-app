@@ -348,12 +348,12 @@ const ContactSupport = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Peminjaman Buku">📚 Peminjaman Buku</SelectItem>
-                              <SelectItem value="Akses Akun / Login">🔐 Akses Akun / Login</SelectItem>
-                              <SelectItem value="Katalog & Pencarian">🔍 Katalog & Pencarian</SelectItem>
-                              <SelectItem value="Kendala Bug / Error">🐛 Kendala Bug / Error</SelectItem>
-                              <SelectItem value="Fitur & Saran">💡 Fitur & Saran</SelectItem>
-                              <SelectItem value="Lainnya">📝 Lainnya</SelectItem>
+                              <SelectItem value="Peminjaman Buku">Peminjaman Buku</SelectItem>
+                              <SelectItem value="Akses Akun / Login">Akses Akun / Login</SelectItem>
+                              <SelectItem value="Katalog & Pencarian">Katalog & Pencarian</SelectItem>
+                              <SelectItem value="Kendala Bug / Error">Kendala Bug / Error</SelectItem>
+                              <SelectItem value="Fitur & Saran">Fitur & Saran</SelectItem>
+                              <SelectItem value="Lainnya">Lainnya</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage className="text-xs" />
@@ -377,9 +377,9 @@ const ContactSupport = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Rendah">🟢 Rendah</SelectItem>
-                              <SelectItem value="Normal">🔵 Normal</SelectItem>
-                              <SelectItem value="Tinggi (Mendesak)">🔴 Tinggi (Mendesak)</SelectItem>
+                              <SelectItem value="Rendah">Rendah</SelectItem>
+                              <SelectItem value="Normal">Normal</SelectItem>
+                              <SelectItem value="Tinggi (Mendesak)">Tinggi (Mendesak)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage className="text-xs" />
