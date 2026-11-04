@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Star, BookOpen } from 'lucide-react';
+import { ArrowLeft, Star, Plus, BookOpen } from 'lucide-react';
 import api from '../services/api';
 
 type Status = 'read' | 'reading' | 'want-to-read';
@@ -55,18 +55,18 @@ const BookDetail = () => {
     fetchBook();
   }, [id]);
 
-  const handleChangeStatus = async (newStatus: Status) => {
-    if (!book || saving || newStatus === book.status) return;
+    const handleAddToLibrary = async () => {
+    if (!book || saving) return;
     try {
       setSaving(true);
       setSaveError(null);
       const response = await api.put<Book>(`/api/books/${book.id}`, {
-        status: newStatus,
+        status: 'want-to-read',
       });
       setBook(response.data);
     } catch (err) {
-      console.error('Error updating status:', err);
-      setSaveError('Failed to update status. Please try again.');
+      console.error('Error adding book:', err);
+      setSaveError('Failed to add book. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -145,26 +145,14 @@ const BookDetail = () => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-sm font-medium text-gray-700 text-center">Reading status</p>
-              <div className="grid grid-cols-3 gap-2">
-                {STATUS_OPTIONS.map((option) => {
-                  const active = book.status === option.value;
-                  return (
-                    <button
-                      key={option.value}
-                      onClick={() => handleChangeStatus(option.value)}
-                      disabled={saving}
-                      className={`py-3 rounded-xl text-sm font-medium transition-colors disabled:opacity-60 ${
-                        active
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
+              <button
+                onClick={handleAddToLibrary}
+                disabled={saving || book.status === 'want-to-read'}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                <Plus size={18} />
+                {book.status === 'want-to-read' ? 'In Your Library' : 'Add to Library'}
+              </button>
               {saveError && (
                 <p className="text-sm text-red-500 text-center">{saveError}</p>
               )}
