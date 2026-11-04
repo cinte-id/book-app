@@ -256,3 +256,41 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+## Submission Notes
+
+**Role:** Fullstack Developer (Junior)
+
+### How to run
+
+Backend:
+```bash
+cd backend
+pip install -r requirements.txt
+python app.py
+```
+Backend runs on http://localhost:5001
+
+Frontend:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend runs on http://localhost:8080
+
+### What I did
+
+- Added `GET /api/books/:id` endpoint (returns 404 if the book does not exist)
+- Added book detail page at `/books/:id` showing cover, title, author, genre, pages, rating, and an Add to Library button
+- Linked book cards to the detail page
+- Fixed broken cover URLs in `backend/books.json`, with an icon fallback when an image fails to load
+- Search by title/author and genre filter on Library > Browse were already working and work together
+- Loading, empty, and error states are handled
+
+### Notes and decisions
+
+- Preserve search/filter state when returning from the detail page was not implemented (optional task, other optional items were covered)
+- I kept the scope to the required tasks and did not add extra features
