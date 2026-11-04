@@ -50,6 +50,7 @@ def save_books(books_data):
 # Initialize books from JSON file
 books = load_books()
 
+
 @app.route('/api/books', methods=['GET', 'OPTIONS'])
 def get_books():
     if request.method == 'OPTIONS':
@@ -59,14 +60,38 @@ def get_books():
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
-    
-    return jsonify(books)
+
+    # Optional filters: ?q=<title or author>&genre=<genre>
+    q = request.args.get('q', '').strip().lower()
+    genre = request.args.get('genre', '').strip().lower()
+
+    result = books
+    if q:
+        result = [
+            b for b in result
+            if q in (b.get('title') or '').lower()
+            or q in (b.get('author') or '').lower()
+        ]
+    if genre and genre != 'all':
+        result = [b for b in result if (b.get('genre') or '').lower() == genre]
+
+    return jsonify(result)
+
+
+@app.route('/api/books/<int:book_id>', methods=['GET'])
+def get_book(book_id):
+    for book in books:
+        if book['id'] == book_id:
+            return jsonify(book)
+    return jsonify({'error': 'Book not found'}), 404
+
 
 @app.route('/api/books', methods=['POST'])
 def add_book():
     data = request.json
     book = {
-        'id': len(books) + 1,
+        # max+1 avoids duplicate ids after a book has been deleted
+        'id': max((b['id'] for b in books), default=0) + 1,
         'title': data.get('title'),
         'author': data.get('author'),
         'cover': data.get('cover', ''),  # Book cover image URL
@@ -79,6 +104,7 @@ def add_book():
     save_books(books)  # Save to JSON file
     return jsonify(book), 201
 
+
 @app.route('/api/books/<int:book_id>', methods=['PUT', 'OPTIONS'])
 def update_book(book_id):
     if request.method == 'OPTIONS':
@@ -88,7 +114,7 @@ def update_book(book_id):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
-    
+
     data = request.json
     for book in books:
         if book['id'] == book_id:
@@ -103,6 +129,7 @@ def update_book(book_id):
             return jsonify(book)
     return jsonify({'error': 'Book not found'}), 404
 
+
 @app.route('/api/books/<int:book_id>', methods=['DELETE'])
 def delete_book(book_id):
     for i, book in enumerate(books):
@@ -112,8 +139,9 @@ def delete_book(book_id):
             return jsonify(deleted_book)
     return jsonify({'error': 'Book not found'}), 404
 
+
 if __name__ == '__main__':
     print(f"Starting Flask server on http://{FLASK_HOST}:{FLASK_PORT}")
     print("CORS enabled for development")
     print(f"Allowed origins: {CORS_ORIGINS}")
-    app.run(debug=FLASK_DEBUG, port=FLASK_PORT, host=FLASK_HOST) 
+    app.run(debug=FLASK_DEBUG, port=FLASK_PORT, host=FLASK_HOST)
