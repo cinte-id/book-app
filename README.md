@@ -256,3 +256,44 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+## Submission
+
+**Role:** Fullstack (Junior)
+**Name:** <Fikri Adiyofa>
+
+### What I built
+- `GET /api/books/:id` returns a single book (404 with JSON error if not found).
+- `GET /api/books` now also accepts `?q=` (title/author) and `?genre=` query params.
+- Library > Browse: real-time search (300 ms debounce) that works together with the genre filter.
+- Book detail page at `/books/:id` (cover, title, author, genre, pages, rating, Add to Library button).
+- Loading spinner, empty state, and friendly error messages (list and detail page).
+- Search/genre state is kept in `sessionStorage`, so it survives navigating to the detail page and back.
+- Fixed duplicate book ids after deleting a book (`max(id) + 1`).
+
+### How to run
+Backend (from the repo root):
+
+    python -m venv venv
+    venv\Scripts\activate      # macOS/Linux: source venv/bin/activate
+    pip install -r requirements.txt
+    cd backend
+    python app.py              # http://localhost:5001
+
+Frontend:
+
+    cd frontend
+    npm install
+    npm run dev                # http://localhost:5173
+
+### How to test
+- API: `curl http://localhost:5001/api/books/1`, `curl "http://localhost:5001/api/books?q=harry&genre=Fantasy"`
+- UI: open Library > Browse, try search, genre chips, open a book, go back, stop the backend to see the error state.
+- `npm run build` and `npx tsc --noEmit` in `frontend/` pass. `npm run lint` reports errors and warnings only in untouched template files (`components/ui/*`, `tailwind.config.ts`); the files I changed are lint-clean.
+
+### Decisions & notes
+- Search is sent to the backend (debounced) instead of filtering only on the client, so the API can be reused and tested on its own.
+- The genre list is loaded once so the chips don't change while filtering.
+- Kept the existing "add to library" behaviour (PUT status `want-to-read`) to stay consistent with the Browse page.
+- Added `react-router-dom` for the `/books/:id` route (if it was not already a dependency).
