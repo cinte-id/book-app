@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Star, Plus, BookOpen } from 'lucide-react';
+import { ArrowLeft, Star, BookOpen } from 'lucide-react';
 import api from '../services/api';
+
+type Status = 'read' | 'reading' | 'want-to-read';
 
 interface Book {
   id: number;
@@ -12,8 +14,14 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: Status;
 }
+
+const STATUS_OPTIONS: { value: Status; label: string }[] = [
+  { value: 'want-to-read', label: 'Want to Read' },
+  { value: 'reading', label: 'Reading' },
+  { value: 'read', label: 'Read' },
+];
 
 const BookDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +29,7 @@ const BookDetail = () => {
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [coverFailed, setCoverFailed] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -46,17 +55,18 @@ const BookDetail = () => {
     fetchBook();
   }, [id]);
 
-  const handleAddToLibrary = async () => {
-    if (!book) return;
+  const handleChangeStatus = async (newStatus: Status) => {
+    if (!book || saving || newStatus === book.status) return;
     try {
       setSaving(true);
+      setSaveError(null);
       const response = await api.put<Book>(`/api/books/${book.id}`, {
-        status: 'want-to-read',
+        status: newStatus,
       });
       setBook(response.data);
     } catch (err) {
-      console.error('Error adding book:', err);
-      setError('Failed to add book. Please try again.');
+      console.error('Error updating status:', err);
+      setSaveError('Failed to update status. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -134,18 +144,31 @@ const BookDetail = () => {
               </div>
             </div>
 
-            <p className="text-sm text-gray-600 text-center">
-              Status: <span className="font-semibold">{book.status}</span>
-            </p>
-
-            <button
-              onClick={handleAddToLibrary}
-              disabled={saving || book.status === 'want-to-read'}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              <Plus size={18} />
-              {book.status === 'want-to-read' ? 'In Your Library' : 'Add to Library'}
-            </button>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-700 text-center">Reading status</p>
+              <div className="grid grid-cols-3 gap-2">
+                {STATUS_OPTIONS.map((option) => {
+                  const active = book.status === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      onClick={() => handleChangeStatus(option.value)}
+                      disabled={saving}
+                      className={`py-3 rounded-xl text-sm font-medium transition-colors disabled:opacity-60 ${
+                        active
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {saveError && (
+                <p className="text-sm text-red-500 text-center">{saveError}</p>
+              )}
+            </div>
           </div>
         )}
       </div>

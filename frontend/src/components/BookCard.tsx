@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom';
 import { Star, BookOpen, Clock } from 'lucide-react';
 
 interface Book {
@@ -17,7 +17,7 @@ interface BookCardProps {
   variant?: 'default' | 'compact' | 'library' | 'discover';
 }
 
-const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
+const BookCardContent = ({ book, variant = 'default' }: BookCardProps) => {
   if (variant === 'compact') {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200 hover:scale-105">
@@ -114,5 +114,11 @@ const BookCard = ({ book, variant = 'default' }: BookCardProps) => {
     </div>
   );
 };
+
+const BookCard = ({ book, variant = 'default' }: BookCardProps) => (
+  <Link to={`/books/${book.id}`} className="block">
+    <BookCardContent book={book} variant={variant} />
+  </Link>
+);
 
 export default BookCard;
