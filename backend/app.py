@@ -79,6 +79,13 @@ def add_book():
     save_books(books)  # Save to JSON file
     return jsonify(book), 201
 
+@app.route('/api/books/<int:book_id>', methods=['GET'])
+def get_book(book_id):
+    for book in books:
+        if book['id'] == book_id:
+            return jsonify(book)
+    return jsonify({'error': 'Book not found'}), 404
+
 @app.route('/api/books/<int:book_id>', methods=['PUT', 'OPTIONS'])
 def update_book(book_id):
     if request.method == 'OPTIONS':

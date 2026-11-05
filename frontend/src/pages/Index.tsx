@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Book, Search, User, TrendingUp, Plus, Library } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import ProgressCard from '../components/ProgressCard';
@@ -7,9 +7,26 @@ import HeaderNav from '../components/HeaderNav';
 import BrowseLibrary from '../components/BrowseLibrary';
 import { books, currentlyReading, readingStats } from '../data/dummyData';
 
+const readStored = (key: string, fallback: string) => {
+  try {
+    return sessionStorage.getItem(key) || fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('home');
-  const [libraryView, setLibraryView] = useState('my-books'); // 'my-books' or 'browse'
+  const [activeTab, setActiveTab] = useState(() => readStored('activeTab', 'home'));
+  const [libraryView, setLibraryView] = useState(() => readStored('libraryView', 'my-books')); // 'my-books' or 'browse'
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('activeTab', activeTab);
+      sessionStorage.setItem('libraryView', libraryView);
+    } catch {
+      // abaikan jika penyimpanan tidak tersedia
+    }
+  }, [activeTab, libraryView]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -164,8 +181,7 @@ const Index = () => {
       </main>
 
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
-    </div>
-  );
+    </div>  );
 };
 
 export default Index;
