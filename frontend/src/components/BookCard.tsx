@@ -9,7 +9,7 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+     status: 'read' | 'reading' | 'want-to-read' | 'none';
 }
 
 interface BookCardProps {

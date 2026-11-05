@@ -1,5 +1,6 @@
-import { Search, Filter, Star, Plus } from 'lucide-react';
+import { Search, Filter, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import BookCard from './BookCard';
 
@@ -12,7 +13,7 @@ interface Book {
   rating: number;
   pages: number;
   genre: string;
-  status: 'read' | 'reading' | 'want-to-read';
+  status: 'read' | 'reading' | 'want-to-read' | 'none';
 }
 
 const BrowseLibrary = () => {
@@ -21,6 +22,7 @@ const BrowseLibrary = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // Fetch books from the backend
   useEffect(() => {
@@ -43,11 +45,12 @@ const BrowseLibrary = () => {
 
   // Get unique genres from books
   const genres = ['all', ...new Set(books.map(book => book.genre))];
-  
+
   // Filter books based on search term and selected genre
   const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGenre = selectedGenre === 'all' || book.genre === selectedGenre;
     return matchesSearch && matchesGenre;
   });
@@ -59,9 +62,9 @@ const BrowseLibrary = () => {
         status: 'want-to-read'
       });
       // Update local state
-      setBooks(books.map(book => 
-        book.id === bookId 
-          ? { ...book, status: 'want-to-read' }
+      setBooks(books.map(book =>
+        book.id === bookId
+          ? { ...book, status: 'want-to-read' as const }
           : book
       ));
     } catch (err) {
@@ -133,11 +136,13 @@ const BrowseLibrary = () => {
       <div className="space-y-3">
         {filteredBooks.map((book) => (
           <div key={book.id} className="relative">
-            <BookCard book={book} variant="discover" />
-            {book.status === 'want-to-read' ? (
-              <button 
+            <div onClick={() => navigate(`/book/${book.id}`)} className="cursor-pointer">
+              <BookCard book={book} variant="discover" />
+            </div>
+            {book.status === 'none' ? (
+              <button
                 className="absolute top-4 right-4 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors shadow-lg"
-                onClick={() => handleAddBook(book.id)}
+                onClick={(e) => { e.stopPropagation(); handleAddBook(book.id); }}
               >
                 <Plus size={16} />
               </button>

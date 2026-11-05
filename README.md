@@ -256,3 +256,42 @@ book-app/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+---
+
+## Test Submission - Fullstack (Junior)
+
+**Role:** Fullstack (Junior) - Nurul Sabrina
+
+### How to run / test
+
+Backend:
+
+    cd backend
+    pip install -r requirements.txt
+    python app.py
+
+Runs on http://localhost:5001 (this differs from the port in the setup section above).
+
+Frontend:
+
+    cd frontend
+    npm install
+    npm run dev
+
+Runs on http://localhost:8080 (this differs from the port in the setup section above).
+
+Quick test:
+
+- `http://localhost:5001/api/books/1` returns one book.
+- `http://localhost:5001/api/books/999` returns `{"error": "Book not found"}`.
+- Open Library > Browse, click a book, check the detail page and the Back button.
+
+### Notes / decisions
+
+- Search, genre filter, and empty state already existed in the base project; I verified they work together.
+- Added `GET /api/books/<id>` (404 with JSON error if not found).
+- Added the book detail page at `/book/:id` and made Browse cards clickable.
+- Fixed the "+" button logic in Browse and added a Back button that returns to the Browse tab.
+- Fixed covers by loading them via ISBN from Open Library (the old cover IDs did not match the titles).
