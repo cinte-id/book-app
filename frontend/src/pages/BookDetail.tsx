@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Star, Plus, BookOpen } from 'lucide-react';
+import { ArrowLeft, Star, Plus, Check, BookOpen } from 'lucide-react';
 import api from '../services/api';
 
 type Status = 'read' | 'reading' | 'want-to-read';
@@ -16,12 +16,6 @@ interface Book {
   genre: string;
   status: Status;
 }
-
-const STATUS_OPTIONS: { value: Status; label: string }[] = [
-  { value: 'want-to-read', label: 'Want to Read' },
-  { value: 'reading', label: 'Reading' },
-  { value: 'read', label: 'Read' },
-];
 
 const BookDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,13 +49,15 @@ const BookDetail = () => {
     fetchBook();
   }, [id]);
 
-    const handleAddToLibrary = async () => {
-    if (!book || saving) return;
+  const inLibrary = book ? book.status !== 'want-to-read' : false;
+
+  const handleAddToLibrary = async () => {
+    if (!book || saving || inLibrary) return;
     try {
       setSaving(true);
       setSaveError(null);
       const response = await api.put<Book>(`/api/books/${book.id}`, {
-        status: 'want-to-read',
+        status: 'reading',
       });
       setBook(response.data);
     } catch (err) {
@@ -147,11 +143,15 @@ const BookDetail = () => {
             <div className="space-y-2">
               <button
                 onClick={handleAddToLibrary}
-                disabled={saving || book.status === 'want-to-read'}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                disabled={saving || inLibrary}
+                className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-medium transition-colors disabled:opacity-100 ${
+                  inLibrary
+                    ? 'bg-green-500 cursor-default'
+                    : 'bg-blue-500 hover:bg-blue-600'
+                }`}
               >
-                <Plus size={18} />
-                {book.status === 'want-to-read' ? 'In Your Library' : 'Add to Library'}
+                {inLibrary ? <Check size={18} /> : <Plus size={18} />}
+                {inLibrary ? 'In Your Library' : 'Add to Library'}
               </button>
               {saveError && (
                 <p className="text-sm text-red-500 text-center">{saveError}</p>
